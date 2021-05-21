@@ -11,7 +11,12 @@ namespace AccesoDatos.Data
     {
         public AplicacionDBContext(DbContextOptions<AplicacionDBContext> options) : base(options)
         {
-
+           
         }
+        
+        DbSet<Proveedor> Proveedores { get; set; }
+        DbSet<Funcionario> Funcionarios { get; set; }
+        DbSet<Usuario> Usuarios { get; set; }
+        DbSet<Ingreso> Ingresos { get; set; }
     }
 }
