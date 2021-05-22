@@ -14,4 +14,10 @@
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Comun\Comun.csproj" />
+    <ProjectReference Include="..\..\Modelo\Modelo.csproj" />
+    <ProjectReference Include="..\..\Negocio\Negocio.csproj" />
+  </ItemGroup>
+
 </Project>

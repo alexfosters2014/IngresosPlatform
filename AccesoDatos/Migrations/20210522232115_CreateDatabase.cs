@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AccesoDatos.Migrations
 {
-    public partial class IndexIncluidos : Migration
+    public partial class CreateDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,9 @@ namespace AccesoDatos.Migrations
                     RazonSocial = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     NombreFantasia = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Direccion = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rubro = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -134,6 +136,12 @@ namespace AccesoDatos.Migrations
                 name: "IX_Ingresos_ProveedorId",
                 table: "Ingresos",
                 column: "ProveedorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Proveedores_Rut",
+                table: "Proveedores",
+                column: "Rut",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_ProveedorId",

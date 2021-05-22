@@ -26,7 +26,8 @@ namespace AccesoDatos.Data
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
-
+        [MaxLength(50)]
+        public string Rubro { get; set; }
         public bool Activo { get; set; } = true;
     }
 }
