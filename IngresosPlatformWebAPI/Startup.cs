@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Negocio.Repositorios;
 
 namespace IngresosPlatformWebAPI
 {
@@ -31,6 +32,7 @@ namespace IngresosPlatformWebAPI
             services.AddDbContext<AplicacionDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
