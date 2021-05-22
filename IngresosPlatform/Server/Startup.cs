@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using AutoMapper;
+using System;
 
 namespace IngresosPlatform.Server
 {
@@ -25,10 +27,14 @@ namespace IngresosPlatform.Server
         {
             services.AddDbContext<AplicacionDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddControllersWithViews();
             services.AddRazorPages();
+            
         }
-
+        //configuracion de todos los servicios que quiero usar
+       
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
