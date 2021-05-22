@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccesoDatos.Migrations
 {
     [DbContext(typeof(AplicacionDBContext))]
-    [Migration("20210522030148_creacion2")]
-    partial class creacion2
+    [Migration("20210522144334_IndexIncluidos")]
+    partial class IndexIncluidos
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,6 +80,9 @@ namespace AccesoDatos.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Cedula")
+                        .IsUnique();
 
                     b.HasIndex("ProveedorId");
 

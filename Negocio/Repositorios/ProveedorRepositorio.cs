@@ -1,5 +1,6 @@
 ﻿using AccesoDatos.Data;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Modelo;
 using System;
 using System.Collections.Generic;
@@ -14,35 +15,99 @@ namespace Negocio.Repositorios
         private readonly AplicacionDBContext db;
         private readonly IMapper mapper;
 
-        public ProveedorRepositorio(AplicacionDBContext db, IMapper mapper)
+        public ProveedorRepositorio(AplicacionDBContext _db, IMapper _mapper)
         {
-            this.db = db;
-            this.mapper = mapper;
+            db = _db;
+            mapper = _mapper;
         }
-        public Task<ProveedorDTO> ActualizarProveedor(int ProveedorId, ProveedorDTO proveedor)
+        public async Task<ProveedorDTO> ActualizarProveedor(int proveedorId, ProveedorDTO proveedorDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (proveedorId == proveedorDTO.Id)
+                {
+                    Proveedor proveedorDB = await db.Proveedores.FindAsync(proveedorId);
+                    Proveedor proveedor = mapper.Map<ProveedorDTO, Proveedor>(proveedorDTO, proveedorDB);
+                    proveedor.Activo = true;
+                    var updateProveedor = db.Update(proveedor);
+                    await db.SaveChangesAsync();
+                    return mapper.Map<Proveedor, ProveedorDTO>(updateProveedor.Entity);
+                }
+                else
+                {
+                    return null;
+                }
+            }catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<ProveedorDTO> AgregarProveedor(ProveedorDTO proveedorDTO)
         {
+            try { 
             Proveedor proveedor = mapper.Map<ProveedorDTO, Proveedor>(proveedorDTO);
-            var adadProovedor = await db.AddAsync(proveedor);                           
+            var addProovedor = await db.Proveedores.AddAsync(proveedor);
+            await db.SaveChangesAsync();
+            return mapper.Map<Proveedor, ProveedorDTO>(addProovedor.Entity);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
-        public Task<ProveedorDTO> ExisteProveedor(string rut)
+        public async Task<int> EliminarProveedor(int proveedorId)
         {
-            throw new NotImplementedException();
+            Proveedor proveedorDB = await db.Proveedores.FindAsync(proveedorId);
+            if (proveedorDB != null)
+            {
+                proveedorDB.Activo = false;
+                var updateProveedor = db.Update(proveedorDB);
+                return await db.SaveChangesAsync();
+            }
+            else
+            {
+                return 0;
+            }
         }
 
-        public Task<ProveedorDTO> ObtenerProveedor(int proveedorId)
+        public async Task<ProveedorDTO> ExisteProveedor(string rut)
         {
-            throw new NotImplementedException();
+            try
+            {
+                ProveedorDTO proveedor = mapper.Map<Proveedor, ProveedorDTO>(await db.Proveedores.FirstOrDefaultAsync(p => p.Rut.ToLower() == rut.ToLower()));
+                return proveedor;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
-        public Task<List<ProveedorDTO>> ObtenerProveedores()
+        public async Task<ProveedorDTO> ObtenerProveedor(int proveedorId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                ProveedorDTO proveedor = mapper.Map<Proveedor, ProveedorDTO>(await db.Proveedores.FirstOrDefaultAsync(p => p.Id == proveedorId));
+                return proveedor;
+            }catch(Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<ProveedorDTO>> ObtenerProveedores()
+        {
+            try
+            {
+                List<ProveedorDTO> proveedores = mapper.Map <List<Proveedor>, List<ProveedorDTO>>(db.Proveedores.ToList());
+                return proveedores;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

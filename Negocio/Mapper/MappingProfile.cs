@@ -13,7 +13,7 @@ namespace Negocio.Mapper
     {
         public MappingProfile()
         {
-            CreateMap<ProveedorDTO, Proveedor>();
+            CreateMap<ProveedorDTO, Proveedor>().ReverseMap();
         }
     }
 }

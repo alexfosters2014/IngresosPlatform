@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\IngresosPlatform.Shared.csproj" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
 </Project>

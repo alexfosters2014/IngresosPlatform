@@ -14,9 +14,9 @@ namespace AccesoDatos.Data
            
         }
         
-        DbSet<Proveedor> Proveedores { get; set; }
-        DbSet<Funcionario> Funcionarios { get; set; }
-        DbSet<Usuario> Usuarios { get; set; }
-        DbSet<Ingreso> Ingresos { get; set; }
+        public DbSet<Proveedor> Proveedores { get; set; }
+        public DbSet<Funcionario> Funcionarios { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Ingreso> Ingresos { get; set; }
     }
 }

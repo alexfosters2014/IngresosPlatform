@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccesoDatos.Migrations
 {
     [DbContext(typeof(AplicacionDBContext))]
-    [Migration("20210521011510_ClasesModelo")]
-    partial class ClasesModelo
+    [Migration("20210522161200_AtributoActivo")]
+    partial class AtributoActivo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -81,6 +81,9 @@ namespace AccesoDatos.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Cedula")
+                        .IsUnique();
+
                     b.HasIndex("ProveedorId");
 
                     b.ToTable("Funcionarios");
@@ -145,6 +148,9 @@ namespace AccesoDatos.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Direccion")
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
@@ -168,6 +174,9 @@ namespace AccesoDatos.Migrations
                         .HasColumnType("nvarchar(12)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Rut")
+                        .IsUnique();
 
                     b.ToTable("Proveedores");
                 });

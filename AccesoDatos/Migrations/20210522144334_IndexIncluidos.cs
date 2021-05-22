@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AccesoDatos.Migrations
 {
-    public partial class ClasesModelo : Migration
+    public partial class IndexIncluidos : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -113,6 +113,12 @@ namespace AccesoDatos.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Funcionarios_Cedula",
+                table: "Funcionarios",
+                column: "Cedula",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Funcionarios_ProveedorId",

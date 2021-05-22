@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccesoDatos.Data
 {
+    [Index(nameof(Rut), IsUnique = true)]
     public class Proveedor
     {
         [Required]
@@ -25,5 +27,6 @@ namespace AccesoDatos.Data
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+        public bool Activo { get; set; } = true;
     }
 }
