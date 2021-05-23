@@ -1,6 +1,66 @@
-﻿@page "/Proveedores/Nuevo"
-<h3>Nuevo Proveedor</h3>
+﻿@page "/NuevoProveedor"
+@inject IServiceProveedor serviceProveedor;
+@inject NavigationManager nav
 
+<div class="container">
+    <h3>Nuevo Proveedor</h3>
+    <EditForm Model="proveedorDTO" OnValidSubmit="CargarNuevoProveedor" class="col-4">
+        <DataAnnotationsValidator />
+        <div class="form-group">
+            <label for="rut">RUT*</label>
+            <InputText @bind-Value="proveedorDTO.Rut" id="rut" class="form-control" />
+            <ValidationMessage For="@( () => proveedorDTO.Rut)" />
+        </div>
+        <div class="form-group">
+            <label for="razonsocial">Razon Social*</label>
+            <InputText @bind-Value="proveedorDTO.RazonSocial" id="razonsocial" class="form-control" />
+            <ValidationMessage For="@( () => proveedorDTO.RazonSocial)" />
+        </div>
+        <div class="form-group">
+            <label for="nombrefantasia">Nombre Fantasia*</label>
+            <InputText @bind-Value="proveedorDTO.NombreFantasia" id="nombrefantasia" class="form-control" />
+            <ValidationMessage For="@( () => proveedorDTO.NombreFantasia)" />
+        </div>
+        <div class="form-group">
+            <label for="direccion">Dirección</label>
+            <InputText @bind-Value="proveedorDTO.Direccion" id="direccion" class="form-control" />
+            <ValidationMessage For="@( () => proveedorDTO.Direccion)" />
+        </div>
+        <div class="form-group">
+            <label for="rubro">Rubro*</label>
+            <InputText @bind-Value="proveedorDTO.Rubro" id="rubro" class="form-control" />
+            <ValidationMessage For="@( () => proveedorDTO.Rubro)" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email*</label>
+            <InputText @bind-Value="proveedorDTO.Email" id="email" class="form-control" />
+            <ValidationMessage For="@( () => proveedorDTO.Email)" />
+        </div>
+        <div class="col text-center">
+            <button type="submit" class="btn btn-primary">Agregar</button>
+            <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+        </div>
+    </EditForm>
+</div>
 @code {
+    ProveedorDTO proveedorDTO = new ProveedorDTO();
 
+    public async void CargarNuevoProveedor()
+    {
+        var resultado = await serviceProveedor.AgregarProveedor(proveedorDTO);
+
+        if ( resultado == null)
+        {
+            Console.WriteLine("Hubo un error");
+        }
+        else
+        {
+            nav.NavigateTo("/Proveedores",true);
+        }
+    }
+
+    public void Cancelar()
+    {
+        nav.NavigateTo("/Proveedores");
+    }
 }
