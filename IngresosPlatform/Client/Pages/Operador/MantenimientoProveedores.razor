@@ -1,7 +1,16 @@
 ﻿@page "/Proveedores"
+@inject IServiceProveedor serviceProveedor;
 
 <h3>Mantenimiento de Proveedores</h3>
 
+
+@if (proveedores == null)
+            {
+                <p class="btn btn-info">Cargando...</p>
+            }
+            else
+            {
+            
 <table class="table table-striped">
     <thead>
         <tr>
@@ -15,21 +24,37 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>216201790016</td>
-            <td>Fabamor S.A.</td>
-            <td>Vector Seguridad</td>
-            <td>Seguridad</td>
-            <td>Activo</td>
-            <td><a href="#">Editar</a></td>
-            <td><a href="#">Baja</a></td>
-        </tr>
+        @foreach (ProveedorDTO pro in proveedores)
+        {
+            <tr>
+                <td>@pro.Rut</td>
+                <td>@pro.RazonSocial</td>
+                <td>@pro.NombreFantasia</td>
+                <td>@pro.Rubro</td>
+                <td>@((pro.Activo == true ) ? "Activo" : "No Activo")</td>
+                <td><a href="#">Editar</a></td>
+                <td><a href="#">Baja</a></td>
+            </tr>
+        }
         <tr>
             <td colspan="6" align="center"><img class="nuevoBoton" src="img/add.png" /></td>
         </tr>
     </tbody>
 </table>
+}
 
 @code {
+
+    List<ProveedorDTO> proveedores { get; set; } = new List<ProveedorDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProveedores();
+    }
+
+    private async Task CargarProveedores()
+    {
+        proveedores = await serviceProveedor.ObtenerProveedores();
+    }
 
 }

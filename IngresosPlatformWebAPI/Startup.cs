@@ -34,6 +34,8 @@ namespace IngresosPlatformWebAPI
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
 
+
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -52,6 +54,9 @@ namespace IngresosPlatformWebAPI
             }
 
             app.UseRouting();
+
+            //para dar acceso a la web api sin politicas de seguridad
+            app.UseCors(options => options.AllowAnyOrigin());
 
             app.UseAuthorization();
 

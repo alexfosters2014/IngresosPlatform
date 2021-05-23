@@ -25,5 +25,7 @@ namespace Modelo
         [Required(ErrorMessage = "El campo está vacio")]
         [DataType(DataType.EmailAddress, ErrorMessage = "El formato de email no es válido")]
         public string Email { get; set; }
+        [MaxLength(50, ErrorMessage = "Limites de caracteres excedidos. Max 50")]
+        public bool Activo { get; set; }
     }
 }
