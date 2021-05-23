@@ -47,6 +47,7 @@ namespace Negocio.Repositorios
         {
             try { 
             Proveedor proveedor = mapper.Map<ProveedorDTO, Proveedor>(proveedorDTO);
+                proveedor.Activo = true;
             var addProovedor = await db.Proveedores.AddAsync(proveedor);
             await db.SaveChangesAsync();
             return mapper.Map<Proveedor, ProveedorDTO>(addProovedor.Entity);

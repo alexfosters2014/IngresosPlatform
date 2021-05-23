@@ -33,7 +33,7 @@ namespace IngresosPlatformWebAPI
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
-
+            services.AddCors();
 
 
             services.AddControllers();
@@ -56,7 +56,12 @@ namespace IngresosPlatformWebAPI
             app.UseRouting();
 
             //para dar acceso a la web api sin politicas de seguridad
-            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors(options =>
+            {
+                options.WithOrigins("http://localhost:31496");
+                options.AllowAnyMethod();
+                options.AllowAnyHeader();
+            });
 
             app.UseAuthorization();
 

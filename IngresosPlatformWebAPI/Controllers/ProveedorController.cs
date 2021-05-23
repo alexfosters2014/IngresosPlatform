@@ -63,7 +63,7 @@ namespace IngresosPlatformWebAPI.Controllers
                 });;
             }
 
-            return Ok();
+            return Ok(resultado);
         }
 
         [HttpDelete]

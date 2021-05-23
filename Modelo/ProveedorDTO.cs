@@ -10,22 +10,23 @@ namespace Modelo
     public class ProveedorDTO
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "El RUT debe contener 12 digitos")]
-        [MaxLength(12)]
+        [Required(ErrorMessage = "El RUT no puede estar vacio")]
+        [MaxLength(12, ErrorMessage = "El RUT debe contener 12 digitos")]
         public string Rut { get; set; }
         [Required(ErrorMessage = "La razón social no puede estar vacia")]
         [MaxLength(100)]
         public string RazonSocial { get; set; }
         [MaxLength(100)]
+        [Required(ErrorMessage = "El nombre fantasia no puede estar vacio")]
         public string NombreFantasia { get; set; }
         [MaxLength(60)]
         public string Direccion { get; set; }
         [MaxLength(50)]
+        [Required(ErrorMessage = "El rubro no puede estar vacio")]
         public string Rubro { get; set; }
-        [Required(ErrorMessage = "El campo está vacio")]
+        [Required(ErrorMessage = "El email no puede estar vacio")]
         [DataType(DataType.EmailAddress, ErrorMessage = "El formato de email no es válido")]
         public string Email { get; set; }
-        [MaxLength(50, ErrorMessage = "Limites de caracteres excedidos. Max 50")]
         public bool Activo { get; set; }
     }
 }

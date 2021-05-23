@@ -2,3 +2,11 @@
     height:50px;
     width:50px;
 }
+img.nuevoBoton:hover{
+    height: 60px;
+    width: 60px;
+}
+
+tr.colorFila{
+    background-color:white;
+}
