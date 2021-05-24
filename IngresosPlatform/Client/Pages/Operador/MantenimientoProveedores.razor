@@ -1,35 +1,64 @@
 ﻿@page "/Proveedores"
+@inject IServiceProveedor serviceProveedor;
+@inject NavigationManager nav
 
 <h3>Mantenimiento de Proveedores</h3>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">RUT</th>
-            <th scope="col">Razon Social</th>
-            <th scope="col">Nombre Fantasia</th>
-            <th scope="col">Tipo de Servicio</th>
-            <th scope="col">Estado</th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>216201790016</td>
-            <td>Fabamor S.A.</td>
-            <td>Vector Seguridad</td>
-            <td>Seguridad</td>
-            <td>Activo</td>
-            <td><a href="#">Editar</a></td>
-            <td><a href="#">Baja</a></td>
-        </tr>
-        <tr>
-            <td colspan="6" align="center"><img class="nuevoBoton" src="img/add.png" /></td>
-        </tr>
-    </tbody>
-</table>
+
+@if (proveedores != null && proveedores.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">RUT</th>
+                <th scope="col">Razon Social</th>
+                <th scope="col">Nombre Fantasia</th>
+                <th scope="col">Tipo de Servicio</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ProveedorDTO pro in proveedores)
+            {
+                <tr>
+                    <td>@pro.Rut</td>
+                    <td>@pro.RazonSocial</td>
+                    <td>@pro.NombreFantasia</td>
+                    <td>@pro.Rubro</td>
+                    <td>@((pro.Activo == true ) ? "Activo" : "No Activo")</td>
+                    <td><a href="#">Editar</a></td>
+                    <td><a href="#">Baja</a></td>
+                </tr>
+            }
+            <tr >
+                <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoProveedor"/></td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+   <Loading />
+}
 
 @code {
+
+    List<ProveedorDTO> proveedores { get; set; } = new List<ProveedorDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProveedores();
+    }
+
+    private async Task CargarProveedores()
+    {
+        proveedores = await serviceProveedor.ObtenerProveedores();
+    }
+    private void NuevoProveedor()
+    {
+        nav.NavigateTo("/NuevoProveedor");
+    }
 
 }
