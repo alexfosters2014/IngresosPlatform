@@ -80,6 +80,15 @@
 
     public async Task EditarProveedorX()
     {
+        var resultado = await serviceProveedor.ActualizarProveedor(proveedorDTO);
 
+        if (resultado == null)
+        {
+            Console.WriteLine("Hubo un error");
+        }
+        else
+        {
+            nav.NavigateTo("/Proveedores", true);
+        }
     }
 }

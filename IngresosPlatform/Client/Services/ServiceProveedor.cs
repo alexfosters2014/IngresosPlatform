@@ -16,9 +16,22 @@ namespace IngresosPlatform.Client.Services
         {
             httpClient = _httpClient;
         }
-        public Task<ProveedorDTO> ActualizarProveedor(int proveedorId, ProveedorDTO proveedorDTO)
+        public async Task<ProveedorDTO> ActualizarProveedor(ProveedorDTO proveedorDTO)
         {
-            throw new NotImplementedException();
+            var response = await httpClient.PostAsJsonAsync("/api/Proveedor", proveedorDTO);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                var proveedorActualizado = JsonConvert.DeserializeObject<ProveedorDTO>(content);
+
+                return proveedorActualizado;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<ProveedorDTO> AgregarProveedor(ProveedorDTO proveedor)

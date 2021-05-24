@@ -52,6 +52,7 @@ namespace IngresosPlatformWebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Proveedor([FromBody] ProveedorDTO proveedorDTO)
         {
+            if (proveedorDTO != null && proveedorDTO.Id == 0) { 
             var resultado = await proveedorRepositorio.AgregarProveedor(proveedorDTO);
             if (resultado== null)
             {
@@ -64,6 +65,22 @@ namespace IngresosPlatformWebAPI.Controllers
             }
 
             return Ok(resultado);
+            }
+            else
+            {
+                var resultado = await proveedorRepositorio.ActualizarProveedor(proveedorDTO.Id, proveedorDTO);
+                if (resultado == null)
+                {
+                    return BadRequest(new ErrorModel()
+                    {
+                        Titulo = "",
+                        ErrorMensaje = "Proveedor ya existe o no puedo crearse",
+                        StatusCode = StatusCodes.Status400BadRequest
+                    }); ;
+                }
+
+                return Ok(resultado);
+            }
         }
 
         [HttpDelete]
