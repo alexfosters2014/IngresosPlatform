@@ -26,7 +26,7 @@ namespace IngresosPlatformWebAPI.Controllers
         }
 
         [HttpGet("{proveedorId}")]
-        public async Task<IActionResult> Proveedor(int? proveedorId)
+        public async Task<IActionResult> Proveedores(int? proveedorId)
         {
             if (proveedorId == null)
             {

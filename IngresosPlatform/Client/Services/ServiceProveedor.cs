@@ -38,14 +38,29 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public Task<ProveedorDTO> ObtenerProveedor(int proveedorId)
+        public async Task<ProveedorDTO> ObtenerProveedor(int? proveedorId)
         {
-            throw new NotImplementedException();
+            if( proveedorId != null) {
+            var response = await httpClient.GetAsync($"api/Proveedor/{proveedorId.Value}");
+            if (response != null) { 
+            var content = await response.Content.ReadAsStringAsync();
+            var proveedor = JsonConvert.DeserializeObject<ProveedorDTO>(content);
+            return proveedor;
+            }
+            else
+            {
+                return null;
+            }
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<List<ProveedorDTO>> ObtenerProveedores()
         {
-            var response = await httpClient.GetAsync("api/Proveedor");
+            var response = await httpClient.GetAsync("api/Proveedor/");
             var content = await response.Content.ReadAsStringAsync();
             var proveedores = JsonConvert.DeserializeObject<List<ProveedorDTO>>(content);
             return proveedores;
