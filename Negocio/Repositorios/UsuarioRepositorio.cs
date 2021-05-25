@@ -56,12 +56,22 @@ namespace Negocio.Repositorios
                 Usuario usuario = mapper.Map<UsuarioDTO, Usuario>(usuarioDTO);
                 usuario.Password = Encriptar.GetSHA256(passInicial);
                 usuario.Email = usuarioDTO.Proveedor.Email;
-                //guardar en BD
-                var addUsuario = await db.Usuarios.AddAsync(usuario);
-                await db.SaveChangesAsync();
-                UsuarioDTO uFinal = mapper.Map<Usuario, UsuarioDTO>(addUsuario.Entity);
-                uFinal.PassInicial = passInicial;
-                return uFinal;
+                Proveedor proveedorBuscado = await db.Proveedores.FindAsync(usuarioDTO.Proveedor.Id);
+                if (proveedorBuscado != null)
+                {
+                    //guardar en BD
+                    db.Entry(proveedorBuscado).State = EntityState.Unchanged;
+                    usuario.Proveedor = proveedorBuscado;
+                    var addUsuario = await db.Usuarios.AddAsync(usuario);
+                    await db.SaveChangesAsync();
+                    UsuarioDTO uFinal = mapper.Map<Usuario, UsuarioDTO>(addUsuario.Entity);
+                    uFinal.PassInicial = passInicial;
+                    return uFinal;
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception e)
             {
