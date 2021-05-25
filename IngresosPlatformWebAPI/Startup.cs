@@ -27,6 +27,8 @@ namespace IngresosPlatformWebAPI
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
+            services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+            services.AddScoped<IMailRepositorio, MailRepositorio>();
             services.AddCors();
 
 

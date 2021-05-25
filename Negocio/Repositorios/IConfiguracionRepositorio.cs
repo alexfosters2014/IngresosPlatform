@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Negocio.Repositorios
 {
-    interface IConfiguracionRepositorio
+    public interface IConfiguracionRepositorio
     {
         public Task<ConfiguracionSistemaDTO> AgregarConfig(ConfiguracionSistemaDTO ConfiguracionSistemaDTO);
         public Task<ConfiguracionSistemaDTO> ActualizarConfig(ConfiguracionSistemaDTO ConfiguracionSistemaDTO);

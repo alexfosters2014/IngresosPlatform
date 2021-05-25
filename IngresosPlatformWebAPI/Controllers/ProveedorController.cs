@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Comun;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Modelo;
 using Negocio.Repositorios;
@@ -14,6 +15,7 @@ namespace IngresosPlatformWebAPI.Controllers
     public class ProveedorController : Controller
     {
         private readonly IProveedorRepositorio proveedorRepositorio;
+        
         public ProveedorController(IProveedorRepositorio _proveedorRepositorio)
         {
             proveedorRepositorio = _proveedorRepositorio;
@@ -63,7 +65,6 @@ namespace IngresosPlatformWebAPI.Controllers
                     StatusCode = StatusCodes.Status400BadRequest
                 });;
             }
-
             return Ok(resultado);
             }
             else

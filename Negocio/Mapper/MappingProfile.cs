@@ -14,6 +14,7 @@ namespace Negocio.Mapper
         public MappingProfile()
         {
             CreateMap<ProveedorDTO, Proveedor>().ReverseMap();
+            CreateMap<UsuarioDTO, Usuario>().ReverseMap();
         }
     }
 }

@@ -17,13 +17,14 @@ namespace Modelo
         public string DominioSmtp { get; set; }
         [Required(ErrorMessage = "El puerto no puede estar vacio")]
         [MaxLength(10)]
-        public int puerto { get; set; }
+        public int Puerto { get; set; }
         public bool Ssl { get; set; }
         [Required(ErrorMessage = "El correo propio no puede estar vacio")]
         [MaxLength(100)]
-        public string correo { get; set; }
+        public string Correo { get; set; }
         [Required(ErrorMessage = "La contraseña no puede estar vacia")]
         [MaxLength(40)]
-        public string passMail { get; set; }
+        public string PassMail { get; set; }
+
     }
 }

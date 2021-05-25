@@ -1,5 +1,6 @@
 ﻿@page "/Proveedores/Nuevo"
 @inject IServiceProveedor serviceProveedor;
+@inject IServiceUsuario serviceUsuario;
 @inject NavigationManager nav
 
 <div class="container">
@@ -47,16 +48,26 @@
 
     public async void CargarNuevoProveedor()
     {
-        var resultado = await serviceProveedor.AgregarProveedor(proveedorDTO);
+        ProveedorDTO resultado = await serviceProveedor.AgregarProveedor(proveedorDTO);
 
-        if ( resultado == null)
+        if ( resultado != null)
         {
-            Console.WriteLine("Hubo un error");
+            UsuarioDTO usuarioDTO = new UsuarioDTO()
+            {
+                Proveedor = proveedorDTO
+            };
+            UsuarioDTO usuarioNuevoDTO = await serviceUsuario.Agregar(usuarioDTO);
+
+            if (usuarioDTO != null)
+            {
+                nav.NavigateTo("/Proveedores", true);
+            }
+            else
+            {
+                Console.WriteLine("Hubo un error");
+            }
         }
-        else
-        {
-            nav.NavigateTo("/Proveedores",true);
-        }
+
     }
 
     public void Cancelar()

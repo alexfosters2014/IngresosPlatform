@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Comun;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Modelo
 {
-    class MailDTO
+    public class MailDTO
     {
        
         public string DominioSmtp { get; set; }
@@ -21,12 +22,12 @@ namespace Modelo
         
         public string PassMail { get; set; }
 
-        public bool EnvioAutentificacionProveeodr(string destinatario, string pass)
+        public bool EnvioAutentificacionProveedor(string destinatario, string passInicial)
         {
             try
             {
             SmtpClient smtp = new SmtpClient(DominioSmtp, Puerto);
-            smtp.Credentials = new NetworkCredential(Correo,PassMail);
+            smtp.Credentials = new NetworkCredential(Correo,Encriptar.DesEncriptacion(PassMail));
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.EnableSsl = Ssl;
             smtp.UseDefaultCredentials = false;
@@ -36,7 +37,7 @@ namespace Modelo
             mail.To.Add(new MailAddress(destinatario));
             mail.Subject = "Nuevo usuario de Ingresos Platform";
             mail.IsBodyHtml = false;
-            mail.Body = $"Bienvenidos a la Ingresos Platform. Su usuario es su RUT y la contraseña inicial es:{pass}, la cual deberá cambiar una vez autentificado al sistema";
+            mail.Body = $"Bienvenidos a la Ingresos Platform. Su usuario es su RUT y la contraseña inicial es:{passInicial}, la cual deberá cambiar una vez autentificado al sistema";
 
             smtp.Send(mail);
             mail.Dispose();

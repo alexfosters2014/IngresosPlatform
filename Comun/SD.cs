@@ -10,9 +10,9 @@ namespace Comun
     {
         public enum TipoUsuario
         {
-            Proveedor,
-            Operador,
-            Porteria
+            ProveedorIngPlt,
+            OperadorIngPlt,
+            PorteriaIngPlt
         }
     }
 }

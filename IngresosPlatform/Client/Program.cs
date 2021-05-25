@@ -20,6 +20,7 @@ namespace IngresosPlatform.Client
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPIUrl")) });
             builder.Services.AddScoped<IServiceProveedor, ServiceProveedor>();
+            builder.Services.AddScoped<IServiceUsuario, ServiceUsuario>();
 
             await builder.Build().RunAsync();
         }

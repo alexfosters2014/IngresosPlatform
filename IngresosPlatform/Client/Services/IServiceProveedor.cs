@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IngresosPlatform.Client.Services
 {
-    interface IServiceProveedor
+    public interface IServiceProveedor
     {
         public Task<ProveedorDTO> AgregarProveedor(ProveedorDTO proveedor);
         public Task<ProveedorDTO> ActualizarProveedor(ProveedorDTO proveedorDTO);

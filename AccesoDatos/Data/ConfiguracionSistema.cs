@@ -15,12 +15,12 @@ namespace AccesoDatos.Data
         [MaxLength(70)]
         public string DominioSmtp { get; set; }
         [MaxLength(10)]
-        public int puerto { get; set; }
+        public int Puerto { get; set; }
         public bool Ssl { get; set; }
         [MaxLength(100)]
-        public string correo { get; set; }
-        [MaxLength(40)]
-        public string passMail { get; set; }
+        public string Correo { get; set; }
+        [MaxLength(200)]
+        public string PassMail { get; set; }
 
     }
 }
