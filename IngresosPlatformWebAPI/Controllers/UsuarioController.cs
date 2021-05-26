@@ -52,5 +52,24 @@ namespace IngresosPlatformWebAPI.Controllers
 
             
         }
+
+        [HttpDelete("{usuarioId}")]
+        public async Task<IActionResult> Delete(int? usuarioId)
+        {
+            if (usuarioId != null)
+            {
+                var resultado = await usuarioRepositorio.Eliminar(usuarioId.Value);
+                if (resultado == 0)
+                {
+                    return BadRequest(null); ;
+                }
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(null);
+            }
+
+        }
     }
 }

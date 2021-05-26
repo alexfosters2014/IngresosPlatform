@@ -12,5 +12,6 @@ namespace IngresosPlatform.Client.Services
         public Task<UsuarioDTO> Actualizar(UsuarioDTO usuarioDTO);
         public Task<UsuarioDTO> Obtener(int? usuarioId);
         public Task<List<UsuarioDTO>> ObtenerTodos();
+        public Task<int> EliminarUsuario(int usuarioId);
     }
 }
