@@ -16,9 +16,22 @@ namespace IngresosPlatform.Client.Services
         {
             httpClient = _httpClient;
         }
-        public Task<ProveedorDTO> ActualizarProveedor(int proveedorId, ProveedorDTO proveedorDTO)
+        public async Task<ProveedorDTO> ActualizarProveedor(ProveedorDTO proveedorDTO)
         {
-            throw new NotImplementedException();
+            var response = await httpClient.PostAsJsonAsync("/api/Proveedor", proveedorDTO);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                var proveedorActualizado = JsonConvert.DeserializeObject<ProveedorDTO>(content);
+
+                return proveedorActualizado;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<ProveedorDTO> AgregarProveedor(ProveedorDTO proveedor)
@@ -38,14 +51,43 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public Task<ProveedorDTO> ObtenerProveedor(int proveedorId)
+        public async Task<int> EliminarProveedor(int proveedorId)
         {
-            throw new NotImplementedException();
+            var response = await httpClient.DeleteAsync($"/api/Proveedor/{proveedorId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public async Task<ProveedorDTO> ObtenerProveedor(int? proveedorId)
+        {
+            if( proveedorId != null) {
+            var response = await httpClient.GetAsync($"api/Proveedor/{proveedorId.Value}");
+            if (response != null) { 
+            var content = await response.Content.ReadAsStringAsync();
+            var proveedor = JsonConvert.DeserializeObject<ProveedorDTO>(content);
+            return proveedor;
+            }
+            else
+            {
+                return null;
+            }
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<List<ProveedorDTO>> ObtenerProveedores()
         {
-            var response = await httpClient.GetAsync("api/Proveedor");
+            var response = await httpClient.GetAsync("api/Proveedor/");
             var content = await response.Content.ReadAsStringAsync();
             var proveedores = JsonConvert.DeserializeObject<List<ProveedorDTO>>(content);
             return proveedores;

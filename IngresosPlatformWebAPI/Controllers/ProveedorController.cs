@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Comun;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Modelo;
 using Negocio.Repositorios;
@@ -14,6 +15,7 @@ namespace IngresosPlatformWebAPI.Controllers
     public class ProveedorController : Controller
     {
         private readonly IProveedorRepositorio proveedorRepositorio;
+        
         public ProveedorController(IProveedorRepositorio _proveedorRepositorio)
         {
             proveedorRepositorio = _proveedorRepositorio;
@@ -26,7 +28,7 @@ namespace IngresosPlatformWebAPI.Controllers
         }
 
         [HttpGet("{proveedorId}")]
-        public async Task<IActionResult> Proveedor(int? proveedorId)
+        public async Task<IActionResult> Proveedores(int? proveedorId)
         {
             if (proveedorId == null)
             {
@@ -52,6 +54,7 @@ namespace IngresosPlatformWebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Proveedor([FromBody] ProveedorDTO proveedorDTO)
         {
+            if (proveedorDTO != null && proveedorDTO.Id == 0) { 
             var resultado = await proveedorRepositorio.AgregarProveedor(proveedorDTO);
             if (resultado== null)
             {
@@ -62,26 +65,41 @@ namespace IngresosPlatformWebAPI.Controllers
                     StatusCode = StatusCodes.Status400BadRequest
                 });;
             }
-
             return Ok(resultado);
+            }
+            else
+            {
+                var resultado = await proveedorRepositorio.ActualizarProveedor(proveedorDTO.Id, proveedorDTO);
+                if (resultado == null)
+                {
+                    return BadRequest(new ErrorModel()
+                    {
+                        Titulo = "",
+                        ErrorMensaje = "Proveedor ya existe o no puedo crearse",
+                        StatusCode = StatusCodes.Status400BadRequest
+                    }); ;
+                }
+
+                return Ok(resultado);
+            }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Proveedor([FromBody] int proveedorId)
+        [HttpDelete("{proveedorId}")]
+        public async Task<IActionResult> Delete(int? proveedorId)
         {
-            var resultado = await proveedorRepositorio.EliminarProveedor(proveedorId);
+            if (proveedorId != null) {
+            var resultado = await proveedorRepositorio.EliminarProveedor(proveedorId.Value);
             if (resultado == 0)
             {
-                return BadRequest(new ErrorModel()
-                {
-                    Titulo = "",
-                    ErrorMensaje = "No existe proveedor para dar de baja",
-                    StatusCode = StatusCodes.Status400BadRequest
-                }); ;
+                return BadRequest(null); ;
             }
             return Ok();
-        }
+        }else
+            {
+                return BadRequest(null);
+            }
 
+        }
 
     }
 }

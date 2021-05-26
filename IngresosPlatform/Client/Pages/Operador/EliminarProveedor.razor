@@ -1,0 +1,28 @@
+﻿@page "/Proveedores/Baja/{ProveedorId:int}"
+@inject IServiceProveedor serviceProveedor;
+@inject IServiceUsuario serviceUsuario;
+@inject NavigationManager nav
+
+
+<Loading />
+
+@code {
+    [Parameter]
+    public int ProveedorId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        BajaProveedor();
+    }
+
+    protected override void OnParametersSet()
+    {
+        BajaProveedor();
+    }
+
+
+    public async void BajaProveedor()
+    {
+
+    }
+}

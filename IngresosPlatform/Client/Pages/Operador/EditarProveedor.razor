@@ -1,11 +1,10 @@
-﻿@page "/Proveedores/Nuevo"
+﻿@page "/Proveedores/Editar/{proveedorId:int}"
 @inject IServiceProveedor serviceProveedor;
-@inject IServiceUsuario serviceUsuario;
 @inject NavigationManager nav
 
 <div class="container">
     <h3>Nuevo Proveedor</h3>
-    <EditForm Model="proveedorDTO" OnValidSubmit="CargarNuevoProveedor" class="col-4">
+    <EditForm Model="proveedorDTO" OnValidSubmit="EditarProveedorX" class="col-4">
         <DataAnnotationsValidator />
         <div class="form-group">
             <label for="rut">RUT*</label>
@@ -38,40 +37,58 @@
             <ValidationMessage For="@( () => proveedorDTO.Email)" />
         </div>
         <div class="col text-center">
-            <button type="submit" class="btn btn-primary">Agregar</button>
+            <button type="submit" class="btn btn-primary">Actualizar</button>
             <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
         </div>
     </EditForm>
 </div>
 @code {
+    [Parameter]
+    public int? proveedorId { get; set; }
+
     ProveedorDTO proveedorDTO = new ProveedorDTO();
 
-    public async void CargarNuevoProveedor()
+    protected override async Task OnInitializedAsync()
     {
-        ProveedorDTO resultado = await serviceProveedor.AgregarProveedor(proveedorDTO);
-
-        if ( resultado != null)
+        if (proveedorId != null)
         {
-            UsuarioDTO usuarioDTO = new UsuarioDTO()
-            {
-                Proveedor = resultado 
-            };
-            UsuarioDTO usuarioNuevoDTO = await serviceUsuario.Agregar(usuarioDTO);
-
-            if (usuarioNuevoDTO != null)
-            {
-                nav.NavigateTo("/Proveedores", true);
-            }
-            else
-            {
-                Console.WriteLine("Hubo un error");
-            }
+            await CargarProveedor();
+        }else
+        {
+            Console.WriteLine("El id de proveedor es nulo");
         }
+    }
 
+    public async Task CargarProveedor()
+    {
+        var resultado = await serviceProveedor.ObtenerProveedor(proveedorId.Value);
+
+        if (resultado == null)
+        {
+            Console.WriteLine("Hubo un error");
+        }
+        else
+        {
+            proveedorDTO = resultado;
+        }
     }
 
     public void Cancelar()
     {
         nav.NavigateTo("/Proveedores");
+    }
+
+    public async Task EditarProveedorX()
+    {
+        var resultado = await serviceProveedor.ActualizarProveedor(proveedorDTO);
+
+        if (resultado == null)
+        {
+            Console.WriteLine("Hubo un error");
+        }
+        else
+        {
+            nav.NavigateTo("/Proveedores", true);
+        }
     }
 }
