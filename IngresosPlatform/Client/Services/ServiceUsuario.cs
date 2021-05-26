@@ -38,6 +38,20 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
+        public async Task<int> EliminarUsuario(int usuarioId)
+        {
+            var response = await httpClient.DeleteAsync($"/api/Usuario/{usuarioId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public Task<UsuarioDTO> Obtener(int? usuarioId)
         {
             throw new NotImplementedException();

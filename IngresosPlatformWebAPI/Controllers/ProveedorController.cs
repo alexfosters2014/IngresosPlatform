@@ -88,12 +88,12 @@ namespace IngresosPlatformWebAPI.Controllers
         public async Task<IActionResult> Delete(int? proveedorId)
         {
             if (proveedorId != null) {
-            var resultado = await proveedorRepositorio.EliminarProveedor(proveedorId.Value);
+            int resultado = await proveedorRepositorio.EliminarProveedor(proveedorId.Value);
             if (resultado == 0)
             {
                 return BadRequest(null); ;
             }
-            return Ok();
+            return Ok(resultado);
         }else
             {
                 return BadRequest(null);

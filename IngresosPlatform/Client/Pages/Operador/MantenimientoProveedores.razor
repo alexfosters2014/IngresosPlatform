@@ -29,7 +29,7 @@
                     <td>@pro.Rubro</td>
                     <td>@((pro.Activo == true ) ? "Activo" : "No Activo")</td>
                     <td><a href="@($"/Proveedores/Editar/{pro.Id}")">Editar</a></td>
-                    <td><a href="@($"/Proveedores/Baja/{pro.Id}")">Baja</a></td>
+                    <td>@if(pro.Activo == true){<a href="@($"/Proveedores/Baja/{pro.Id}")">Baja</a>}</td>
                 </tr>
             }
             <tr>

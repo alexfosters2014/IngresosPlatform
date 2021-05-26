@@ -23,6 +23,20 @@
 
     public async void BajaProveedor()
     {
+        int usuarioId = await serviceProveedor.EliminarProveedor(ProveedorId);
 
+        if (usuarioId > 0)
+        {
+            int usuarioEliminado = await serviceUsuario.EliminarUsuario(usuarioId);
+
+            if (usuarioEliminado != 0)
+            {
+                nav.NavigateTo("/Proveedores", true);
+            }
+            else
+            {
+                Console.WriteLine("error");
+            }
+        }
     }
 }

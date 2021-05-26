@@ -65,7 +65,9 @@ namespace Negocio.Repositorios
             {
                 proveedorDB.Activo = false;
                 var updateProveedor = db.Update(proveedorDB);
-                return await db.SaveChangesAsync();
+                 await db.SaveChangesAsync();
+                var usuario = db.Usuarios.FirstOrDefault(us => us.Proveedor.Id == updateProveedor.Entity.Id);
+                return usuario.Id;
             }
             else
             {

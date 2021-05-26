@@ -57,7 +57,10 @@ namespace IngresosPlatform.Client.Services
 
             if (response.IsSuccessStatusCode)
             {
-                return 1;
+                var content = await response.Content.ReadAsStringAsync();
+
+                int usuarioID = JsonConvert.DeserializeObject<int>(content);
+                return usuarioID;
             }
             else
             {
