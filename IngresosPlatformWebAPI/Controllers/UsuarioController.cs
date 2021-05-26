@@ -33,12 +33,24 @@ namespace IngresosPlatformWebAPI.Controllers
                     Titulo = "",
                     ErrorMensaje = "Proveedor ya existe o no puedo crearse",
                     StatusCode = StatusCodes.Status400BadRequest
-                }); ;
+                });
             }
             MailDTO mail = await mailRepositorio.CargarConfigMail();
-            mail.EnvioAutentificacionProveedor(usuarioDTO.Email,usuarioDTO.PassInicial);
+            string mensaje= $"Bienvenidos a Ingresos Platform. Su usuario es su RUT y la contraseña inicial es: {usuarioNuevo.PassInicial}, la cual deberá cambiar una vez autentificado al sistema";
+            if (await mail.EnvioAutentificacionProveedor(usuarioNuevo.Email, mensaje)){
+                return Ok(usuarioNuevo);
+            }
+            else
+            {
+                return BadRequest(new ErrorModel()
+                {
+                    Titulo = "",
+                    ErrorMensaje = "Proveedor ya existe o no puedo crearse",
+                    StatusCode = StatusCodes.Status400BadRequest
+                });
+            }
 
-            return Ok(usuarioNuevo);
+            
         }
     }
 }

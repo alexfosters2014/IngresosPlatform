@@ -51,6 +51,20 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
+        public async Task<int> EliminarProveedor(int proveedorId)
+        {
+            var response = await httpClient.DeleteAsync($"/api/Proveedor/{proveedorId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public async Task<ProveedorDTO> ObtenerProveedor(int? proveedorId)
         {
             if( proveedorId != null) {

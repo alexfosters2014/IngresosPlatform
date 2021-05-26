@@ -58,7 +58,7 @@
             };
             UsuarioDTO usuarioNuevoDTO = await serviceUsuario.Agregar(usuarioDTO);
 
-            if (usuarioDTO != null)
+            if (usuarioNuevoDTO != null)
             {
                 nav.NavigateTo("/Proveedores", true);
             }

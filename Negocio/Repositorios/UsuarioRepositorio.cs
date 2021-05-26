@@ -54,7 +54,7 @@ namespace Negocio.Repositorios
                 usuarioDTO.TipoUsuario = SD.TipoUsuario.ProveedorIngPlt.ToString();
                 usuarioDTO.Token = Generador.GenerarToken();
                 Usuario usuario = mapper.Map<UsuarioDTO, Usuario>(usuarioDTO);
-                usuario.Password = Encriptar.GetSHA256(passInicial);
+                usuario.Password = Encriptacion.GetSHA256(passInicial);
                 usuario.Email = usuarioDTO.Proveedor.Email;
                 Proveedor proveedorBuscado = await db.Proveedores.FindAsync(usuarioDTO.Proveedor.Id);
                 if (proveedorBuscado != null)

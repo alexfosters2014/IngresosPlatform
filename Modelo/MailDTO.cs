@@ -22,12 +22,12 @@ namespace Modelo
         
         public string PassMail { get; set; }
 
-        public bool EnvioAutentificacionProveedor(string destinatario, string passInicial)
+        public async Task<bool> EnvioAutentificacionProveedor(string destinatario, string mensaje)
         {
             try
             {
             SmtpClient smtp = new SmtpClient(DominioSmtp, Puerto);
-            smtp.Credentials = new NetworkCredential(Correo,Encriptar.DesEncriptacion(PassMail));
+            smtp.Credentials = new NetworkCredential(Correo,Encriptacion.DesEncriptacion(PassMail));
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.EnableSsl = Ssl;
             smtp.UseDefaultCredentials = false;
@@ -37,11 +37,10 @@ namespace Modelo
             mail.To.Add(new MailAddress(destinatario));
             mail.Subject = "Nuevo usuario de Ingresos Platform";
             mail.IsBodyHtml = false;
-            mail.Body = $"Bienvenidos a la Ingresos Platform. Su usuario es su RUT y la contraseña inicial es:{passInicial}, la cual deberá cambiar una vez autentificado al sistema";
+            mail.Body = mensaje;
 
-            smtp.Send(mail);
+            await smtp.SendMailAsync(mail);
             mail.Dispose();
-
             return true;
             }catch (Exception e)
             {

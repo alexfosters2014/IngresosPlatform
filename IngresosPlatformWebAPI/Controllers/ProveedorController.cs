@@ -84,22 +84,22 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Proveedor([FromBody] int proveedorId)
+        [HttpDelete("{proveedorId}")]
+        public async Task<IActionResult> Delete(int? proveedorId)
         {
-            var resultado = await proveedorRepositorio.EliminarProveedor(proveedorId);
+            if (proveedorId != null) {
+            var resultado = await proveedorRepositorio.EliminarProveedor(proveedorId.Value);
             if (resultado == 0)
             {
-                return BadRequest(new ErrorModel()
-                {
-                    Titulo = "",
-                    ErrorMensaje = "No existe proveedor para dar de baja",
-                    StatusCode = StatusCodes.Status400BadRequest
-                }); ;
+                return BadRequest(null); ;
             }
             return Ok();
-        }
+        }else
+            {
+                return BadRequest(null);
+            }
 
+        }
 
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Comun
 {
-    public static class Encriptar
+    public static class Encriptacion
     {
         public static string GetSHA256(string str)
         {
@@ -20,7 +20,7 @@ namespace Comun
             return sb.ToString();
         }
 
-        public static string Encriptacion(this string _cadenaAencriptar)
+        public static string Encriptar(this string _cadenaAencriptar)
         {
             string result = string.Empty;
             byte[] encryted = System.Text.Encoding.Unicode.GetBytes(_cadenaAencriptar);
