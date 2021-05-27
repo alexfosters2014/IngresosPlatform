@@ -5,6 +5,7 @@
 
 <div class="container">
     <h3>Nuevo Proveedor</h3>
+    <section class="row">
     <EditForm Model="proveedorDTO" OnValidSubmit="CargarNuevoProveedor" class="col-4">
         <DataAnnotationsValidator />
         <div class="form-group">
@@ -37,17 +38,29 @@
             <InputText @bind-Value="proveedorDTO.Email" id="email" class="form-control" />
             <ValidationMessage For="@( () => proveedorDTO.Email)" />
         </div>
+         @if (!carga){
         <div class="col text-center">
             <button type="submit" class="btn btn-primary">Agregar</button>
             <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
         </div>
+         }
     </EditForm>
+    </section>
+
+    <section class="row">
+        @if (carga)
+        {
+            <Loading></Loading>
+        }
+    </section>
 </div>
 @code {
     ProveedorDTO proveedorDTO = new ProveedorDTO();
+    private bool carga = false;
 
     public async void CargarNuevoProveedor()
     {
+        carga = true;
         ProveedorDTO resultado = await serviceProveedor.AgregarProveedor(proveedorDTO);
 
         if ( resultado != null)
