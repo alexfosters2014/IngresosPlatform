@@ -1,9 +1,11 @@
 ﻿@page "/Proveedores/Editar/{proveedorId:int}"
 @inject IServiceProveedor serviceProveedor;
 @inject NavigationManager nav
+@inject JSRuntime js
 
 <div class="container">
-    <h3>Nuevo Proveedor</h3>
+    <h3>Edición de Proveedor</h3>
+      <section class="row">
     <EditForm Model="proveedorDTO" OnValidSubmit="EditarProveedorX" class="col-4">
         <DataAnnotationsValidator />
         <div class="form-group">
@@ -36,15 +38,26 @@
             <InputText @bind-Value="proveedorDTO.Email" id="email" class="form-control" />
             <ValidationMessage For="@( () => proveedorDTO.Email)" />
         </div>
+          @if (!carga)
+            {
         <div class="col text-center">
             <button type="submit" class="btn btn-primary">Actualizar</button>
             <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
         </div>
+        }
     </EditForm>
+    </section>
+    <section class="row">
+        @if (carga)
+        {
+            <Loading></Loading>
+        }
+    </section>
 </div>
 @code {
     [Parameter]
     public int? proveedorId { get; set; }
+    private bool carga { get; set; } = false;
 
     ProveedorDTO proveedorDTO = new ProveedorDTO();
 
@@ -80,11 +93,12 @@
 
     public async Task EditarProveedorX()
     {
+        carga = true;
         var resultado = await serviceProveedor.ActualizarProveedor(proveedorDTO);
 
         if (resultado == null)
         {
-            Console.WriteLine("Hubo un error");
+            await js.MsgError("Hubo un error");
         }
         else
         {
