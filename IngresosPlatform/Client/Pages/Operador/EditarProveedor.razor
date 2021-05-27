@@ -1,7 +1,7 @@
 ﻿@page "/Proveedores/Editar/{proveedorId:int}"
 @inject IServiceProveedor serviceProveedor;
 @inject NavigationManager nav
-@inject JSRuntime js
+@inject IJSRuntime js
 
 <div class="container">
     <h3>Edición de Proveedor</h3>
@@ -57,23 +57,24 @@
 @code {
     [Parameter]
     public int? proveedorId { get; set; }
-    private bool carga { get; set; } = false;
+
+    private bool carga = false;
 
     ProveedorDTO proveedorDTO = new ProveedorDTO();
 
     protected override async Task OnInitializedAsync()
     {
-        if (proveedorId != null)
-        {
             await CargarProveedor();
-        }else
-        {
-            Console.WriteLine("El id de proveedor es nulo");
-        }
+    }
+     protected override async void OnParametersSet()
+    {
+       await CargarProveedor();
     }
 
     public async Task CargarProveedor()
     {
+          if (proveedorId != null)
+        {
         var resultado = await serviceProveedor.ObtenerProveedor(proveedorId.Value);
 
         if (resultado == null)
@@ -83,6 +84,10 @@
         else
         {
             proveedorDTO = resultado;
+        }
+           }else
+        {
+            Console.WriteLine("El id de proveedor es nulo");
         }
     }
 
@@ -98,7 +103,8 @@
 
         if (resultado == null)
         {
-            await js.MsgError("Hubo un error");
+             Console.WriteLine("Hubo un error");
+             await js.MsgError("Hubo un error");
         }
         else
         {
