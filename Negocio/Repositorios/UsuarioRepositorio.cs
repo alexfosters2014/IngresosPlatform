@@ -70,8 +70,6 @@ namespace Negocio.Repositorios
                 }
                 else if (usuarioDTO.TipoUsuario != SD.TipoUsuario.ProveedorIngPlt.ToString())
                 {
-                    db.Entry(proveedorBuscado).State = EntityState.Unchanged;
-                    usuario.Proveedor = proveedorBuscado;
                     var addUsuario = await db.Usuarios.AddAsync(usuario);
                     await db.SaveChangesAsync();
                     UsuarioDTO uFinal = mapper.Map<Usuario, UsuarioDTO>(addUsuario.Entity);
