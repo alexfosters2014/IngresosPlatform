@@ -1,4 +1,5 @@
 ﻿@page "/Proveedores/Nuevo"
+@using Comun
 @inject IServiceProveedor serviceProveedor;
 @inject IServiceUsuario serviceUsuario;
 @inject NavigationManager nav
@@ -67,6 +68,9 @@
         {
             UsuarioDTO usuarioDTO = new UsuarioDTO()
             {
+                UsuarioNombre = resultado.Rut,
+                Email = resultado.Email,
+                TipoUsuario = SD.TipoUsuario.ProveedorIngPlt.ToString(),
                 Proveedor = resultado 
             };
             UsuarioDTO usuarioNuevoDTO = await serviceUsuario.Agregar(usuarioDTO);

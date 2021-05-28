@@ -22,6 +22,13 @@ namespace IngresosPlatformWebAPI.Controllers
             usuarioRepositorio = _usuarioRepositorio;
             mailRepositorio = _mailRepositorio;
         }
+        [HttpGet]
+        public async Task<IActionResult> ObtenerTodos()
+        {
+            var todosUsuarios = await usuarioRepositorio.ObtenerTodos();
+            return Ok(todosUsuarios);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AgregarUsuario([FromBody] UsuarioDTO usuarioDTO)
         {

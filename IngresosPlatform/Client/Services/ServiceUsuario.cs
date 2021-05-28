@@ -57,9 +57,12 @@ namespace IngresosPlatform.Client.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<UsuarioDTO>> ObtenerTodos()
+        public async Task<List<UsuarioDTO>> ObtenerTodos()
         {
-            throw new NotImplementedException();
+            var response = await httpClient.GetAsync("api/Usuario/");
+            var content = await response.Content.ReadAsStringAsync();
+            var usuarios = JsonConvert.DeserializeObject<List<UsuarioDTO>>(content);
+            return usuarios;
         }
     }
 }

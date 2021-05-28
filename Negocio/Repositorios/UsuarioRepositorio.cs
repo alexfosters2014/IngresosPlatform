@@ -21,28 +21,28 @@ namespace Negocio.Repositorios
             db = _db;
             mapper = _mapper;
         }
-        public async Task<UsuarioDTO> Actualizar(UsuarioDTO usuarioDTO)
-        {
-            try
-            {
-                if (usuarioDTO.Id > 0)
-                {
-                    Usuario usuarioDB = await db.Usuarios.FindAsync(usuarioDTO.Id);
-                    Usuario usuario = mapper.Map<UsuarioDTO, Usuario>(usuarioDTO, usuarioDB);
-                    var update = db.Usuarios.Update(usuario);
-                    await db.SaveChangesAsync();
-                    return mapper.Map<Usuario, UsuarioDTO>(update.Entity);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
+        //public async Task<UsuarioDTO> Actualizar(UsuarioDTO usuarioDTO)
+        //{
+        //    try
+        //    {
+        //        if (usuarioDTO.Id > 0)
+        //        {
+        //            Usuario usuarioDB = await db.Usuarios.FindAsync(usuarioDTO.Id);
+        //            Usuario usuario = mapper.Map<UsuarioDTO, Usuario>(usuarioDTO, usuarioDB);
+        //            var update = db.Usuarios.Update(usuario);
+        //            await db.SaveChangesAsync();
+        //            return mapper.Map<Usuario, UsuarioDTO>(update.Entity);
+        //        }
+        //        else
+        //        {
+        //            return null;
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return null;
+        //    }
+        //}
 
         public async Task<UsuarioDTO> Agregar(UsuarioDTO usuarioDTO)
         {
@@ -50,16 +50,26 @@ namespace Negocio.Repositorios
             {
 
                 string passInicial = Generador.GenerarPassword(15);
-                usuarioDTO.UsuarioNombre = usuarioDTO.Proveedor.Rut;
-                usuarioDTO.TipoUsuario = SD.TipoUsuario.ProveedorIngPlt.ToString();
                 usuarioDTO.Token = Generador.GenerarToken();
                 Usuario usuario = mapper.Map<UsuarioDTO, Usuario>(usuarioDTO);
                 usuario.Password = Encriptacion.GetSHA256(passInicial);
-                usuario.Email = usuarioDTO.Proveedor.Email;
-                Proveedor proveedorBuscado = await db.Proveedores.FindAsync(usuarioDTO.Proveedor.Id);
-                if (proveedorBuscado != null)
+                Proveedor proveedorBuscado = null;
+                if (usuarioDTO.Proveedor != null) {
+                    proveedorBuscado = await db.Proveedores.FindAsync(usuarioDTO.Proveedor.Id);
+                }
+                if (proveedorBuscado != null && usuarioDTO.TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
                 {
                     //guardar en BD
+                    db.Entry(proveedorBuscado).State = EntityState.Unchanged;
+                    usuario.Proveedor = proveedorBuscado;
+                    var addUsuario = await db.Usuarios.AddAsync(usuario);
+                    await db.SaveChangesAsync();
+                    UsuarioDTO uFinal = mapper.Map<Usuario, UsuarioDTO>(addUsuario.Entity);
+                    uFinal.PassInicial = passInicial;
+                    return uFinal;
+                }
+                else if (usuarioDTO.TipoUsuario != SD.TipoUsuario.ProveedorIngPlt.ToString())
+                {
                     db.Entry(proveedorBuscado).State = EntityState.Unchanged;
                     usuario.Proveedor = proveedorBuscado;
                     var addUsuario = await db.Usuarios.AddAsync(usuario);
@@ -110,7 +120,11 @@ namespace Negocio.Repositorios
         {
             try
             {
-                List<UsuarioDTO> usuarios = mapper.Map<List<Usuario>, List<UsuarioDTO>>(db.Usuarios.ToList());
+                string operador = SD.TipoUsuario.OperadorIngPlt.ToString();
+                string portero = SD.TipoUsuario.PorteriaIngPlt.ToString();
+                List<UsuarioDTO> usuarios =
+                    mapper.Map<List<Usuario>, List<UsuarioDTO>>(db.Usuarios
+                    .Where(us => us.TipoUsuario == operador || us.TipoUsuario == portero).ToList());
                 return usuarios;
             }
             catch (Exception e)

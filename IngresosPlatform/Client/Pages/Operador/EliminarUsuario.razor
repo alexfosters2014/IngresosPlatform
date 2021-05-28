@@ -1,0 +1,37 @@
+﻿@page "/Usuarios/Eliminar/{usuarioId:int}"
+@inject IServiceUsuario serviceUsuario;
+@inject NavigationManager nav
+
+
+<Loading />
+
+@code {
+    [Parameter]
+    public int usuarioId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        EliminarUsuarioSel();
+    }
+
+    protected override void OnParametersSet()
+    {
+        EliminarUsuarioSel();
+    }
+
+
+    public async void EliminarUsuarioSel()
+    {
+        int usuarioEliminado = await serviceUsuario.EliminarUsuario(usuarioId);
+     
+            if (usuarioEliminado != 0)
+            {
+                nav.NavigateTo("/Usuarios", true);
+            }
+            else
+            {
+                Console.WriteLine("error");
+            }
+        }
+    }
+}
