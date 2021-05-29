@@ -1,27 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AccesoDatos.Data
+namespace Modelo
 {
-    [Index(nameof(Fecha), nameof(Funcionario))]
-    public class Ingreso
+    public class IngresoDTO
     {
         public int Id { get; set; }
         [Required]
         public DateTime Fecha { get; set; }
         [Required]
-        public Funcionario Funcionario { get; set; }
+        public FuncionarioDTO Funcionario { get; set; }
         [Required]
         public DateTime EntradaPlanificada { get; set; }
         [Required]
         public DateTime SalidaPlanificada { get; set; }
-        public DateTime EntradaEfectiva { get; set; }
-        public DateTime SalidaEfectiva { get; set; }
         [MaxLength(30)]
         [Required]
         public string EstadoAutorizacion { get; set; }
@@ -30,6 +26,6 @@ namespace AccesoDatos.Data
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         [Required]
-        public Proveedor Proveedor { get; set; }
+        public ProveedorDTO Proveedor { get; set; }
     }
 }

@@ -14,5 +14,11 @@ namespace Comun
             OperadorIngPlt,
             PorteriaIngPlt
         }
+        public enum TipoAutIng
+        {
+            Pendiente,
+            Autorizado,
+            NoAutorizado
+        }
     }
 }

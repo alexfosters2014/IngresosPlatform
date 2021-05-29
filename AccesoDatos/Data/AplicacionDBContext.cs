@@ -13,7 +13,13 @@ namespace AccesoDatos.Data
         {
            
         }
-        
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    //claves primarias compuestas
+        //    modelBuilder.Entity<Funcionario>()
+        //   .HasKey(t => new { t.Id, t.Nombre });
+        //}
+
         public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }

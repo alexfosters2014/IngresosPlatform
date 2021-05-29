@@ -29,6 +29,7 @@ namespace IngresosPlatformWebAPI
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
             services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
             services.AddScoped<IMailRepositorio, MailRepositorio>();
+            services.AddScoped<IIngresoRepositorio, IngresoRepositorio>();
             services.AddCors();
 
 

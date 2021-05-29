@@ -19,7 +19,6 @@ namespace IngresosPlatform.Client.Services
         public async Task<ProveedorDTO> ActualizarProveedor(ProveedorDTO proveedorDTO)
         {
             var response = await httpClient.PostAsJsonAsync("/api/Proveedor", proveedorDTO);
-
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
