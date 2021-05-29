@@ -1,0 +1,46 @@
+﻿@page "/Autorizaciones"
+@inject IServiceIngreso serviceIngreso
+
+
+<h3>Monitor de Autorizaciones</h3>
+
+@if (ingresosXProv != null && ingresosXProv.Any())
+{
+               @foreach (IngresoXProveedorDTO ing in ingresosXProv)
+                   {
+                   <ContenedorIngreso proveedorDTO="@ing.Proveedor" ingresosDTO="@ing.Ingresos"/>
+                   }
+ }
+else if (ingresosXProv != null && ingresosXProv.Count == 0)
+{
+   <p> No hay nuevas autorizaciones a procesar</p>
+}
+else
+{
+    <Loading />
+}
+
+
+
+
+@code {
+    List<IngresoXProveedorDTO> ingresosXProv = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ObtenerTodosIngresos();
+    }
+
+    private async Task ObtenerTodosIngresos()
+    {
+        ingresosXProv = await serviceIngreso.ObtenerIngresos();
+        if (ingresosXProv != null)
+        {
+        }
+        else
+        {
+            Console.WriteLine("Hubo un error");
+        }
+    }
+
+}
