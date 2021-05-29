@@ -61,7 +61,11 @@ namespace IngresosPlatformWebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IngresosPlatformWebAPI v1"));
             }
-
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<AplicacionDBContext>();
+                context.Database.EnsureCreated();
+            }
             app.UseRouting();
             app.UseStaticFiles();
 
