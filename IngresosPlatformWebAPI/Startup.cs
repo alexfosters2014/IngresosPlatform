@@ -27,12 +27,14 @@ namespace IngresosPlatformWebAPI
             services.AddDbContext<AplicacionDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
             services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
             services.AddScoped<IMailRepositorio, MailRepositorio>();
             services.AddScoped<IIngresoRepositorio, IngresoRepositorio>();
+            services.AddScoped<IFuncionarioRepositorio, FuncionarioRepositorio>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IFuncionarioRepositorio, FuncionarioRepositorio>();
             //services.AddCors();
             services.AddCors(options =>
             {
