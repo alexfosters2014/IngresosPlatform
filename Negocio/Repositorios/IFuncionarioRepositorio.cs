@@ -9,9 +9,10 @@ namespace Negocio.Repositorios
 {
     public interface IFuncionarioRepositorio
     {
-        public Task<int> Agregar(FuncionarioDTO funcionarioDTO);
+        public Task<FuncionarioDTO> Agregar(FuncionarioDTO funcionarioDTO);
         public Task<int> Borrar(int funcionarioId);
         public Task<FuncionarioDTO> Actualizar(FuncionarioDTO funcionarioDTO);
-        public Task<List<FuncionarioDTO>> ObtenerTodos();
+        public Task<List<FuncionarioDTO>> ObtenerTodosActivos();
+        public Task<FuncionarioDTO> ObtenerFuncionario(int funcionarioId);
     }
 }

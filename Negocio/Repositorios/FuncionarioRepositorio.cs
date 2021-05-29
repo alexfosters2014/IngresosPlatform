@@ -1,4 +1,7 @@
-﻿using Modelo;
+﻿using AccesoDatos.Data;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Modelo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,24 +12,92 @@ namespace Negocio.Repositorios
 {
     public class FuncionarioRepositorio : IFuncionarioRepositorio
     {
-        public Task<FuncionarioDTO> Actualizar(FuncionarioDTO funcionarioDTO)
+        private readonly AplicacionDBContext db;
+        private readonly IMapper mapper;
+
+        public FuncionarioRepositorio(AplicacionDBContext _db, IMapper _mapper)
         {
-            throw new NotImplementedException();
+            db = _db;
+            mapper = _mapper;
+        }
+        public async Task<FuncionarioDTO> Actualizar(FuncionarioDTO funcionarioDTO)
+        {
+
+            try
+            {
+                if (funcionarioDTO != null)
+                {
+                    Funcionario funcionarioDB = await db.Funcionarios.FindAsync(funcionarioDTO.Id);
+                    Funcionario funcionario = mapper.Map<FuncionarioDTO, Funcionario>(funcionarioDTO, funcionarioDB);
+                    var updateFuncionario = db.Funcionarios.Update(funcionario);
+                    await db.SaveChangesAsync();
+                    return mapper.Map<Funcionario, FuncionarioDTO>(updateFuncionario.Entity);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
-        public Task<int> Agregar(FuncionarioDTO funcionarioDTO)
+        public async Task<FuncionarioDTO> Agregar(FuncionarioDTO funcionarioDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Funcionario funcionario = mapper.Map<FuncionarioDTO, Funcionario>(funcionarioDTO);
+                var addFuncionario = await db.Funcionarios.AddAsync(funcionario);
+                await db.SaveChangesAsync();
+                return mapper.Map<Funcionario, FuncionarioDTO>(addFuncionario.Entity);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
-        public Task<int> Borrar(int funcionarioId)
+        public async Task<int> Borrar(int funcionarioId)
         {
-            throw new NotImplementedException();
+            Funcionario funcinarioDB = await db.Funcionarios.FindAsync(funcionarioId);
+            if (funcionarioId != 0)
+            {
+                funcinarioDB.Activo = false;
+                var updateProveedor = db.Update(funcinarioDB);
+                return await db.SaveChangesAsync();
+            }
+            else
+            {
+                return 0;
+            }
         }
 
-        public Task<List<FuncionarioDTO>> ObtenerTodos()
+        public async Task<List<FuncionarioDTO>> ObtenerTodosActivos()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<FuncionarioDTO> funcionarios = mapper.Map<List<Funcionario>, List<FuncionarioDTO>>
+                    (db.Funcionarios.Where(p => p.Activo).ToList());
+                return funcionarios;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+        public async Task<FuncionarioDTO> ObtenerFuncionario(int funcionarioId)
+        {
+            try
+            {
+                FuncionarioDTO funcionario = mapper.Map<Funcionario, FuncionarioDTO>(await db.Funcionarios.FirstOrDefaultAsync(p => p.Id == funcionarioId));
+                return funcionario;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

@@ -31,9 +31,7 @@ namespace AccesoDatos.Data
         public DateTime VtoCarneSalud { get; set; }
         [Required]
         public string PathCarneSalud { get; set; }
-        [Required]
         public DateTime VtoCMAlimentos { get; set; }
-        [Required]
         public string PathCMAlimentos { get; set; }
         [Required]
         public DateTime AltaBps { get; set; }
@@ -41,5 +39,6 @@ namespace AccesoDatos.Data
         public string PathAltaBps { get; set; }
         [Required]
         public Proveedor Proveedor { get; set; }
+        public bool Activo { get; set; }
     }
 }

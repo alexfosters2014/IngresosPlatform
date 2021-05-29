@@ -1,6 +1,7 @@
 using AccesoDatos.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,8 +31,17 @@ namespace IngresosPlatformWebAPI
             services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
             services.AddScoped<IMailRepositorio, MailRepositorio>();
             services.AddScoped<IIngresoRepositorio, IngresoRepositorio>();
-            services.AddCors();
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IFuncionarioRepositorio, FuncionarioRepositorio>();
+            //services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                 builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                );
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -51,15 +61,16 @@ namespace IngresosPlatformWebAPI
             }
 
             app.UseRouting();
+            app.UseStaticFiles();
 
             //para dar acceso a la web api sin politicas de seguridad
-            app.UseCors(options =>
-            {
-                options.WithOrigins("http://localhost:31496");
-                options.AllowAnyMethod();
-                options.AllowAnyHeader();
-            });
-
+            //app.UseCors(options =>
+            //{
+            //    options.WithOrigins("http://localhost:31496");
+            //    options.AllowAnyMethod();
+            //    options.AllowAnyHeader();
+            //});
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
