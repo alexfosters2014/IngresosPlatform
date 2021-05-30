@@ -22,6 +22,7 @@ namespace IngresosPlatform.Client
             builder.Services.AddScoped<IServiceProveedor, ServiceProveedor>();
             builder.Services.AddScoped<IServiceUsuario, ServiceUsuario>();
             builder.Services.AddScoped<IServiceIngreso, ServiceIngreso>();
+            builder.Services.AddScoped<IServiceFuncionario, ServiceFuncionario>();
 
             await builder.Build().RunAsync();
         }

@@ -25,7 +25,7 @@ namespace AccesoDatos.Data
         public string PathCedula { get; set; }
         [MaxLength(10)]
         public string CategoriaLibreta { get; set; }
-        public string VtoLibreta { get; set; }
+        public DateTime VtoLibreta { get; set; }
         public string PathLibreta { get; set; }
         [Required]
         public DateTime VtoCarneSalud { get; set; }

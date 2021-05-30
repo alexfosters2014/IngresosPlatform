@@ -20,6 +20,10 @@ namespace IngresosPlatform.Client.Helper
         {
             return await js.InvokeAsync<bool>("ConfirmarOperacion", pregunta);
         }
-        
+        public static async ValueTask WindowPopUp(this IJSRuntime js, string url)
+        {
+           await js.InvokeVoidAsync("OpenWindow", url);
+        }
+
     }
 }
