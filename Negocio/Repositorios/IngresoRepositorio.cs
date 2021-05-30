@@ -81,6 +81,29 @@ namespace Negocio.Repositorios
             }
         }
 
+        public async Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion)
+        {
+            try
+            {
+                if (ingresoId != 0)
+                {
+                    Ingreso ingresoDB = await db.Ingresos.FindAsync(ingresoId);
+                    ingresoDB.EstadoAutorizacion = estadoAutorizacion;
+                    var updateIngreso = db.Ingresos.Update(ingresoDB);
+                    await db.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
         public async Task<int> Borrar(int ingresoId)
         {
             Ingreso IngresoDB = await db.Ingresos.FindAsync(ingresoId);

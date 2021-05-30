@@ -51,6 +51,23 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
+        public async Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion)
+        {
+            var response = await httpClient.GetAsync($"/api/Ingreso/estado/{ingresoId}/{estadoAutorizacion}");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                var ingresoActualizado = JsonConvert.DeserializeObject<bool>(content);
+
+                return ingresoActualizado;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public async Task<int> EliminarIngreso(int IngresoId)
         {
             var response = await httpClient.DeleteAsync($"/api/Ingreso/{IngresoId}");
@@ -87,7 +104,7 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<IngresoXProveedorDTO>> ObtenerIngresos()
+        public async Task<List<IngresoXProveedorDTO>> ObtenerIngresosPendientes()
         {
             var response = await httpClient.GetAsync("api/Ingreso/");
             var content = await response.Content.ReadAsStringAsync();

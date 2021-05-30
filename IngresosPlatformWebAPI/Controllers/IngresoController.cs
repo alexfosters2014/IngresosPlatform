@@ -68,12 +68,30 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> ActualizarEstadoIngreso([FromBody] IngresoDTO ingresoEstado)
+        public async Task<IActionResult> ActualizarIngreso([FromBody] IngresoDTO ingresoEstado)
         {
             if (ingresoEstado != null)
             {
                 var resultado = await ingresoRepositorio.Actualizar(ingresoEstado);
                 if (resultado == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(resultado);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("/estado/{ingresoId:int}/{estadoAutorizacion}")]
+        public async Task<IActionResult> ActualizarEstadoIngreso(int? ingresoId,string estadoAutorizacion)
+        {
+            if (ingresoId != null && !string.IsNullOrEmpty(estadoAutorizacion))
+            {
+                var resultado = await ingresoRepositorio.AutorizarIngreso(ingresoId.Value, estadoAutorizacion);
+                if (resultado == false)
                 {
                     return BadRequest();
                 }

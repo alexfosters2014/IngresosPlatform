@@ -11,7 +11,8 @@ namespace IngresosPlatform.Client.Services
         public Task<IngresoDTO> AgregarIngreso(IngresoDTO ingresoDTO);
         public Task<IngresoDTO> ActualizarIngreso(IngresoDTO ingresoDTO);
         public Task<IngresoDTO> ObtenerIngreso(int? ingresoId);
-        public Task<List<IngresoXProveedorDTO>> ObtenerIngresos();
+        public Task<List<IngresoXProveedorDTO>> ObtenerIngresosPendientes();
         public Task<int> EliminarIngreso(int IngresoId);
+        public Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion);
     }
 }

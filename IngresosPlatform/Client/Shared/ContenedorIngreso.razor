@@ -1,4 +1,8 @@
-﻿<div hidden="@visible">
+﻿@inject IJSRuntime js
+@using Comun
+@inject IServiceIngreso serviceIngreso
+
+<div hidden="@visible">
     <div class="row">
         <div class="col">
             <h2>@proveedorDTO.Rut</h2>
@@ -43,8 +47,8 @@
                         <td>@ing.FechaFin</td>
                         <td>@ing.FechaFin</td>
                         <td>
-                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id,true))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
-                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id,false))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
+                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id, SD.TipoAutIng.Autorizado.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
+                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id,SD.TipoAutIng.NoAutorizado.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
                         </td>
                     </tr>
                 }
@@ -70,11 +74,21 @@
 
     private async Task VerDatosFuncionario(int funcinoarioId)
     {
-
+        await js.InvokeVoidAsync("open", $"/Funcionario/{funcinoarioId}", "_blank");
     }
-    private async Task IngresoAutorizado(int funcinoarioId,bool autorizado)
+    private async Task IngresoAutorizado(int ingresoId,string autorizado)
     {
-
+        bool resultado = await serviceIngreso.AutorizarIngreso(ingresoId, autorizado);
+        if (resultado)
+        {
+            //mensaje de success
+            visible = false;
+            StateHasChanged();
+        }
+        else
+        {
+            //mensaje de error
+        }
     }
     private async Task AutorizarTodos()
     {

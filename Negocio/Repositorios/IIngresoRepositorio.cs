@@ -13,5 +13,7 @@ namespace Negocio.Repositorios
         public Task<int> Borrar(int ingresoId);
         public Task<IngresoDTO> Actualizar(IngresoDTO ingresoDTO);
         public Task<List<IngresoDTO>> ObtenerPendientes();
+
+        public Task<bool> AutorizarIngreso(int ingresoId,string estadoAutorizacion);
     }
 }

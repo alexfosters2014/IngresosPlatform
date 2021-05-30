@@ -28,12 +28,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ObtenerTodosIngresos();
+        await ObtenerTodosIngresos();
     }
 
     private async Task ObtenerTodosIngresos()
     {
-        ingresosXProv = await serviceIngreso.ObtenerIngresos();
+        ingresosXProv = await serviceIngreso.ObtenerIngresosPendientes();
         if (ingresosXProv != null)
         {
         }
