@@ -1,17 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AccesoDatos.Data
+namespace Modelo
 {
-    [Index(nameof(Cedula), IsUnique = true)]
-    public class Funcionario
+    public class FuncionarioDTO
     {
-        [Required]
         public int Id { get; set; }
         [Required]
         [MaxLength(9)]
@@ -38,7 +35,8 @@ namespace AccesoDatos.Data
         [Required]
         public string PathAltaBps { get; set; }
         [Required]
-        public Proveedor Proveedor { get; set; }
+        public ProveedorDTO Proveedor { get; set; }
+
         public bool Activo { get; set; }
     }
 }

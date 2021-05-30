@@ -17,6 +17,8 @@ namespace Negocio.Mapper
             CreateMap<UsuarioDTO, Usuario>().ReverseMap();
             CreateMap<ConfiguracionSistemaDTO, MailDTO>().ReverseMap();
             CreateMap<ConfiguracionSistema, ConfiguracionSistemaDTO>().ReverseMap();
+            CreateMap<IngresoDTO, Ingreso>().ReverseMap();
+            CreateMap<FuncionarioDTO, Funcionario>().ReverseMap();
         }
     }
 }

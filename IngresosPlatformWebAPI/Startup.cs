@@ -1,6 +1,7 @@
 using AccesoDatos.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,11 +27,23 @@ namespace IngresosPlatformWebAPI
             services.AddDbContext<AplicacionDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
             services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
             services.AddScoped<IMailRepositorio, MailRepositorio>();
-            services.AddCors();
+            services.AddScoped<IIngresoRepositorio, IngresoRepositorio>();
+            services.AddScoped<IFuncionarioRepositorio, FuncionarioRepositorio>();
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                 builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                );
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -48,17 +61,22 @@ namespace IngresosPlatformWebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IngresosPlatformWebAPI v1"));
             }
-
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<AplicacionDBContext>();
+                context.Database.EnsureCreated();
+            }
             app.UseRouting();
+            app.UseStaticFiles();
 
             //para dar acceso a la web api sin politicas de seguridad
-            app.UseCors(options =>
-            {
-                options.WithOrigins("http://localhost:31496");
-                options.AllowAnyMethod();
-                options.AllowAnyHeader();
-            });
-
+            //app.UseCors(options =>
+            //{
+            //    options.WithOrigins("http://localhost:31496");
+            //    options.AllowAnyMethod();
+            //    options.AllowAnyHeader();
+            //});
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

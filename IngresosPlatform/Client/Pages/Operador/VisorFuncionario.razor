@@ -1,0 +1,87 @@
+﻿@page "/Funcionario/{funcionarioId:int}"
+@layout EmptyLayout
+@inject IJSRuntime js
+@inject IServiceFuncionario serviceFuncionario
+
+<h4>Visor Funcionario</h4>
+
+<table class="table table-borderless">
+    <tbody>
+        <tr>
+            <td colspan="3"><LabelFull Titulo="Nombre" Dato="@funcionarioDTO.Nombre" /></td>
+        </tr>
+        <tr>
+            <td><LabelFull Titulo="Numero de Cedula" Dato="@funcionarioDTO.Cedula" /></td>
+            <td><LabelFull Titulo="Vencimiento de Cedula" Dato="@funcionarioDTO.VtoCedula.ToString()" /></td>
+            <td>
+                @if (funcionarioDTO.PathCedula.Length > 0)
+                {
+                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCedula))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td><LabelFull Titulo="Categoria libreta conducir" Dato="@funcionarioDTO.CategoriaLibreta" /></td>
+            <td><LabelFull Titulo="Vencimiento libreta de conducir" Dato="@funcionarioDTO.VtoLibreta.ToString()" /></td>
+            <td>
+                @if (funcionarioDTO.PathLibreta.Length > 0)
+                {
+                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathLibreta))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><LabelFull Titulo="Vencimiento carne de salud" Dato="@funcionarioDTO.VtoCarneSalud.ToString()" /></td>
+            <td>
+                @if (funcionarioDTO.PathCarneSalud.Length > 0)
+                {
+                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCarneSalud))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><LabelFull Titulo="Vencimiento carne de manipulacion de alimentos" Dato="@funcionarioDTO.VtoCMAlimentos.ToString()" /></td>
+            <td>
+                @if (funcionarioDTO.PathCMAlimentos.Length > 0)
+                {
+                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCMAlimentos))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><LabelFull Titulo="Fecha de alta BPS" Dato="@funcionarioDTO.AltaBps.ToString()" /></td>
+            <td>
+                @if (funcionarioDTO.PathAltaBps.Length > 0)
+                {
+                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathAltaBps))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+@code {
+    [Parameter]
+    public int funcionarioId { get; set; }
+
+    private FuncionarioDTO funcionarioDTO = null;
+
+    async Task PopPage(string url)
+    {
+        await js.WindowPopUp(url);
+    }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+    }
+
+    private async Task CargaFuncionario()
+    {
+        funcionarioDTO = await serviceFuncionario.Obtener(funcionarioId);
+    }
+}

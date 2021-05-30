@@ -21,29 +21,6 @@ namespace Negocio.Repositorios
             db = _db;
             mapper = _mapper;
         }
-        //public async Task<UsuarioDTO> Actualizar(UsuarioDTO usuarioDTO)
-        //{
-        //    try
-        //    {
-        //        if (usuarioDTO.Id > 0)
-        //        {
-        //            Usuario usuarioDB = await db.Usuarios.FindAsync(usuarioDTO.Id);
-        //            Usuario usuario = mapper.Map<UsuarioDTO, Usuario>(usuarioDTO, usuarioDB);
-        //            var update = db.Usuarios.Update(usuario);
-        //            await db.SaveChangesAsync();
-        //            return mapper.Map<Usuario, UsuarioDTO>(update.Entity);
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return null;
-        //    }
-        //}
-
         public async Task<UsuarioDTO> Agregar(UsuarioDTO usuarioDTO)
         {
             try

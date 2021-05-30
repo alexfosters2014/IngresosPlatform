@@ -31,8 +31,10 @@ function ConfirmarOperacion (pregunta) {
         })
 
     })
-      
+}
 
-    }
+function OpenWindow(url) {
+    window.open(url, 'Visor', 'width=800,height=860,scrollbars=no,toolbar=no,location=no');
+}
 
 
