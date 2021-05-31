@@ -29,6 +29,9 @@ namespace Negocio.Repositorios
                 {
                     Funcionario funcionarioDB = await db.Funcionarios.FindAsync(funcionarioDTO.Id);
                     Funcionario funcionario = mapper.Map<FuncionarioDTO, Funcionario>(funcionarioDTO, funcionarioDB);
+                    Proveedor pro = await db.Proveedores.FindAsync(funcionario.Proveedor.Id);
+                    db.Entry(pro).State = EntityState.Unchanged;
+                    funcionario.Proveedor = pro;
                     var updateFuncionario = db.Funcionarios.Update(funcionario);
                     await db.SaveChangesAsync();
                     return mapper.Map<Funcionario, FuncionarioDTO>(updateFuncionario.Entity);
@@ -49,6 +52,10 @@ namespace Negocio.Repositorios
             try
             {
                 Funcionario funcionario = mapper.Map<FuncionarioDTO, Funcionario>(funcionarioDTO);
+                
+                Proveedor pro = await db.Proveedores.FindAsync(funcionario.Proveedor.Id);
+                db.Entry(pro).State = EntityState.Unchanged;
+                funcionario.Proveedor = pro;
                 var addFuncionario = await db.Funcionarios.AddAsync(funcionario);
                 await db.SaveChangesAsync();
                 return mapper.Map<Funcionario, FuncionarioDTO>(addFuncionario.Entity);

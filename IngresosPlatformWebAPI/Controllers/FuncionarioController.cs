@@ -40,7 +40,7 @@ namespace IngresosPlatformWebAPI.Controllers
         }
 
         [HttpGet("{funcionarioId}")]
-        public async Task<IActionResult> Proveedores(int? funcionarioId)
+        public async Task<IActionResult> Funcionarios(int? funcionarioId)
         {
             if (funcionarioId == null)
             {
