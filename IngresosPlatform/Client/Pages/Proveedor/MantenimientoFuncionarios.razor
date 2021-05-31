@@ -82,7 +82,20 @@ else if (funcionarios != null && funcionarios.Count == 0)
 
     protected override async Task OnInitializedAsync()
     {
+        ProveedorDTO pro = new ProveedorDTO()
+        {
+            Id = 1
+        };
+        UsuarioDTO usu = new UsuarioDTO()
+        {
+            Id = 1,
+            Proveedor = pro
+        };
+        await localStorage.SetItemAsync(SD.LocalUsuario, usu);
+
         await CargarProveedores();
+        //por mientras lo inicializo
+
     }
 
     private async Task CargarProveedores()
@@ -90,19 +103,22 @@ else if (funcionarios != null && funcionarios.Count == 0)
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         if (usuarioDTO != null) {
             funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
-            }
-            else{
-                //mensaje de error
-            }
+        }
+        else{
+            //mensaje de error
+
+        }
     }
     private void NuevoFuncionario()
     {
         nav.NavigateTo("/Funcionarios/Nuevo");
     }
+
     private async Task BajaFuncionario(int funcionarioId)
     {
         confirmacion = await js.MsgConfirmacion("Desea dar de baja al funcionario seleccionado?");
-        if (confirmacion){
+        if (confirmacion)
+        {
             nav.NavigateTo($"/Funcionarios/Baja/{funcionarioId}");
         }
     }

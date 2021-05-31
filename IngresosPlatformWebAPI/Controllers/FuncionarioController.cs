@@ -24,7 +24,7 @@ namespace IngresosPlatformWebAPI.Controllers
             var funcionariosActivos = await funcionarioRepositorio.ObtenerTodosActivos();
             return Ok(funcionariosActivos);
         }
-        [HttpGet("/FunProv/{proveedorId}")]
+        [HttpGet("FunProv/{proveedorId}")]
         public async Task<IActionResult> ObtenerFuncionariosXProveedor(int? proveedorId)
         {
             if (proveedorId != null)

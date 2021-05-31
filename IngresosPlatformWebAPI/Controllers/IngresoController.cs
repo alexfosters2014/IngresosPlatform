@@ -85,7 +85,7 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-        [HttpGet("/estado/{ingresoId:int}/{estadoAutorizacion}")]
+        [HttpGet("estado/{ingresoId:int}/{estadoAutorizacion}")]
         public async Task<IActionResult> ActualizarEstadoIngreso(int? ingresoId,string estadoAutorizacion)
         {
             if (ingresoId != null && !string.IsNullOrEmpty(estadoAutorizacion))
