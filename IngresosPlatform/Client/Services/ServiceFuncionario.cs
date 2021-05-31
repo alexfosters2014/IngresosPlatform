@@ -96,5 +96,19 @@ namespace IngresosPlatform.Client.Services
             return funcionario;
         }
 
+        public async Task<List<FuncionarioDTO>> ObtenerTodosSegunProveedor(int? funcionarioDTO)
+        {
+            if (funcionarioDTO != null)
+            {
+                var response = await httpClient.GetAsync($"api/Funcionario/FunProv/{funcionarioDTO.Value}");
+                var content = await response.Content.ReadAsStringAsync();
+                var funcionario = JsonConvert.DeserializeObject<List<FuncionarioDTO>>(content);
+                return funcionario;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

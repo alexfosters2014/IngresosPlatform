@@ -1,0 +1,194 @@
+﻿@page "/Funcionarios/Editar/{funcionarioId:int}"
+@inject IServiceFuncionario serviceFuncionario
+@inject NavigationManager nav
+@inject IJSRuntime js
+
+<div class="container">
+    <h3>Editar Funcionario</h3>
+
+    <section class="row">
+        <EditForm Model="funcionarioDTO" OnValidSubmit="EditarFuncionario" class="col-6">
+            <DataAnnotationsValidator />
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="funNombre">Nombre de funcionario*</label>
+                        <InputText @bind-Value="funcionarioDTO.Nombre" id="funNombre" class="form-control" />
+                        <ValidationMessage For="@(() => funcionarioDTO.Nombre)" />
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Numero de Cedula*</label>
+                        <InputText @bind-Value="funcionarioDTO.Cedula" id="rut" class="form-control" />
+                        <ValidationMessage For="@(() => funcionarioDTO.Cedula)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Vto. de Cedula*</label>
+                        <InputDate @bind-Value="funcionarioDTO.VtoCedula" id="rut" class="form-control" />
+                        <ValidationMessage For="@(() => funcionarioDTO.VtoCedula)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Categoria de libreta conducir</label>
+                        <InputText @bind-Value="funcionarioDTO.CategoriaLibreta" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.CategoriaLibreta)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Vto. de libreta de conducir</label>
+                        <InputDate @bind-Value="funcionarioDTO.VtoLibreta" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.VtoCedula)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Vto. de carne de salud</label>
+                        <InputDate @bind-Value="funcionarioDTO.VtoCarneSalud" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.VtoCarneSalud)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Vto. de C. Manipulación de alimentos</label>
+                        <InputDate @bind-Value="funcionarioDTO.VtoCMAlimentos" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.VtoCMAlimentos)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Fecha de alta BPS</label>
+                        <InputDate @bind-Value="funcionarioDTO.AltaBps" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.AltaBps)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+            @if (!carga)
+            {
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                    <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+                </div>
+            }
+
+        </EditForm>
+    </section>
+
+    <section class="row">
+        @if (carga)
+        {
+            <Loading></Loading>
+        }
+    </section>
+
+</div>
+
+@code {
+    [Parameter]
+    public int? funcionarioId { get; set; }
+
+    private bool carga = false;
+
+    FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarFunconarios();
+    }
+    protected override async void OnParametersSet()
+    {
+        await CargarFunconarios();
+    }
+
+    public async Task CargarFunconarios()
+    {
+        if (funcionarioId != null)
+        {
+            var resultado = await serviceFuncionario.Obtener(funcionarioId);
+
+            if (resultado == null)
+            {
+                Console.WriteLine("Hubo un error");
+            }
+            else
+            {
+                funcionarioDTO = resultado;
+            }
+        }
+        else
+        {
+            Console.WriteLine("El id de proveedor es nulo");
+        }
+    }
+
+    public void Cancelar()
+    {
+        nav.NavigateTo("/Funcionarios");
+    }
+
+    public async Task EditarFuncionario()
+    {
+        carga = true;
+        var resultado = await serviceFuncionario.Actualizar(funcionarioDTO);
+
+        if (resultado == null)
+        {
+            Console.WriteLine("Hubo un error");
+            await js.MsgError("Hubo un error");
+        }
+        else
+        {
+            nav.NavigateTo("/Funcionarios", true);
+        }
+    }
+}

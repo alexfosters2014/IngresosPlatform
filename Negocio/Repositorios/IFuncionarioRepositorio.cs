@@ -14,5 +14,6 @@ namespace Negocio.Repositorios
         public Task<FuncionarioDTO> Actualizar(FuncionarioDTO funcionarioDTO);
         public Task<List<FuncionarioDTO>> ObtenerTodosActivos();
         public Task<FuncionarioDTO> ObtenerFuncionario(int funcionarioId);
+        public Task<List<FuncionarioDTO>> ObtenerTodosSegunProveedor(int proveedorId);
     }
 }

@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using IngresosPlatform.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,8 @@ namespace IngresosPlatform.Client
             builder.Services.AddScoped<IServiceUsuario, ServiceUsuario>();
             builder.Services.AddScoped<IServiceIngreso, ServiceIngreso>();
             builder.Services.AddScoped<IServiceFuncionario, ServiceFuncionario>();
+
+            builder.Services.AddBlazoredLocalStorage();
 
             await builder.Build().RunAsync();
         }

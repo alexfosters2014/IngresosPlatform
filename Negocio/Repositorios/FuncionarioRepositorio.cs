@@ -87,6 +87,20 @@ namespace Negocio.Repositorios
                 return null;
             }
         }
+
+        public async Task<List<FuncionarioDTO>> ObtenerTodosSegunProveedor(int proveedorId)
+        {
+            try
+            {
+                List<FuncionarioDTO> funcionarios = mapper.Map<List<Funcionario>, List<FuncionarioDTO>>
+                    (db.Funcionarios.Where(p => p.Proveedor.Id == proveedorId).ToList());
+                return funcionarios;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
         public async Task<FuncionarioDTO> ObtenerFuncionario(int funcionarioId)
         {
             try

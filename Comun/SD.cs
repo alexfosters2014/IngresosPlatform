@@ -8,6 +8,7 @@ namespace Comun
 {
     public class SD
     {
+        public const string LocalUsuario = "UsuarioLocalLogin";
         public enum TipoUsuario
         {
             ProveedorIngPlt,

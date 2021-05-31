@@ -1,0 +1,154 @@
+﻿@page "/Funcionarios/Nuevo"
+@inject NavigationManager nav
+@inject IServiceFuncionario serviceFuncionario
+
+    <div class="container">
+    <h3>Nuevo Proveedor</h3>
+
+    <section class="row">
+        <EditForm Model="funcionarioDTO" OnValidSubmit="CargarNuevoFuncionario" class="col-6">
+            <DataAnnotationsValidator />
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Nombre de funcionario*</label>
+                        <InputText @bind-Value="funcionarioDTO.Nombre" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.Nombre)" />
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Numero de Cedula*</label>
+                        <InputText @bind-Value="funcionarioDTO.Cedula" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.Cedula)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Vto. de Cedula*</label>
+                        <InputDate @bind-Value="funcionarioDTO.VtoCedula" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.VtoCedula)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Categoria de libreta conducir</label>
+                        <InputText @bind-Value="funcionarioDTO.CategoriaLibreta" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.CategoriaLibreta)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Vto. de libreta de conducir</label>
+                        <InputDate @bind-Value="funcionarioDTO.VtoLibreta" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.VtoCedula)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Vto. de carne de salud</label>
+                        <InputDate @bind-Value="funcionarioDTO.VtoCarneSalud" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.VtoCarneSalud)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Vto. de C. Manipulación de alimentos</label>
+                        <InputDate @bind-Value="funcionarioDTO.VtoCMAlimentos" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.VtoCMAlimentos)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="rut">Fecha de alta BPS</label>
+                        <InputDate @bind-Value="funcionarioDTO.AltaBps" id="rut" class="form-control" />
+                        <ValidationMessage For="@( () => funcionarioDTO.AltaBps)" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <InputFile />
+                    </div>
+                </div>
+            </div>
+
+            @if (!carga){
+        <div class="col text-center">
+            <button type="submit" class="btn btn-primary">Agregar</button>
+            <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+        </div>
+         }
+
+        </EditForm>
+    </section>
+
+    <section class="row">
+        @if (carga)
+        {
+            <Loading></Loading>
+        }
+    </section>
+
+</div>
+
+@code {
+    FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
+    private bool carga = false;
+
+    public async void CargarNuevoFuncionario()
+    {
+        carga = true;
+        FuncionarioDTO resultado = await serviceFuncionario.Agregar(funcionarioDTO);
+
+        if ( resultado != null)
+        {
+            nav.NavigateTo("/Funcionarios", true);
+        }
+
+    }
+
+    public void Cancelar()
+    {
+        nav.NavigateTo("/Funcionarios");
+    }
+}
