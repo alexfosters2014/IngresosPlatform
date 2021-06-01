@@ -30,8 +30,8 @@
                 <td>@fun.Cedula</td>
                 <td>@fun.Nombre</td>
                 <td>@fun.VtoCedula.ToShortDateString()</td>
-                <td>@fun.VtoCarneSalud.ToShortDateString()</td>
-                <td>@fun.VtoCMAlimentos.ToShortDateString()</td>
+                <td>@fun.VtoCarneSalud.Value.ToShortDateString()</td>
+                <td>@fun.VtoCMAlimentos.Value.ToShortDateString()</td>
                 <td>@fun.VtoLibreta</td>
                 <td>@((fun.Activo == true ) ? "Activo" : "No Activo")</td>
                 @if (fun.Activo == true)

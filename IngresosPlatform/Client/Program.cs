@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Tewr.Blazor.FileReader;
 
 namespace IngresosPlatform.Client
 {
@@ -26,6 +27,7 @@ namespace IngresosPlatform.Client
             builder.Services.AddScoped<IServiceFuncionario, ServiceFuncionario>();
 
             builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
 
             await builder.Build().RunAsync();
         }

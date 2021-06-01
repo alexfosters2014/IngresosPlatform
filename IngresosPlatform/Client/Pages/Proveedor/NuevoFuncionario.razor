@@ -1,16 +1,23 @@
 ﻿@page "/Funcionarios/Nuevo"
+@using System.IO
+@using Tewr.Blazor.FileReader;
+@using Newtonsoft.Json;
 @inject NavigationManager nav
 @inject IServiceFuncionario serviceFuncionario
 @inject ILocalStorageService localStorage
+@inject IFileReaderService fileReader
+@inject IJSRuntime js
+@inject HttpClient httpClient
 
-    <div class="container">
+<div class="container">
     <h3>Nuevo Proveedor</h3>
+
+    <p style="font-size:small;color:orange">Recuerde que el tamaño de los archivos deben ser hasta 2Mb</p>
 
     <section class="row">
         <div class="col-6">
-            <EditForm Model="funcionarioDTO" OnValidSubmit="CargarNuevoFuncionario">
+            <EditForm Model="funcionarioDTO" OnValidSubmit="AgregarNuevoFuncionario">
                 <DataAnnotationsValidator />
-
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
@@ -39,7 +46,8 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <InputFile />
+                            <input type"file" accept=".pdf" @ref="refCedula" @onchange="SubirPDF_PathCedula"/>
+                            <ValidationMessage For="@( () => funcionarioDTO.PathCedula)" />
                         </div>
                     </div>
                 </div>
@@ -56,12 +64,13 @@
                         <div class="form-group">
                             <label for="rut">Vto. de libreta de conducir</label>
                             <InputDate @bind-Value="funcionarioDTO.VtoLibreta" id="rut" class="form-control" />
-                            <ValidationMessage For="@( () => funcionarioDTO.VtoCedula)" />
+                            <ValidationMessage For="@( () => funcionarioDTO.VtoLibreta)" />
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <InputFile />
+                            <input type="file" accept=".pdf" @ref="refLibreta" @onchange="SubirPDF_PathLibreta"/>
+                            <ValidationMessage For="@( () => funcionarioDTO.PathLibreta)" />
                         </div>
                     </div>
                 </div>
@@ -79,7 +88,8 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <InputFile />
+                            <input type="file" accept=".pdf" @ref="refCarneSalud" @onchange="SubirPDF_PathCarneSalud"/>
+                            <ValidationMessage For="@( () => funcionarioDTO.PathCarneSalud)" />
                         </div>
                     </div>
                 </div>
@@ -94,7 +104,8 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <InputFile />
+                            <input type="file" accept=".pdf" @ref="refCarneMA" @onchange="SubirPDF_PathMA"/>
+                            <ValidationMessage For="@( () => funcionarioDTO.PathCMAlimentos)" />
                         </div>
                     </div>
                 </div>
@@ -109,7 +120,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <InputFile />
+                            <input type="file" accept=".pdf" @ref="refAltaBPS" @onchange="SubirPDF_PathAltaBPS"/>
                         </div>
                     </div>
                 </div>
@@ -139,27 +150,83 @@
     FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
     private bool carga = false;
 
-    public async void CargarNuevoFuncionario()
+    ElementReference refCedula;
+    ElementReference refLibreta;
+    ElementReference refCarneSalud;
+    ElementReference refCarneMA;
+    ElementReference refAltaBPS;
+
+    private async Task AgregarNuevoFuncionario()
     {
         carga = true;
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         funcionarioDTO.Proveedor = new ProveedorDTO()
         {
-           Id = usuarioDTO.Proveedor.Id
+            Id = usuarioDTO.Proveedor.Id
         };
         FuncionarioDTO resultado = await serviceFuncionario.Agregar(funcionarioDTO);
 
-        if ( resultado != null)
+        if (resultado != null)
         {
             nav.NavigateTo("/Funcionarios", true);
         }
-            else
-            {
-                //mensaje de error
-            }
+        else
+        {
+            await js.MsgError("No se pudo dar de alta al nuevo funcionario");
+        }
     }
 
-    public void Cancelar()
+    private async void SubirPDF_PathCedula()
+    {
+        var file = (await fileReader.CreateReference(refCedula).EnumerateFilesAsync()).FirstOrDefault();
+        if (file == null) return;
+
+        var fileInfo = await file.ReadFileInfoAsync();
+
+        Stream fileStream = null;
+
+        using (var ms = await file.CreateMemoryStreamAsync((int)fileInfo.Size))
+        {
+            fileStream = ms;
+        }
+        var contentUpload = new MultipartFormDataContent();
+        contentUpload.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
+        contentUpload.Add(new StreamContent(fileStream, (int)fileStream.Length), "pdf", fileInfo.Name);
+
+        var response = await httpClient.PostAsync("/api/Archivo", contentUpload);
+        string nuevaPath = null;
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            nuevaPath = JsonConvert.DeserializeObject<string>(content);
+
+            funcionarioDTO.PathCedula = nuevaPath;
+            await js.MsgExitoso("Archivo subido exitosamente");
+        }
+        else
+        {
+            await js.MsgError("No se pudo subir el archivo");
+        }
+    }
+    private async void SubirPDF_PathLibreta()
+    {
+
+    }
+    private async void SubirPDF_PathCarneSalud()
+    {
+
+    }
+    private async void SubirPDF_PathMA()
+    {
+
+    }
+    private async void SubirPDF_PathAltaBPS()
+    {
+
+    }
+
+    private void Cancelar()
     {
         nav.NavigateTo("/Funcionarios");
     }

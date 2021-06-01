@@ -22,7 +22,7 @@
         </tr>
         <tr>
             <td><LabelFull Titulo="Categoria libreta conducir" Dato="@funcionarioDTO.CategoriaLibreta" /></td>
-            <td><LabelFull Titulo="Vencimiento libreta de conducir" Dato="@funcionarioDTO.VtoLibreta.ToString()" /></td>
+            <td><LabelFull Titulo="Vencimiento libreta de conducir" Dato="@funcionarioDTO.VtoLibreta.Value.ToShortDateString()" /></td>
             <td>
                 @if (funcionarioDTO.PathLibreta.Length > 0)
                 {
@@ -31,7 +31,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2"><LabelFull Titulo="Vencimiento carne de salud" Dato="@funcionarioDTO.VtoCarneSalud.ToShortDateString()" /></td>
+            <td colspan="2"><LabelFull Titulo="Vencimiento carne de salud" Dato="@funcionarioDTO.VtoCarneSalud.Value.ToShortDateString()" /></td>
             <td>
                 @if (funcionarioDTO.PathCarneSalud.Length > 0)
                 {
@@ -40,7 +40,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2"><LabelFull Titulo="Vencimiento carne de manipulacion de alimentos" Dato="@funcionarioDTO.VtoCMAlimentos.ToShortDateString()" /></td>
+            <td colspan="2"><LabelFull Titulo="Vencimiento carne de manipulacion de alimentos" Dato="@funcionarioDTO.VtoCMAlimentos.Value.ToShortDateString()" /></td>
             <td>
                 @if (funcionarioDTO.PathCMAlimentos.Length > 0)
                 {
@@ -49,7 +49,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2"><LabelFull Titulo="Fecha de alta BPS" Dato="@funcionarioDTO.AltaBps.ToShortDateString()" /></td>
+            <td colspan="2"><LabelFull Titulo="Fecha de alta BPS" Dato="@funcionarioDTO.AltaBps.Value.ToShortDateString()" /></td>
             <td>
                 @if (funcionarioDTO.PathAltaBps.Length > 0)
                 {

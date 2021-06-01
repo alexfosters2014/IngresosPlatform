@@ -21,7 +21,6 @@ namespace AccesoDatos.Data
         [Required]
         [MaxLength(100)]
         public string Nombre { get; set; }
-        [Required]
         public string PathCedula { get; set; }
         [MaxLength(10)]
         public string CategoriaLibreta { get; set; }
@@ -29,13 +28,11 @@ namespace AccesoDatos.Data
         public string PathLibreta { get; set; }
         [Required]
         public DateTime VtoCarneSalud { get; set; }
-        [Required]
         public string PathCarneSalud { get; set; }
         public DateTime VtoCMAlimentos { get; set; }
         public string PathCMAlimentos { get; set; }
         [Required]
         public DateTime AltaBps { get; set; }
-        [Required]
         public string PathAltaBps { get; set; }
         [Required]
         public Proveedor Proveedor { get; set; }
