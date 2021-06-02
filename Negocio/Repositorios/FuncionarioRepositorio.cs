@@ -27,12 +27,11 @@ namespace Negocio.Repositorios
             {
                 if (funcionarioDTO != null)
                 {
-                    Funcionario funcionarioDB = await db.Funcionarios.FindAsync(funcionarioDTO.Id);
+                    Funcionario funcionarioDB = await db.Funcionarios.Include(i => i.Proveedor).SingleAsync(f => f.Id == funcionarioDTO.Id);
                     Funcionario funcionario = mapper.Map<FuncionarioDTO, Funcionario>(funcionarioDTO, funcionarioDB);
-                    Proveedor pro = await db.Proveedores.FindAsync(funcionario.Proveedor.Id);
-                    db.Entry(pro).State = EntityState.Unchanged;
-                    funcionario.Proveedor = pro;
+                    db.Entry(funcionario.Proveedor).State = EntityState.Unchanged;
                     var updateFuncionario = db.Funcionarios.Update(funcionario);
+                    
                     await db.SaveChangesAsync();
                     return mapper.Map<Funcionario, FuncionarioDTO>(updateFuncionario.Entity);
                 }
@@ -86,7 +85,7 @@ namespace Negocio.Repositorios
             try
             {
                 List<FuncionarioDTO> funcionarios = mapper.Map<List<Funcionario>, List<FuncionarioDTO>>
-                    (db.Funcionarios.Where(p => p.Activo).ToList());
+                    (db.Funcionarios.Include(i => i.Proveedor).Where(p => p.Activo == true).ToList());
                 return funcionarios;
             }
             catch (Exception e)
@@ -100,7 +99,7 @@ namespace Negocio.Repositorios
             try
             {
                 List<FuncionarioDTO> funcionarios = mapper.Map<List<Funcionario>, List<FuncionarioDTO>>
-                    (db.Funcionarios.Where(p => p.Proveedor.Id == proveedorId).ToList());
+                    (db.Funcionarios.Include(i => i.Proveedor).Where(p => p.Proveedor.Id == proveedorId && p.Activo == true).ToList());
                 return funcionarios;
             }
             catch (Exception e)
@@ -112,7 +111,7 @@ namespace Negocio.Repositorios
         {
             try
             {
-                FuncionarioDTO funcionario = mapper.Map<Funcionario, FuncionarioDTO>(await db.Funcionarios.FirstOrDefaultAsync(p => p.Id == funcionarioId));
+                FuncionarioDTO funcionario = mapper.Map<Funcionario, FuncionarioDTO>(await db.Funcionarios.Include(i => i.Proveedor).SingleAsync(p => p.Id == funcionarioId));
                 return funcionario;
             }
             catch (Exception e)

@@ -35,7 +35,7 @@ namespace AccesoDatos.Data
         public DateTime? AltaBps { get; set; }
         public string PathAltaBps { get; set; }
         [Required]
-        public Proveedor Proveedor { get; set; }
+        public virtual Proveedor Proveedor { get; set; }
         public bool Activo { get; set; }
     }
 }

@@ -25,6 +25,6 @@ namespace AccesoDatos.Data
         [Required]
         [MaxLength(100)]
         public string Email { get; set; }
-        public Proveedor Proveedor { get; set; }
+        public virtual Proveedor Proveedor { get; set; }
     }
 }

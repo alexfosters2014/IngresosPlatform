@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refCedula" @onchange="SubirPDF_PathCedula" />
+                            <input type="file" accept=".pdf" @ref="refCedulaEdit" @onchange="SubirPDF_PathCedula" />
                             <ValidationMessage For="@( () => funcionarioDTO.PathCedula)" />
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refLibreta" @onchange="SubirPDF_PathLibreta" />
+                            <input type="file" accept=".pdf" @ref="refLibretaEdit" @onchange="SubirPDF_PathLibreta" />
                             <ValidationMessage For="@( () => funcionarioDTO.PathLibreta)" />
                         </div>
                     </div>
@@ -102,7 +102,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refCarneSalud" @onchange="SubirPDF_PathCarneSalud" />
+                            <input type="file" accept=".pdf" @ref="refCarneSaludEdit" @onchange="SubirPDF_PathCarneSalud" />
                             <ValidationMessage For="@( () => funcionarioDTO.PathCarneSalud)" />
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refCarneMA" @onchange="SubirPDF_PathMA" />
+                            <input type="file" accept=".pdf" @ref="refCarneMAEdit" @onchange="SubirPDF_PathMA" />
                             <ValidationMessage For="@( () => funcionarioDTO.PathCMAlimentos)" />
                         </div>
                     </div>
@@ -150,7 +150,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refAltaBPS" @onchange="SubirPDF_PathAltaBPS" />
+                            <input type="file" accept=".pdf" @ref="refAltaBPSEdit" @onchange="SubirPDF_PathAltaBPS" />
                         </div>
                     </div>
                     <div class="col-12">
@@ -186,11 +186,11 @@
     FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
     private bool carga = false;
 
-    ElementReference refCedula;
-    ElementReference refLibreta;
-    ElementReference refCarneSalud;
-    ElementReference refCarneMA;
-    ElementReference refAltaBPS;
+    ElementReference refCedulaEdit;
+    ElementReference refLibretaEdit;
+    ElementReference refCarneSaludEdit;
+    ElementReference refCarneMAEdit;
+    ElementReference refAltaBPSEdit;
 
 
 
@@ -222,7 +222,7 @@
 
     private async void SubirPDF_PathCedula()
     {
-        var file = (await fileReader.CreateReference(refCedula).EnumerateFilesAsync()).FirstOrDefault();
+        var file = (await fileReader.CreateReference(refCedulaEdit).EnumerateFilesAsync()).FirstOrDefault();
         string nuevaPath = await FileStream(file);
         if (nuevaPath != null || nuevaPath != "")
         {
@@ -238,7 +238,7 @@
 
     private async void SubirPDF_PathLibreta()
     {
-        var file = (await fileReader.CreateReference(refLibreta).EnumerateFilesAsync()).FirstOrDefault();
+        var file = (await fileReader.CreateReference(refLibretaEdit).EnumerateFilesAsync()).FirstOrDefault();
         string nuevaPath = await FileStream(file);
         if (nuevaPath != null || nuevaPath != "")
         {
@@ -254,7 +254,7 @@
 
     private async void SubirPDF_PathCarneSalud()
     {
-        var file = (await fileReader.CreateReference(refCarneSalud).EnumerateFilesAsync()).FirstOrDefault();
+        var file = (await fileReader.CreateReference(refCarneSaludEdit).EnumerateFilesAsync()).FirstOrDefault();
         string nuevaPath = await FileStream(file);
         if (nuevaPath != null || nuevaPath != "")
         {
@@ -270,7 +270,7 @@
 
     private async void SubirPDF_PathMA()
     {
-        var file = (await fileReader.CreateReference(refCarneMA).EnumerateFilesAsync()).FirstOrDefault();
+        var file = (await fileReader.CreateReference(refCarneMAEdit).EnumerateFilesAsync()).FirstOrDefault();
         string nuevaPath = await FileStream(file);
         if (nuevaPath != null || nuevaPath != "")
         {
@@ -286,7 +286,7 @@
 
     private async void SubirPDF_PathAltaBPS()
     {
-        var file = (await fileReader.CreateReference(refAltaBPS).EnumerateFilesAsync()).FirstOrDefault();
+        var file = (await fileReader.CreateReference(refAltaBPSEdit).EnumerateFilesAsync()).FirstOrDefault();
         string nuevaPath = await FileStream(file);
         if (nuevaPath != null || nuevaPath != "")
         {
