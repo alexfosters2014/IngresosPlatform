@@ -25,6 +25,7 @@ namespace IngresosPlatform.Client
             builder.Services.AddScoped<IServiceUsuario, ServiceUsuario>();
             builder.Services.AddScoped<IServiceIngreso, ServiceIngreso>();
             builder.Services.AddScoped<IServiceFuncionario, ServiceFuncionario>();
+            builder.Services.AddScoped<IServiceArchivo, ServiceArchivo>();
 
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
