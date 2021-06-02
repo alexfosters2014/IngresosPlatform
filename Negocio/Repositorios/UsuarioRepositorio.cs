@@ -82,7 +82,8 @@ namespace Negocio.Repositorios
         {
             try
             {
-                UsuarioDTO usuario = mapper.Map<Usuario, UsuarioDTO>(await db.Usuarios.FindAsync(usuarioId));
+                UsuarioDTO usuario = mapper.Map<Usuario, UsuarioDTO>(await db.Usuarios.Include(i => i.Proveedor)
+                                                                            .SingleAsync(s => s.Id == usuarioId));
                 return usuario;
             }
             catch (Exception e)

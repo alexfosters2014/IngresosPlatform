@@ -27,7 +27,7 @@ namespace Negocio.Repositorios
             {
                 if (ingresoDTO != null )
                 {
-                    Ingreso ingresoDB = await db.Ingresos.FindAsync(ingresoDTO.Id);
+                    Ingreso ingresoDB = await db.Ingresos.Include(i => i.Proveedor).SingleAsync(s => s.Id == ingresoDTO.Id);
                     Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingresoDTO, ingresoDB);
                     var updateIngreso = db.Ingresos.Update(ingreso);
                     await db.SaveChangesAsync();
@@ -87,7 +87,7 @@ namespace Negocio.Repositorios
             {
                 if (ingresoId != 0)
                 {
-                    Ingreso ingresoDB = await db.Ingresos.FindAsync(ingresoId);
+                    Ingreso ingresoDB = await db.Ingresos.Include(i => i.Proveedor).SingleAsync(i => i.Id == ingresoId);
                     ingresoDB.EstadoAutorizacion = estadoAutorizacion;
                     var updateIngreso = db.Ingresos.Update(ingresoDB);
                     await db.SaveChangesAsync();
@@ -124,6 +124,7 @@ namespace Negocio.Repositorios
             {
                 List<IngresoDTO> ingresos =
                     mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
+                    .Include(i => i.Proveedor)
                     .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.Pendiente.ToString()).ToList());
                 return ingresos;
             }
