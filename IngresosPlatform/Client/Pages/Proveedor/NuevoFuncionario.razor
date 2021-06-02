@@ -200,7 +200,12 @@
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         funcionarioDTO.Proveedor = new ProveedorDTO()
         {
-            Id = usuarioDTO.Proveedor.Id
+            Id = usuarioDTO.Proveedor.Id,
+            Rut = "000",
+            RazonSocial = "0",
+            NombreFantasia = "0",
+            Rubro = "0",
+            Email = "a@a.com"
         };
         FuncionarioDTO resultado = await serviceFuncionario.Agregar(funcionarioDTO);
 
@@ -210,7 +215,8 @@
         }
         else
         {
-            await js.MsgError("No se pudo dar de alta al nuevo funcionario");
+            await js.MsgError("No se pudo dar de alta al nuevo funcionario. Verifique si ya fue ingresado");
+            carga = false;
         }
     }
 
