@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using IngresosPlatform.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Tewr.Blazor.FileReader;
 
 namespace IngresosPlatform.Client
 {
@@ -23,6 +25,10 @@ namespace IngresosPlatform.Client
             builder.Services.AddScoped<IServiceUsuario, ServiceUsuario>();
             builder.Services.AddScoped<IServiceIngreso, ServiceIngreso>();
             builder.Services.AddScoped<IServiceFuncionario, ServiceFuncionario>();
+            builder.Services.AddScoped<IServiceArchivo, ServiceArchivo>();
+
+            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
 
             await builder.Build().RunAsync();
         }

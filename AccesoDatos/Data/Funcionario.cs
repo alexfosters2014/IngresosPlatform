@@ -21,24 +21,21 @@ namespace AccesoDatos.Data
         [Required]
         [MaxLength(100)]
         public string Nombre { get; set; }
-        [Required]
         public string PathCedula { get; set; }
         [MaxLength(10)]
         public string CategoriaLibreta { get; set; }
-        public DateTime VtoLibreta { get; set; }
+        public DateTime? VtoLibreta { get; set; }
         public string PathLibreta { get; set; }
         [Required]
-        public DateTime VtoCarneSalud { get; set; }
-        [Required]
+        public DateTime? VtoCarneSalud { get; set; }
         public string PathCarneSalud { get; set; }
-        public DateTime VtoCMAlimentos { get; set; }
+        public DateTime? VtoCMAlimentos { get; set; }
         public string PathCMAlimentos { get; set; }
         [Required]
-        public DateTime AltaBps { get; set; }
-        [Required]
+        public DateTime? AltaBps { get; set; }
         public string PathAltaBps { get; set; }
         [Required]
-        public Proveedor Proveedor { get; set; }
+        public virtual Proveedor Proveedor { get; set; }
         public bool Activo { get; set; }
     }
 }

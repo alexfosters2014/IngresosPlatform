@@ -10,33 +10,32 @@ namespace Modelo
     public class FuncionarioDTO
     {
         public int Id { get; set; }
-        [Required]
-        [MaxLength(9)]
+        [Required(ErrorMessage ="Debe ingresar un numero de cedula")]
+        [MaxLength(12,ErrorMessage = "Maximo 12 caracteres")]
         public string Cedula { get; set; }
-        [Required]
-        public DateTime VtoCedula { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Debe ingresar Vto Cedula")]
+        public DateTime VtoCedula { get; set; } = DateTime.Now;
+        [Required(ErrorMessage ="Debe ingresar nombre y apellido")]
         [MaxLength(100)]
         public string Nombre { get; set; }
-        [Required]
         public string PathCedula { get; set; }
-        [MaxLength(10)]
+        [MaxLength(10,ErrorMessage = "Debe ingresar una categoria hasta 10 caracteres")]
         public string CategoriaLibreta { get; set; }
-        public DateTime VtoLibreta { get; set; }
+        public DateTime? VtoLibreta { get; set; }
         public string PathLibreta { get; set; }
-        [Required]
-        public DateTime VtoCarneSalud { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Debe ingresar vto carne de salud")]
+        public DateTime? VtoCarneSalud { get; set; }
+        [Required(ErrorMessage = "Debe subir un archivo en formato PDF")]
         public string PathCarneSalud { get; set; }
-        public DateTime VtoCMAlimentos { get; set; }
+        [Required(ErrorMessage = "Debe ingresar un vto de carne de manipulacion de alimentos")]
+        public DateTime? VtoCMAlimentos { get; set; }
+        [Required(ErrorMessage = "Debe subir un archivo en formato PDF")]
         public string PathCMAlimentos { get; set; }
-        [Required]
-        public DateTime AltaBps { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Debe ingresar fecha de alta BPS")]
+        public DateTime? AltaBps { get; set; }
+        [Required(ErrorMessage = "Debe subir un archivo en formato PDF")]
         public string PathAltaBps { get; set; }
-        [Required]
         public ProveedorDTO Proveedor { get; set; }
-
-        public bool Activo { get; set; }
+        public bool Activo { get; set; } = true;
     }
 }

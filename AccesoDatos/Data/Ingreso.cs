@@ -28,8 +28,8 @@ namespace AccesoDatos.Data
         public string Comentarios { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
-        public Proveedor Proveedor { get; set; }
+        public virtual Proveedor Proveedor { get; set; }
         public int FuncionarioId { get; set; }
-        public Funcionario Funcionario { get; set; }
+        public virtual Funcionario Funcionario { get; set; }
     }
 }
