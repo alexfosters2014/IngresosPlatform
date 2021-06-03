@@ -12,7 +12,9 @@ namespace Modelo
         public int Id { get; set; }
         public DateTime? Fecha { get; set; }
         public FuncionarioDTO Funcionario { get; set; }
+        [DataType(DataType.Time)]
         public DateTime? EntradaPlanificada { get; set; }
+        [DataType(DataType.Time)]
         public DateTime? SalidaPlanificada { get; set; }
         [MaxLength(30)]
         public string EstadoAutorizacion { get; set; }

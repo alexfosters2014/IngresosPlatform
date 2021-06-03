@@ -1,7 +1,9 @@
 ﻿@page "/cargaIngresos"
 @inject IServiceFuncionario serviceFuncionario
 @inject ILocalStorageService localStorage
+@inject IJSRuntime js
 
+<h3>Nuevos Ingresos</h3>
 
 @if (funcionarios != null && funcionarios.Any())
 {
@@ -10,13 +12,13 @@
         <div class="row">
             <div class="col">
                 <label>Cedula*</label>
-                <InputText @bind-Value="ingresoIndividual.Funcionario.Cedula" class="form-control" />
+                <InputText @bind-Value="ingresoIndividual.Funcionario.Cedula" class="form-control" readonly />
                 <ValidationMessage For="@( () => ingresoIndividual.Funcionario.Cedula)" />
             </div>
 
             <div class="col">
                 <label>Funcionario*</label>
-                <select @onchange="OnChangeFuncionario" class="form-control">
+                <select @onchange="OnChangeFuncionario" class="form-control" @ref="selectFocus">
                     <option value="0">Seleccionar...</option>
                     @foreach (var fun in funcionarios)
                     {
@@ -53,25 +55,10 @@
 }
 
 
-@*@if (funcionarios != null && funcionarios.Count>0)
-            {
 
-<RadzenDropDownDataGrid 
-         TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
-         AllowFiltering="true" AllowClear="true"
-         Data=@funcionarios
-         TextProperty="Nombre" ValueProperty="Id"
-         Change=@(args => OnChange(args)) Style="width:100%" />
-            }*@
-
-@*<RadzenDropDown AllowClear="true" TValue="string" Style="width:300px"
-    Data=@(funcionariosDTO.Select(c => new { Nombre = c.Nombre }).Distinct())
-    TextProperty="Nombre" ValueProperty="Id" Change=@(args => OnChangeFuncionario(args, "DropDown")) />*@
-
-@*@if (funcionariosDTO != null && funcionariosDTO.Any())
-    {
-        <h3>Nuevos Ingresos</h3>
-        <table class="table table-borderless">
+@if (ingresosDTO != null && ingresosDTO.Any())
+{
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th scope="col">Cedula</th>
@@ -84,34 +71,22 @@
                 </tr>
             </thead>
             <tbody>
-                @if (ingresosDTO.Count > 0)
+                @foreach (IngresoDTO ing in ingresosDTO)
                 {
-                    @foreach (IngresoDTO ing in ingresosDTO)
-                    {
-                        <tr>
-                            <td><InputText @bind-Value="ing.Funcionario.Cedula" /></td>
-                            <td><InputText @bind-Value="ing.Funcionario.Nombre" /></td>
-                            <td><input type="time" @bind="ing.EntradaPlanificada" @bind:format="HH:mm" /></td>
-                            <td><input type="time" @bind="ing.SalidaPlanificada" @bind:format="HH:mm" /></td>
-                            <td><InputDate @bind-Value="ing.FechaInicio" class="form-control" /></td>
-                            <td><InputDate @bind-Value="ing.FechaFin" class="form-control" /></td>
-
-
-                            <td><a href="" @onclick="(() => BorrarIngresoList(ing))" @onclick:preventDefault>Borrar</a></td>
-                        </tr>
-                    }
-                }
-
+                <tr>
+                    <td>@ing.Funcionario.Cedula</td>
+                    <td>@ing.Funcionario.Nombre</td>
+                    <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                    <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                    <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                    <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+                    <td><a href="" @onclick="(() => BorrarIngresoList(ing))" @onclick:preventDefault>Borrar</a></td>
+                 </tr>
                 }
             </tbody>
         </table>
-    }
-    else
-    {
-        <Loading />
-    }*@
-
-
+}
+   
 
 @code {
 
@@ -122,7 +97,7 @@
     private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
     List<FuncionarioDTO> funcionarios { get; set; } = null;
     private UsuarioDTO usuarioDTO { get; set; } = null;//cargar en el inicio , trae el localstorag
-    private string idFun { get; set; }
+    ElementReference selectFocus;
 
     protected override async Task OnInitializedAsync()
     {
@@ -135,22 +110,49 @@
         funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
     }
 
-    private void BorrarIngresoList(IngresoDTO idx)
+    private void BorrarIngresoList(IngresoDTO ingreso)
     {
-        ingresosDTO.Remove(idx);
+        ingresosDTO.Remove(ingreso);
         StateHasChanged();
     }
 
-    private void CargarNuevoIngreso()
+    private async Task CargarNuevoIngreso()
     {
-        IngresoDTO ingresoDTO = new IngresoDTO()
+        try {
+            if (ingresoIndividual.FechaFin < ingresoIndividual.FechaInicio) {
+                await js.MsgError("La fecha de fin debe ser mayor o igual a la fecha de inicio");
+                return;
+            }
+            bool existe = ingresosDTO.Any(a => a.Funcionario.Id == ingresoIndividual.Funcionario.Id);
+            if (existe)
+            {
+                await js.MsgError("Ya existe el funcionario en la lista");
+                return;
+            }
+            ingresoIndividual.Proveedor = usuarioDTO.Proveedor;
+            ingresoIndividual.Fecha = DateTime.Now;
+            ingresoIndividual.EstadoAutorizacion = SD.TipoAutIng.Pendiente.ToString();
+            //bool hayDuplicados = ingresosDTO.GroupBy(g => g.Funcionario.Id).Any(c => c.Count() > 1);
+            ingresosDTO.Add(ingresoIndividual);
+            ReiniciarIngreso();
+
+        }catch(Exception e)
         {
+            js.MsgError(e.Message);
+        }
+    }
 
-            Proveedor = usuarioDTO.Proveedor
+    private void ReiniciarIngreso()
+    {
+        DateTime fechaIn = ingresoIndividual.FechaInicio.Value;
+        DateTime fechaFn = ingresoIndividual.FechaFin.Value;
+        ingresoIndividual = null;
+        ingresoIndividual = new IngresoDTO()
+        {
+            FechaInicio = fechaIn,
+            FechaFin = fechaFn,
+            Funcionario = new FuncionarioDTO()
         };
-
-        ingresosDTO.Add(ingresoDTO);
-        StateHasChanged();
     }
     void OnChangeFuncionario(ChangeEventArgs e)
     {
@@ -161,15 +163,8 @@
         {
             ingresoIndividual.Funcionario = buscarFun;
         }
-        //StateHasChanged();
     }
 
-    private void OnChange(object value)
-    {
-        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
-
-        Console.WriteLine($"value changed to {str}");
-    }
 
 }
 
