@@ -29,9 +29,15 @@ namespace IngresosPlatformWebAPI.Controllers
         {
             if (proveedorId != null)
             { 
-                var funcionariosActivos = await funcionarioRepositorio.ObtenerTodosSegunProveedor(proveedorId.Value);
-            return Ok(funcionariosActivos);
-             }
+                var funcionariosActPRov = await funcionarioRepositorio.ObtenerTodosSegunProveedor(proveedorId.Value);
+                if (funcionariosActPRov != null) { 
+                     return Ok(funcionariosActPRov);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
             else
             {
                 return BadRequest();

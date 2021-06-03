@@ -1,51 +1,72 @@
 ﻿@page "/cargaIngresos"
 @inject IServiceFuncionario serviceFuncionario
+@inject ILocalStorageService localStorage
 
 
+@if (funcionarios != null && funcionarios.Any())
+{
+    <EditForm Model="ingresoIndividual" OnValidSubmit="CargarNuevoIngreso">
+        <DataAnnotationsValidator />
+        <div class="row">
+            <div class="col">
+                <label>Cedula*</label>
+                <InputText @bind-Value="ingresoIndividual.Funcionario.Cedula" class="form-control" />
+                <ValidationMessage For="@( () => ingresoIndividual.Funcionario.Cedula)" />
+            </div>
 
-<EditForm Model="ingresoIndividual" OnValidSubmit="CargarNuevoIngreso">
-    <DataAnnotationsValidator />
-    <div class="row">
-        <div class="col">
-            <label>Cedula*</label>
-            <InputText @bind-Value="ingresoIndividual.Funcionario.Cedula" class="form-control" />
-            <ValidationMessage For="@( () => ingresoIndividual.Funcionario.Cedula)" />
-        </div>
-        <div class="col">
-            <label>Nombre*</label>
-            <InputText @bind-Value="ingresoIndividual.Funcionario.Nombre" class="form-control" />
-            <ValidationMessage For="@( () => ingresoIndividual.Funcionario.Nombre)" />
-        </div>
-        <div class="col">
-            <label>Entrada*</label>
-            <input type="time" @bind="ingresoIndividual.EntradaPlanificada" class="form-control" />
-            <ValidationMessage For="@( () => ingresoIndividual.EntradaPlanificada)" />
-        </div>
-        <div class="col">
-            <label>Salida*</label>
-            <input type="time" @bind="ingresoIndividual.SalidaPlanificada" class="form-control" />
-            <ValidationMessage For="@( () => ingresoIndividual.SalidaPlanificada)" />
-        </div>
-        <div class="col">
-            <label>Desde*</label>
-            <InputDate @bind-Value="ingresoIndividual.FechaInicio" class="form-control" />
-            <ValidationMessage For="@( () => ingresoIndividual.FechaInicio)" />
-        </div>
-        <div class="col">
-            <label>Hasta*</label>
-            <InputDate @bind-Value="ingresoIndividual.FechaFin" class="form-control" />
-            <ValidationMessage For="@( () => ingresoIndividual.FechaFin)" />
-        </div>
+            <div class="col">
+                <label>Funcionario*</label>
+                <select @onchange="OnChangeFuncionario" class="form-control">
+                    <option value="0">Seleccionar...</option>
+                    @foreach (var fun in funcionarios)
+                    {
+                        <option value="@fun.Id">@fun.Nombre </option>
+                    }
+                </select>
+            </div>
+            <div class="col">
+                <label>Entrada*</label>
+                <input type="time" @bind="ingresoIndividual.EntradaPlanificada" class="form-control" />
+                <ValidationMessage For="@( () => ingresoIndividual.EntradaPlanificada)" />
+            </div>
+            <div class="col">
+                <label>Salida*</label>
+                <input type="time" @bind="ingresoIndividual.SalidaPlanificada" class="form-control" />
+                <ValidationMessage For="@( () => ingresoIndividual.SalidaPlanificada)" />
+            </div>
+            <div class="col">
+                <label>Desde*</label>
+                <InputDate @bind-Value="ingresoIndividual.FechaInicio" class="form-control" />
+                <ValidationMessage For="@( () => ingresoIndividual.FechaInicio)" />
+            </div>
+            <div class="col">
+                <label>Hasta*</label>
+                <InputDate @bind-Value="ingresoIndividual.FechaFin" class="form-control" />
+                <ValidationMessage For="@( () => ingresoIndividual.FechaFin)" />
+            </div>
 
-        <div class="col align-self-end">
-            <button type="submit" class="btn btn-primary">Agregar a la lista</button>
+            <div class="col align-self-end">
+                <button type="submit" class="btn btn-primary">Agregar a la lista</button>
+            </div>
         </div>
-    </div>
-</EditForm>
+    </EditForm>
+}
+
+
+@*@if (funcionarios != null && funcionarios.Count>0)
+            {
+
+<RadzenDropDownDataGrid 
+         TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+         AllowFiltering="true" AllowClear="true"
+         Data=@funcionarios
+         TextProperty="Nombre" ValueProperty="Id"
+         Change=@(args => OnChange(args)) Style="width:100%" />
+            }*@
 
 @*<RadzenDropDown AllowClear="true" TValue="string" Style="width:300px"
-                Data=@(funcionariosDTO.Select(c => new { Nombre = c.Nombre }).Distinct())
-                TextProperty="Nombre" ValueProperty="Id" Change=@(args => OnChangeFuncionario(args, "DropDown")) />*@
+    Data=@(funcionariosDTO.Select(c => new { Nombre = c.Nombre }).Distinct())
+    TextProperty="Nombre" ValueProperty="Id" Change=@(args => OnChangeFuncionario(args, "DropDown")) />*@
 
 @*@if (funcionariosDTO != null && funcionariosDTO.Any())
     {
@@ -94,23 +115,24 @@
 
 @code {
 
-    private IngresoDTO ingresoIndividual = new IngresoDTO();
-    private List<IngresoDTO> ingresosDTO = new List<IngresoDTO>();
-    private List<FuncionarioDTO> funcionariosDTO = new List<FuncionarioDTO>();
-    private UsuarioDTO usuarioDTO = null;//cargar en el inicio , trae el localstorag
-    private int? idFun;
-
-    protected async override void OnInitialized()
+    private IngresoDTO ingresoIndividual { get; set; } = new IngresoDTO()
     {
-        usuarioDTO = new UsuarioDTO();
-        usuarioDTO.Proveedor = new ProveedorDTO()
-        {
-            Id = 1
-        };
-        //usar el local storage
-        funcionariosDTO = await serviceFuncionario.ObtenerTodosSegunProveedor(1);
-        ingresoIndividual.Funcionario = new FuncionarioDTO();
-        ingresoIndividual.Proveedor = usuarioDTO.Proveedor;
+        Funcionario = new FuncionarioDTO()
+    };
+    private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
+    List<FuncionarioDTO> funcionarios { get; set; } = null;
+    private UsuarioDTO usuarioDTO { get; set; } = null;//cargar en el inicio , trae el localstorag
+    private string idFun { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarFuncionarios();
+
+    }
+    private async Task CargarFuncionarios()
+    {
+        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
     }
 
     private void BorrarIngresoList(IngresoDTO idx)
@@ -130,11 +152,23 @@
         ingresosDTO.Add(ingresoDTO);
         StateHasChanged();
     }
-    void OnChangeFuncionario(object value, string name)
+    void OnChangeFuncionario(ChangeEventArgs e)
+    {
+        int funId;
+        Int32.TryParse(e.Value.ToString(), out funId);
+        var buscarFun = funcionarios.Where(fun => fun.Id == funId).Single();
+        if (buscarFun != null)
+        {
+            ingresoIndividual.Funcionario = buscarFun;
+        }
+        //StateHasChanged();
+    }
+
+    private void OnChange(object value)
     {
         var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
 
-        Console.WriteLine($"{name} value changed to {str}");
+        Console.WriteLine($"value changed to {str}");
     }
 
 }
