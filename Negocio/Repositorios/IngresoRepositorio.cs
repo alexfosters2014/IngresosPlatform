@@ -66,8 +66,8 @@ namespace Negocio.Repositorios
                         //db.Entry(buscadoP).State = EntityState.Unchanged;
                         //ingreso.Proveedor = buscadoP;
                         //ingreso.Funcionario = buscadoF;
-                        db.Entry(ingDTO.Proveedor).State = EntityState.Unchanged;
-                        db.Entry(ingDTO.Funcionario).State = EntityState.Unchanged;
+                        db.Entry(ingreso.Proveedor).State = EntityState.Unchanged;
+                        db.Entry(ingreso.Funcionario).State = EntityState.Unchanged;
 
                         var addIngreso = await db.Ingresos.AddAsync(ingreso);
                     }
