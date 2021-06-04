@@ -1,7 +1,9 @@
 ﻿@page "/cargaIngresos"
 @inject IServiceFuncionario serviceFuncionario
+@inject IServiceIngreso serviceIngreso
 @inject ILocalStorageService localStorage
 @inject IJSRuntime js
+@inject NavigationManager nav 
 
 <h3>Nuevos Ingresos</h3>
 
@@ -73,16 +75,19 @@
             <tbody>
                 @foreach (IngresoDTO ing in ingresosDTO)
                 {
-                <tr>
-                    <td>@ing.Funcionario.Cedula</td>
-                    <td>@ing.Funcionario.Nombre</td>
-                    <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
-                    <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
-                    <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
-                    <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
-                    <td><a href="" @onclick="(() => BorrarIngresoList(ing))" @onclick:preventDefault>Borrar</a></td>
-                 </tr>
+                    <tr>
+                        <td>@ing.Funcionario.Cedula</td>
+                        <td>@ing.Funcionario.Nombre</td>
+                        <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                        <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                        <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                        <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+                        <td><a href="" @onclick="(() => BorrarIngresoList(ing))" @onclick:preventDefault>Borrar</a></td>
+                    </tr>
                 }
+                <tr>
+                    <td colspan="7"> <button type="button" class="btn btn-primary" @onclick="AgregarIngresos">Enviar ingresos para autorización</button></td>
+                   </tr>
             </tbody>
         </table>
 }
@@ -164,7 +169,19 @@
             ingresoIndividual.Funcionario = buscarFun;
         }
     }
-
+    private async Task AgregarIngresos()
+    {
+        bool resultado = await serviceIngreso.AgregarIngresos(ingresosDTO);
+        if (resultado)
+        {
+            await js.MsgExitoso("Se han enviado las solicitudes de ingreso");
+            nav.NavigateTo("/cargaIngresos", true);
+        }
+        else
+        {
+            await js.MsgError("se ha producido un error");
+        }
+}
 
 }
 

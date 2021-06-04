@@ -8,7 +8,7 @@ namespace IngresosPlatform.Client.Services
 {
     interface IServiceIngreso
     {
-        public Task<IngresoDTO> AgregarIngreso(IngresoDTO ingresoDTO);
+        public Task<bool> AgregarIngresos(List<IngresoDTO> ingresosDTO);
         public Task<IngresoDTO> ActualizarIngreso(IngresoDTO ingresoDTO);
         public Task<IngresoDTO> ObtenerIngreso(int? ingresoId);
         public Task<List<IngresoXProveedorDTO>> ObtenerIngresosPendientes();

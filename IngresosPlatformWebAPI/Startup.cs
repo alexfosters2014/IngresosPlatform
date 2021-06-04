@@ -24,8 +24,17 @@ namespace IngresosPlatformWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                 builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        //.WithOrigins("http://localhost:31496")
+                );
+            });
             services.AddDbContext<AplicacionDBContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                       options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
@@ -36,14 +45,7 @@ namespace IngresosPlatformWebAPI
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddCors();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy", builder =>
-                 builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                );
-            });
+           
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -68,14 +70,6 @@ namespace IngresosPlatformWebAPI
             }
             app.UseRouting();
             app.UseStaticFiles();
-
-            //para dar acceso a la web api sin politicas de seguridad
-            //app.UseCors(options =>
-            //{
-            //    options.WithOrigins("http://localhost:31496");
-            //    options.AllowAnyMethod();
-            //    options.AllowAnyHeader();
-            //});
             app.UseCors("CorsPolicy");
             app.UseAuthorization();
 

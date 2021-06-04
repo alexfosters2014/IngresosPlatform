@@ -50,21 +50,24 @@ namespace Negocio.Repositorios
             {
                 if (ingresosDTO != null && ingresosDTO.Count > 0)
                 {
-                    foreach (IngresoDTO ingDTO in ingresosDTO) { 
+                    foreach (IngresoDTO ingDTO in ingresosDTO)
+                    {
 
-                    Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingDTO);
+                        Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingDTO);
 
                         //buscar el funcionario y el proveedor unchanged
                         Funcionario buscadoF = null;
                         Proveedor buscadoP = null;
-                        buscadoF = await db.Funcionarios.FindAsync(ingreso.Funcionario.Id);
-                        buscadoP = await db.Proveedores.FindAsync(ingreso.Proveedor.Id);
-                        if (buscadoF == null && buscadoP == null) { return 0; }
+                        //buscadoF = await db.Funcionarios.FindAsync(ingreso.Funcionario.Id);
+                        //buscadoP = await db.Proveedores.FindAsync(ingreso.Proveedor.Id);
+                        //if (buscadoF == null && buscadoP == null) { return 0; }
 
-                        db.Entry(buscadoF).State = EntityState.Unchanged;
-                        db.Entry(buscadoP).State = EntityState.Unchanged;
-                        ingreso.Proveedor = buscadoP;
-                        ingreso.Funcionario = buscadoF;
+                        //db.Entry(buscadoF).State = EntityState.Unchanged;
+                        //db.Entry(buscadoP).State = EntityState.Unchanged;
+                        //ingreso.Proveedor = buscadoP;
+                        //ingreso.Funcionario = buscadoF;
+                        db.Entry(ingDTO.Proveedor).State = EntityState.Unchanged;
+                        db.Entry(ingDTO.Funcionario).State = EntityState.Unchanged;
 
                         var addIngreso = await db.Ingresos.AddAsync(ingreso);
                     }

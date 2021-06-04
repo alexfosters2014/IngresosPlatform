@@ -34,20 +34,20 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<IngresoDTO> AgregarIngreso(IngresoDTO ingresoDTO)
+        public async Task<bool> AgregarIngresos(List<IngresoDTO> ingresosDTO)
         {
-            var response = await httpClient.PostAsJsonAsync("/api/Ingreso", ingresoDTO);
+            var response = await httpClient.PostAsJsonAsync("/api/Ingreso", ingresosDTO);
 
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
 
-                var ingresoNuevo = JsonConvert.DeserializeObject<IngresoDTO>(content);
-                return ingresoNuevo;
+                var ingresosNuevos = JsonConvert.DeserializeObject<bool>(content);
+                return ingresosNuevos;
             }
             else
             {
-                return null;
+                return false;
             }
         }
 
