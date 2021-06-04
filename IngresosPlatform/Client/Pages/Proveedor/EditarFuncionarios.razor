@@ -1,13 +1,11 @@
 ﻿@page "/Funcionarios/Editar/{funcionarioId:int}"
 @using System.IO
 @using Tewr.Blazor.FileReader;
-@using Newtonsoft.Json;
 @inject NavigationManager nav
 @inject IServiceFuncionario serviceFuncionario
 @inject ILocalStorageService localStorage
 @inject IFileReaderService fileReader
 @inject IJSRuntime js
-@inject HttpClient httpClient
 @inject IServiceArchivo serviceArchivo
 
 <div class="container">

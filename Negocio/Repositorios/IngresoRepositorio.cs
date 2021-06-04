@@ -27,7 +27,7 @@ namespace Negocio.Repositorios
             {
                 if (ingresoDTO != null )
                 {
-                    Ingreso ingresoDB = await db.Ingresos.FindAsync(ingresoDTO.Id);
+                    Ingreso ingresoDB = await db.Ingresos.Include(i => i.Proveedor).SingleAsync(s => s.Id == ingresoDTO.Id);
                     Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingresoDTO, ingresoDB);
                     var updateIngreso = db.Ingresos.Update(ingreso);
                     await db.SaveChangesAsync();
@@ -50,21 +50,24 @@ namespace Negocio.Repositorios
             {
                 if (ingresosDTO != null && ingresosDTO.Count > 0)
                 {
-                    foreach (IngresoDTO ingDTO in ingresosDTO) { 
+                    foreach (IngresoDTO ingDTO in ingresosDTO)
+                    {
 
-                    Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingDTO);
+                        Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingDTO);
 
                         //buscar el funcionario y el proveedor unchanged
-                        Funcionario buscadoF = null;
-                        Proveedor buscadoP = null;
-                        buscadoF = await db.Funcionarios.FindAsync(ingreso.Funcionario.Id);
-                        buscadoP = await db.Proveedores.FindAsync(ingreso.Proveedor.Id);
-                        if (buscadoF == null && buscadoP == null) { return 0; }
+                        //Funcionario buscadoF = null;
+                        //Proveedor buscadoP = null;
+                        //buscadoF = await db.Funcionarios.FindAsync(ingreso.Funcionario.Id);
+                        //buscadoP = await db.Proveedores.FindAsync(ingreso.Proveedor.Id);
+                        //if (buscadoF == null && buscadoP == null) { return 0; }
 
-                        db.Entry(buscadoF).State = EntityState.Unchanged;
-                        db.Entry(buscadoP).State = EntityState.Unchanged;
-                        ingreso.Proveedor = buscadoP;
-                        ingreso.Funcionario = buscadoF;
+                        //db.Entry(buscadoF).State = EntityState.Unchanged;
+                        //db.Entry(buscadoP).State = EntityState.Unchanged;
+                        //ingreso.Proveedor = buscadoP;
+                        //ingreso.Funcionario = buscadoF;
+                        db.Entry(ingDTO.Proveedor).State = EntityState.Unchanged;
+                        db.Entry(ingDTO.Funcionario).State = EntityState.Unchanged;
 
                         var addIngreso = await db.Ingresos.AddAsync(ingreso);
                     }
@@ -87,7 +90,7 @@ namespace Negocio.Repositorios
             {
                 if (ingresoId != 0)
                 {
-                    Ingreso ingresoDB = await db.Ingresos.FindAsync(ingresoId);
+                    Ingreso ingresoDB = await db.Ingresos.Include(i => i.Proveedor).SingleAsync(i => i.Id == ingresoId);
                     ingresoDB.EstadoAutorizacion = estadoAutorizacion;
                     var updateIngreso = db.Ingresos.Update(ingresoDB);
                     await db.SaveChangesAsync();
@@ -124,6 +127,7 @@ namespace Negocio.Repositorios
             {
                 List<IngresoDTO> ingresos =
                     mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
+                    .Include(i => i.Proveedor)
                     .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.Pendiente.ToString()).ToList());
                 return ingresos;
             }

@@ -14,6 +14,7 @@ namespace IngresosPlatformWebAPI
 {
     public class Startup
     {
+        private readonly string _MyCors = "MyCors";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,8 +25,17 @@ namespace IngresosPlatformWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(_MyCors, builder =>
+                {
+                    //.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
+
             services.AddDbContext<AplicacionDBContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                       options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
@@ -35,15 +45,6 @@ namespace IngresosPlatformWebAPI
             services.AddScoped<IFuncionarioRepositorio, FuncionarioRepositorio>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            //services.AddCors();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy", builder =>
-                 builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                );
-            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -66,19 +67,10 @@ namespace IngresosPlatformWebAPI
                 var context = serviceScope.ServiceProvider.GetRequiredService<AplicacionDBContext>();
                 context.Database.EnsureCreated();
             }
-            app.UseRouting();
             app.UseStaticFiles();
-
-            //para dar acceso a la web api sin politicas de seguridad
-            //app.UseCors(options =>
-            //{
-            //    options.WithOrigins("http://localhost:31496");
-            //    options.AllowAnyMethod();
-            //    options.AllowAnyHeader();
-            //});
-            app.UseCors("CorsPolicy");
+            app.UseRouting();
+            app.UseCors(_MyCors);
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

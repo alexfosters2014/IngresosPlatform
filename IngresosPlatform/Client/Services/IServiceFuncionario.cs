@@ -13,7 +13,7 @@ namespace IngresosPlatform.Client.Services
         public Task<FuncionarioDTO> Obtener(int? funcionarioDTO);
         public Task<List<FuncionarioDTO>> ObtenerTodos();
         public Task<int> Eliminar(int funcionarioDTO);
-        public Task<List<FuncionarioDTO>> ObtenerTodosSegunProveedor(int? funcionarioDTO);
+        public Task<List<FuncionarioDTO>> ObtenerTodosSegunProveedor(int? proveedorId);
 
     }
 }

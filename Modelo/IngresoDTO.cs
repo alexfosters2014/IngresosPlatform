@@ -10,22 +10,18 @@ namespace Modelo
     public class IngresoDTO
     {
         public int Id { get; set; }
-        [Required]
-        public DateTime Fecha { get; set; }
-        [Required]
+        public DateTime? Fecha { get; set; }
         public FuncionarioDTO Funcionario { get; set; }
-        [Required]
-        public DateTime EntradaPlanificada { get; set; }
-        [Required]
-        public DateTime SalidaPlanificada { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime? EntradaPlanificada { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime? SalidaPlanificada { get; set; }
         [MaxLength(30)]
-        [Required]
         public string EstadoAutorizacion { get; set; }
         [MaxLength(150)]
         public string Comentarios { get; set; }
-        public DateTime FechaInicio { get; set; }
-        public DateTime FechaFin { get; set; }
-        [Required]
+        public DateTime? FechaInicio { get; set; }
+        public DateTime? FechaFin { get; set; }
         public ProveedorDTO Proveedor { get; set; }
     }
 }

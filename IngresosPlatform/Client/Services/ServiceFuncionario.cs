@@ -72,7 +72,7 @@ namespace IngresosPlatform.Client.Services
             if (funcionarioDTO != null)
             {
                 var response = await httpClient.GetAsync($"api/Funcionario/{funcionarioDTO.Value}");
-                if (response != null)
+                if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var funcionario = JsonConvert.DeserializeObject<FuncionarioDTO>(content);
@@ -92,18 +92,25 @@ namespace IngresosPlatform.Client.Services
         {
             var response = await httpClient.GetAsync("api/Funcionario/");
             var content = await response.Content.ReadAsStringAsync();
-            var funcionario = JsonConvert.DeserializeObject<List<FuncionarioDTO>>(content);
-            return funcionario;
+            var funcionarios = JsonConvert.DeserializeObject<List<FuncionarioDTO>>(content);
+            return funcionarios;
         }
 
-        public async Task<List<FuncionarioDTO>> ObtenerTodosSegunProveedor(int? funcionarioDTO)
+        public async Task<List<FuncionarioDTO>> ObtenerTodosSegunProveedor(int? proveedorId)
         {
-            if (funcionarioDTO != null)
+            if (proveedorId != null)
             {
-                var response = await httpClient.GetAsync($"api/Funcionario/FunProv/{funcionarioDTO.Value}");
-                var content = await response.Content.ReadAsStringAsync();
-                var funcionario = JsonConvert.DeserializeObject<List<FuncionarioDTO>>(content);
-                return funcionario;
+
+                var response = await httpClient.GetAsync($"api/Funcionario/FunProv/{proveedorId.Value}");
+                if (response.IsSuccessStatusCode) {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var funcionarios = JsonConvert.DeserializeObject<List<FuncionarioDTO>>(content);
+                    return funcionarios;
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {

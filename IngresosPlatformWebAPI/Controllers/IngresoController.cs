@@ -23,7 +23,6 @@ namespace IngresosPlatformWebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> IngresosPendientes()
         {
-
             List<IngresoDTO> ingresos = await ingresoRepositorio.ObtenerPendientes();
             if (ingresos == null)
             {
@@ -46,28 +45,28 @@ namespace IngresosPlatformWebAPI.Controllers
             {
                 return BadRequest();
             }
-
         }
 
-        [HttpPut]
-        public async Task<IActionResult> NuevoIngreso([FromBody] List<IngresoDTO> ingresoNuevo)
+        [HttpPost]
+        public async Task<IActionResult> NuevosIngresos([FromBody] List<IngresoDTO> ingresosNuevos)
         {
             // ingreso nuevo
-            if (ingresoNuevo != null)
+            if (ingresosNuevos != null && ingresosNuevos.Count > 0)
             {
-                var resultado = await ingresoRepositorio.Agregar(ingresoNuevo);
+                var resultado = await ingresoRepositorio.Agregar(ingresosNuevos);
                 if (resultado == 0)
                 {
-                    return BadRequest();
+                    return BadRequest(false);
                 }
-                return Ok(resultado);
+                return Ok(true);
             }
             else
             {
-                return BadRequest();
+                return BadRequest(false);
             }
         }
-        [HttpPost]
+
+        [HttpPost("Actualizar")]
         public async Task<IActionResult> ActualizarIngreso([FromBody] IngresoDTO ingresoEstado)
         {
             if (ingresoEstado != null)
