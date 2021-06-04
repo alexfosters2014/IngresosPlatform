@@ -56,8 +56,8 @@ namespace Negocio.Repositorios
                         Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingDTO);
 
                         //buscar el funcionario y el proveedor unchanged
-                        Funcionario buscadoF = null;
-                        Proveedor buscadoP = null;
+                        //Funcionario buscadoF = null;
+                        //Proveedor buscadoP = null;
                         //buscadoF = await db.Funcionarios.FindAsync(ingreso.Funcionario.Id);
                         //buscadoP = await db.Proveedores.FindAsync(ingreso.Proveedor.Id);
                         //if (buscadoF == null && buscadoP == null) { return 0; }

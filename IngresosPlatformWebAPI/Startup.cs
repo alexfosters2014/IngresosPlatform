@@ -14,6 +14,7 @@ namespace IngresosPlatformWebAPI
 {
     public class Startup
     {
+        private readonly string _MyCors = "MyCors";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,13 +27,13 @@ namespace IngresosPlatformWebAPI
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", builder =>
-                 builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        //.WithOrigins("http://localhost:31496")
-                );
+                options.AddPolicy(_MyCors, builder =>
+                {
+                    //.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
             });
+
             services.AddDbContext<AplicacionDBContext>(options =>
                        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -44,8 +45,6 @@ namespace IngresosPlatformWebAPI
             services.AddScoped<IFuncionarioRepositorio, FuncionarioRepositorio>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            //services.AddCors();
-           
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -68,11 +67,10 @@ namespace IngresosPlatformWebAPI
                 var context = serviceScope.ServiceProvider.GetRequiredService<AplicacionDBContext>();
                 context.Database.EnsureCreated();
             }
-            app.UseRouting();
             app.UseStaticFiles();
-            app.UseCors("CorsPolicy");
+            app.UseRouting();
+            app.UseCors(_MyCors);
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
