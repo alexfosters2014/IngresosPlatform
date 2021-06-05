@@ -47,29 +47,64 @@ namespace Negocio.Repositorios
         public async Task<string> Agregar(List<IngresoDTO> ingresosDTO)
         {
             int contador = 0;
+            Ingreso ingreso = null;
+            List<Ingreso> ingresos = null;
             try
             {
+                //db.Ingresos.AsNoTracking().ToList();
                 if (ingresosDTO != null && ingresosDTO.Count > 0)
                 {
-                    foreach (IngresoDTO ingDTO in ingresosDTO)
+                    ingresos = mapper.Map<List<IngresoDTO>, List<Ingreso>>(ingresosDTO);
+                    //db.Entry(ingreso.Proveedor).State = EntityState.Unchanged;
+                    //db.Entry(ingreso.Funcionario).State = EntityState.Unchanged;
+
+                    foreach (Ingreso ing in ingresos)
                     {
-                        Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingDTO);
-                        db.Entry(ingreso.Proveedor).State = EntityState.Unchanged;
-                        db.Entry(ingreso.Funcionario).State = EntityState.Unchanged;
-                        if (await db.IngresosDiarios.AnyAsync(t => t.Fecha >= ingreso.FechaInicio
-                         && t.Fecha < ingreso.FechaFin.AddDays(1) && t.Funcionario.Id == ingreso.Funcionario.Id))
+                        Proveedor buscarProveedor = await db.Proveedores.FindAsync(ing.Proveedor.Id);
+                        Funcionario buscarFuncionario = await db.Funcionarios.FindAsync(ing.Funcionario.Id);
+                        ing.Proveedor = buscarProveedor;
+                        ing.Funcionario = buscarFuncionario;
+                        db.Entry(ing.Proveedor).State = EntityState.Unchanged;
+                        db.Entry(ing.Funcionario).State = EntityState.Unchanged;
+
+                        if (await db.IngresosDiarios.AnyAsync(t => t.Fecha >= ing.FechaInicio
+                         && t.Fecha < ing.FechaFin.AddDays(1) && t.Funcionario.Id == ing.Funcionario.Id))
                         {
-                            ingreso.EstadoAutorizacion = SD.TipoAutIng.NoAutorizado.ToString();
-                            ingreso.Comentarios = "Parte del rango de fechas solicitadas ya estan ingresadas. Verifique";
+                            ing.EstadoAutorizacion = SD.TipoAutIng.NoAutorizado.ToString();
+                            ing.Comentarios = "Parte del rango de fechas solicitadas ya estan ingresadas. Verifique";
                         }
                         else
                         {
-                            ingreso.EstadoAutorizacion = SD.TipoAutIng.Pendiente.ToString();
+                            ing.EstadoAutorizacion = SD.TipoAutIng.Pendiente.ToString();
                             contador++;
                         }
-                        var addIngreso = await db.Ingresos.AddAsync(ingreso);
+                       
+                       
                     }
+                    await db.Ingresos.AddRangeAsync(ingresos);
                     await db.SaveChangesAsync();
+
+
+                    //ingresos = mapper.Map<List<IngresoDTO>, List<Ingreso>>(ingresosDTO);
+                    //await db.Ingresos.AddRangeAsync(
+                    //    ingresos.Select(ing =>
+
+                    //    if (await db.IngresosDiarios.AnyAsync(t => t.Fecha >= ing.FechaInicio
+                    //         && t.Fecha < ing.FechaFin.AddDays(1) && t.Funcionario.Id == ing.Funcionario.Id))
+                    //{
+                    //    ing.EstadoAutorizacion = SD.TipoAutIng.NoAutorizado.ToString();
+                    //    ing.Comentarios = "Parte del rango de fechas solicitadas ya estan ingresadas. Verifique";
+                    //}
+                    //else
+                    //{
+                    //    ing.EstadoAutorizacion = SD.TipoAutIng.Pendiente.ToString();
+                    //    contador++;
+                    //}
+                    //    )
+
+
+                    //    ) ;
+
                     if (ingresosDTO.Count == contador) {
                         return SD.IngresosReturn.OK.ToString();
                     }

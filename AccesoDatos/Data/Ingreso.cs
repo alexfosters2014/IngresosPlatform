@@ -26,6 +26,7 @@ namespace AccesoDatos.Data
         public string Comentarios { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
+        public int ProveedorId { get; set; }
         public virtual Proveedor Proveedor { get; set; }
         public int FuncionarioId { get; set; }
         public virtual Funcionario Funcionario { get; set; }
