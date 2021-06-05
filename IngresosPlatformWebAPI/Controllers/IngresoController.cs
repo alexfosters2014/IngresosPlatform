@@ -54,15 +54,15 @@ namespace IngresosPlatformWebAPI.Controllers
             if (ingresosNuevos != null && ingresosNuevos.Count > 0)
             {
                 var resultado = await ingresoRepositorio.Agregar(ingresosNuevos);
-                if (resultado == 0)
+                if (resultado == SD.IngresosReturn.ERROR.ToString())
                 {
-                    return BadRequest(false);
+                    return BadRequest(resultado);
                 }
-                return Ok(true);
+                return Ok(resultado);
             }
             else
             {
-                return BadRequest(false);
+                return BadRequest(SD.IngresosReturn.ERROR.ToString());
             }
         }
 
@@ -119,9 +119,28 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-
-
-
-
+        [HttpGet("ingresosNoAutorizadosxProveedor/{proveedorId:int}")]
+        public async Task<IActionResult> IngresosNoAutorizadosXProveedor(int proveedorId)
+        {
+            List<IngresoDTO> ingresos = await ingresoRepositorio.ObtenerNoAutorizadosxProveedor(proveedorId);
+            if (ingresos == null)
+            {
+                return BadRequest();
+            }
+                return Ok(ingresos);
         }
+        [HttpGet("ingresosAutorizadosxProveedor/{proveedorId:int}")]
+        public async Task<IActionResult> IngresosAutorizadosXProveedor(int proveedorId)
+        {
+            List<IngresoDTO> ingresos = await ingresoRepositorio.ObtenerAutorizadosxProveedor(proveedorId);
+            if (ingresos == null)
+            {
+                return BadRequest();
+            }
+            return Ok(ingresos);
+        }
+
+
+
+    }
 }

@@ -1,0 +1,36 @@
+﻿@page "/Ingresos/Baja/{ingresoId:int}"
+@inject IServiceIngreso serviceIngreso
+@inject NavigationManager nav
+
+
+<Loading />
+
+@code {
+    [Parameter]
+    public int ingresoId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        BajaIngresoporId();
+    }
+
+    protected override void OnParametersSet()
+    {
+        BajaIngresoporId();
+    }
+
+
+    public async void BajaIngresoporId()
+    {
+        int resultado = await serviceIngreso.EliminarIngreso(ingresoId);
+
+        if (resultado > 0)
+        {
+            nav.NavigateTo("/Revisiones", true);
+        }
+        else {
+            Console.WriteLine("error");
+        }
+    }
+
+}

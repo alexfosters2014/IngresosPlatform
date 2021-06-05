@@ -24,6 +24,7 @@ namespace AccesoDatos.Data
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Ingreso> Ingresos { get; set; }
+        public DbSet<IngresoDiario> IngresosDiarios { get; set; }
         public DbSet<ConfiguracionSistema> Configuraciones { get; set; }
     }
 }

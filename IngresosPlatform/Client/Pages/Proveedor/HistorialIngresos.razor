@@ -1,0 +1,60 @@
+﻿@page "/HistorialIngresos"
+@inject IServiceIngreso serviceIngreso
+@inject ILocalStorageService localStorage
+@inject IJSRuntime js
+@inject NavigationManager nav
+
+<h3>Historial de Ingresos</h3>
+
+
+@if (ingresosDTO != null && ingresosDTO.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Cedula</th>
+                <th scope="col">Funcionario</th>
+                <th scope="col">Hora entrada</th>
+                <th scope="col">Hora salida</th>
+                <th scope="col">Desde</th>
+                <th scope="col">Hasta</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (IngresoDTO ing in ingresosDTO)
+            {
+                <tr>
+                    <td>@ing.Funcionario.Cedula</td>
+                    <td>@ing.Funcionario.Nombre</td>
+                    <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                    <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                    <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                    <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <Loading />
+}
+
+
+@code {
+
+    private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
+    private UsuarioDTO usuarioDTO { get; set; } = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarIngresos();
+    }
+    private async Task CargarIngresos()
+    {
+        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        ingresosDTO = await serviceIngreso.ObtenerIngresosNoAutXProveedor(usuarioDTO.Proveedor.Id);
+    }
+
+}
+

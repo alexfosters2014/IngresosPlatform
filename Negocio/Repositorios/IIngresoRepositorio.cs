@@ -9,11 +9,12 @@ namespace Negocio.Repositorios
 {
     public interface IIngresoRepositorio
     {
-        public Task<int> Agregar(List<IngresoDTO> ingresosDTO);
+        public Task<string> Agregar(List<IngresoDTO> ingresosDTO);
         public Task<int> Borrar(int ingresoId);
         public Task<IngresoDTO> Actualizar(IngresoDTO ingresoDTO);
         public Task<List<IngresoDTO>> ObtenerPendientes();
-
+        public Task<List<IngresoDTO>> ObtenerNoAutorizadosxProveedor(int proveedorId);
+        public Task<List<IngresoDTO>> ObtenerAutorizadosxProveedor(int proveedorId);
         public Task<bool> AutorizarIngreso(int ingresoId,string estadoAutorizacion);
     }
 }

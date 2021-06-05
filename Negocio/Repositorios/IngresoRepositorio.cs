@@ -44,43 +44,56 @@ namespace Negocio.Repositorios
             }
         }
 
-        public async Task<int> Agregar(List<IngresoDTO> ingresosDTO)
+        public async Task<string> Agregar(List<IngresoDTO> ingresosDTO)
         {
+            int contador = 0;
+            Ingreso ingreso = null;
+            List<Ingreso> ingresos = null;
             try
             {
+
+                //db.Ingresos.AsNoTracking().ToList();
                 if (ingresosDTO != null && ingresosDTO.Count > 0)
                 {
-                    foreach (IngresoDTO ingDTO in ingresosDTO)
+                    ingresos = mapper.Map<List<IngresoDTO>, List<Ingreso>>(ingresosDTO);
+                    Proveedor buscarProveedor = await db.Proveedores.FindAsync(ingresos.First().Proveedor.Id);
+                    foreach (Ingreso ing in ingresos)
                     {
+                        ing.Proveedor = buscarProveedor;
+                        db.Entry(ing.Proveedor).State = EntityState.Unchanged;
+                        db.Entry(ing.Funcionario).State = EntityState.Unchanged;
 
-                        Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingDTO);
-
-                        //buscar el funcionario y el proveedor unchanged
-                        //Funcionario buscadoF = null;
-                        //Proveedor buscadoP = null;
-                        //buscadoF = await db.Funcionarios.FindAsync(ingreso.Funcionario.Id);
-                        //buscadoP = await db.Proveedores.FindAsync(ingreso.Proveedor.Id);
-                        //if (buscadoF == null && buscadoP == null) { return 0; }
-
-                        //db.Entry(buscadoF).State = EntityState.Unchanged;
-                        //db.Entry(buscadoP).State = EntityState.Unchanged;
-                        //ingreso.Proveedor = buscadoP;
-                        //ingreso.Funcionario = buscadoF;
-                        db.Entry(ingDTO.Proveedor).State = EntityState.Unchanged;
-                        db.Entry(ingDTO.Funcionario).State = EntityState.Unchanged;
-
-                        var addIngreso = await db.Ingresos.AddAsync(ingreso);
+                        if (await db.IngresosDiarios.AnyAsync(t => t.Fecha >= ing.FechaInicio
+                         && t.Fecha < ing.FechaFin.AddDays(1) && t.Funcionario.Id == ing.Funcionario.Id))
+                        {
+                            ing.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
+                            ing.Comentarios = "Parte del rango de fechas solicitadas ya estan ingresadas. Verifique";
+                        }
+                        else
+                        {
+                            ing.EstadoAutorizacion = SD.TipoAutIng.PENDIENTE.ToString();
+                            contador++;
+                        }
                     }
-                    return await db.SaveChangesAsync();
+                    await db.Ingresos.AddRangeAsync(ingresos);
+                    await db.SaveChangesAsync();
+
+
+                    if (ingresosDTO.Count == contador) {
+                        return SD.IngresosReturn.OK.ToString();
+                    }
+                    else {
+                        return SD.IngresosReturn.REVISAR.ToString();
+                    } 
                 }
                 else
                 {
-                    return 0;
+                    return SD.IngresosReturn.ERROR.ToString();
                 }
             }
             catch (Exception e)
             {
-                return 0;
+                return SD.IngresosReturn.ERROR.ToString();
             }
         }
 
@@ -128,7 +141,42 @@ namespace Negocio.Repositorios
                 List<IngresoDTO> ingresos =
                     mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
                     .Include(i => i.Proveedor)
-                    .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.Pendiente.ToString()).ToList());
+                    .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.PENDIENTE.ToString()).ToList());
+                return ingresos;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+        public async Task<List<IngresoDTO>> ObtenerNoAutorizadosxProveedor(int proveedorId)
+        {
+            try
+            {
+                List<IngresoDTO> ingresos =
+                    mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
+                    .Include(i => i.Proveedor)
+                    .Include(i => i.Funcionario)
+                    .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.NOAUTORIZADO.ToString()
+                            && ing.Proveedor.Id == proveedorId).ToList());
+                return ingresos;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<IngresoDTO>> ObtenerAutorizadosxProveedor(int proveedorId)
+        {
+            try
+            {
+                List<IngresoDTO> ingresos =
+                    mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
+                    .Include(i => i.Proveedor)
+                    .Include(i => i.Funcionario)
+                    .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.AUTORIZADO.ToString()
+                            && ing.Proveedor.Id == proveedorId).ToList());
                 return ingresos;
             }
             catch (Exception e)
@@ -137,4 +185,6 @@ namespace Negocio.Repositorios
             }
         }
     }
+
+
 }

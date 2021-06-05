@@ -1,19 +1,47 @@
-﻿function MostrarMsg(tipo, mensaje){
-    if (tipo === "success") {
-        Swal.fire(
-            'Exitoso!',
-            mensaje,
-            'success'
-        )
-    }
-        if (tipo === "error") {
-            Swal.fire(
-                'Error!',
-                mensaje,
-                'error'
-            )
-        }
+﻿function MsgSuccess(mensaje) {
+    return new Promise(resolve => {
+        Swal.fire({
+            title: "Exitoso",
+            text: mensaje,
+            icon: 'success',
+            confirmButtonColor: '#00b347',
+            confirmButtonText: 'OK',
+        }).then((result) => {
+            resolve(result.isConfirmed);
+        })
+
+    });
 }
+
+function MsgError(mensaje) {
+    return new Promise(resolve => {
+    Swal.fire({
+        title: "Error",
+        text: mensaje,
+        icon: 'error',
+        confirmButtonColor: '#00b347',
+        confirmButtonText: 'OK',
+    }).then((result) => {
+        resolve(result.isConfirmed);
+    })
+
+    });
+}
+
+function MsgWarning(mensaje) {
+    return new Promise(resolve => {
+    Swal.fire({
+        title: "Advertencia",
+        text: mensaje,
+        icon: 'warning',
+        confirmButtonColor: '#00b347',
+        confirmButtonText: 'OK',
+    }).then((result) => {
+        resolve(result.isConfirmed);
+    })
+
+    });
+    }
 
 function ConfirmarOperacion (pregunta) {
     return new Promise(resolve => {

@@ -20,35 +20,17 @@ namespace IngresosPlatform.Client.Services
         public async Task<IngresoDTO> ActualizarIngreso(IngresoDTO ingresoDTO)
         {
             var response = await httpClient.PostAsJsonAsync("/api/Ingreso", ingresoDTO);
-            if (response.IsSuccessStatusCode)
-            {
                 var content = await response.Content.ReadAsStringAsync();
-
                 var ingresoActualizado = JsonConvert.DeserializeObject<IngresoDTO>(content);
-
                 return ingresoActualizado;
-            }
-            else
-            {
-                return null;
-            }
         }
 
-        public async Task<bool> AgregarIngresos(List<IngresoDTO> ingresosDTO)
+        public async Task<string> AgregarIngresos(List<IngresoDTO> ingresosDTO)
         {
-            var response = await httpClient.PostAsJsonAsync("/api/Ingreso", ingresosDTO);
-
-            if (response.IsSuccessStatusCode)
-            {
+                var response = await httpClient.PostAsJsonAsync("/api/Ingreso", ingresosDTO);
                 var content = await response.Content.ReadAsStringAsync();
-
-                var ingresosNuevos = JsonConvert.DeserializeObject<bool>(content);
-                return ingresosNuevos;
-            }
-            else
-            {
-                return false;
-            }
+                //var ingresosNuevos = JsonConvert.DeserializeObject<string>(content);
+                return content;
         }
 
         public async Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion)
@@ -108,8 +90,52 @@ namespace IngresosPlatform.Client.Services
         {
             var response = await httpClient.GetAsync("api/Ingreso/");
             var content = await response.Content.ReadAsStringAsync();
-            var usuarios = JsonConvert.DeserializeObject<List<IngresoXProveedorDTO>>(content);
-            return usuarios;
+            var ingresoss = JsonConvert.DeserializeObject<List<IngresoXProveedorDTO>>(content);
+            return ingresoss;
+        }
+
+        public async Task<List<IngresoDTO>> ObtenerIngresosNoAutXProveedor(int? proveedorId)
+        {
+            if (proveedorId != null)
+            {
+                var response = await httpClient.GetAsync($"api/Ingreso/ingresosNoAutorizadosxProveedor/{proveedorId.Value}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var ingresos = JsonConvert.DeserializeObject<List<IngresoDTO>>(content);
+                    return ingresos;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<IngresoDTO>> ObtenerIngresosAutXProveedor(int? proveedorId)
+        {
+            if (proveedorId != null)
+            {
+                var response = await httpClient.GetAsync($"api/Ingreso/ingresosAutorizadosxProveedor/{proveedorId.Value}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var ingresos = JsonConvert.DeserializeObject<List<IngresoDTO>>(content);
+                    return ingresos;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

@@ -17,9 +17,15 @@ namespace Comun
         }
         public enum TipoAutIng
         {
-            Pendiente,
-            Autorizado,
-            NoAutorizado
+            PENDIENTE,
+            AUTORIZADO,
+            NOAUTORIZADO
+        }
+        public enum IngresosReturn
+        {
+            OK,
+            REVISAR,
+            ERROR
         }
     }
 }

@@ -47,8 +47,8 @@
                         <td>@ing.FechaFin</td>
                         <td>@ing.FechaFin</td>
                         <td>
-                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id, SD.TipoAutIng.Autorizado.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
-                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id,SD.TipoAutIng.NoAutorizado.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
+                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
+                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id,SD.TipoAutIng.NOAUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
                         </td>
                     </tr>
                 }
