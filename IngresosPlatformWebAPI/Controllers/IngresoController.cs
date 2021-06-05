@@ -54,11 +54,11 @@ namespace IngresosPlatformWebAPI.Controllers
             if (ingresosNuevos != null && ingresosNuevos.Count > 0)
             {
                 var resultado = await ingresoRepositorio.Agregar(ingresosNuevos);
-                if (resultado == SD.IngresosReturn.REVISAR.ToString())
+                if (resultado == SD.IngresosReturn.ERROR.ToString())
                 {
-                    return BadRequest(SD.IngresosReturn.REVISAR.ToString());
+                    return BadRequest(resultado);
                 }
-                return Ok(SD.IngresosReturn.OK.ToString());
+                return Ok(resultado);
             }
             else
             {
@@ -119,15 +119,25 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-        [HttpGet("ingresosPendientesxProveedor/{proveedorId:int}")]
-        public async Task<IActionResult> IngresosPendientesXProveedor(int proveedorId)
+        [HttpGet("ingresosNoAutorizadosxProveedor/{proveedorId:int}")]
+        public async Task<IActionResult> IngresosNoAutorizadosXProveedor(int proveedorId)
         {
-            List<IngresoDTO> ingresos = await ingresoRepositorio.ObtenerPendientes();
+            List<IngresoDTO> ingresos = await ingresoRepositorio.ObtenerNoAutorizadosxProveedor(proveedorId);
             if (ingresos == null)
             {
                 return BadRequest();
             }
                 return Ok(ingresos);
+        }
+        [HttpGet("ingresosAutorizadosxProveedor/{proveedorId:int}")]
+        public async Task<IActionResult> IngresosAutorizadosXProveedor(int proveedorId)
+        {
+            List<IngresoDTO> ingresos = await ingresoRepositorio.ObtenerAutorizadosxProveedor(proveedorId);
+            if (ingresos == null)
+            {
+                return BadRequest();
+            }
+            return Ok(ingresos);
         }
 
 

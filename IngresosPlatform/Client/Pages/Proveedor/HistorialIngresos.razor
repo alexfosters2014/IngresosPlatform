@@ -1,10 +1,10 @@
-﻿@page "/Revisiones"
+﻿@page "/HistorialIngresos"
 @inject IServiceIngreso serviceIngreso
-@inject NavigationManager nav
-@inject IJSRuntime js
 @inject ILocalStorageService localStorage
+@inject IJSRuntime js
+@inject NavigationManager nav
 
-<h3>Revision de autorizaciones de ingresos</h3>
+<h3>Historial de Ingresos</h3>
 
 
 @if (ingresosDTO != null && ingresosDTO.Any())
@@ -18,8 +18,6 @@
                 <th scope="col">Hora salida</th>
                 <th scope="col">Desde</th>
                 <th scope="col">Hasta</th>
-                <th scope="col">Comentarios</th>
-                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -32,8 +30,6 @@
                     <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
                     <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
                     <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
-                    <td>@ing.Comentarios</td>
-                    <td><a href="" @onclick="(() => EliminarIngreso(ing.Id))" @onclick:preventDefault>Borrar</a></td>
                 </tr>
             }
         </tbody>
@@ -44,39 +40,21 @@ else
     <Loading />
 }
 
+
 @code {
 
-    List<IngresoDTO> ingresosDTO { get; set; } = null;
-    UsuarioDTO usuarioDTO { get; set; } = null;
-    bool confirmacion;
+    private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
+    private UsuarioDTO usuarioDTO { get; set; } = null;
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarRechazados();
+        await CargarIngresos();
     }
-
-    private async Task CargarRechazados()
+    private async Task CargarIngresos()
     {
         usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-        if (usuarioDTO != null)
-        {
-            ingresosDTO = await serviceIngreso.ObtenerIngresosNoAutXProveedor(usuarioDTO.Proveedor.Id);
-        }
-        else
-        {
-            await js.MsgError("No se autentificado");
-            nav.NavigateTo("/login");
-        }
+        ingresosDTO = await serviceIngreso.ObtenerIngresosNoAutXProveedor(usuarioDTO.Proveedor.Id);
     }
-
-    private async Task EliminarIngreso(int ingresoId)
-    {
-        confirmacion = await js.MsgConfirmacion("Desea dar de baja el ingreso seleccionado?");
-        if (confirmacion)
-        {
-            nav.NavigateTo($"/Ingresos/Baja/{ingresoId}");
-        }
-    }
-
 
 }
+

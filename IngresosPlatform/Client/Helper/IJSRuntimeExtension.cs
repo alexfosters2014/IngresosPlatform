@@ -8,17 +8,17 @@ namespace IngresosPlatform.Client.Helper
 {
     public static class IJSRuntimeExtension
     {
-        public static async ValueTask MsgExitoso(this IJSRuntime js, string mensaje)
+        public static async ValueTask<bool> MsgExitoso(this IJSRuntime js, string mensaje)
         {
-            await js.InvokeVoidAsync("MostrarMsg", "success",mensaje);
+            return await js.InvokeAsync<bool>("MsgSuccess",mensaje);
         }
-        public static async ValueTask MsgAdvertencia(this IJSRuntime js, string mensaje)
+        public static async ValueTask<bool> MsgAdvertencia(this IJSRuntime js, string mensaje)
         {
-            await js.InvokeVoidAsync("MostrarMsg", "warning", mensaje);
+            return await js.InvokeAsync<bool>("MsgWarning", mensaje);
         }
-        public static async ValueTask MsgError(this IJSRuntime js, string mensaje)
+        public static async ValueTask<bool> MsgError(this IJSRuntime js, string mensaje)
         {
-            await js.InvokeVoidAsync("MostrarMsg", "error", mensaje);
+           return await js.InvokeAsync<bool>("MsgError", mensaje);
         }
         public static async ValueTask<bool> MsgConfirmacion(this IJSRuntime js, string pregunta)
         {

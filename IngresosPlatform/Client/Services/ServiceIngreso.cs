@@ -29,8 +29,8 @@ namespace IngresosPlatform.Client.Services
         {
                 var response = await httpClient.PostAsJsonAsync("/api/Ingreso", ingresosDTO);
                 var content = await response.Content.ReadAsStringAsync();
-                var ingresosNuevos = JsonConvert.DeserializeObject<string>(content);
-                return ingresosNuevos;
+                //var ingresosNuevos = JsonConvert.DeserializeObject<string>(content);
+                return content;
         }
 
         public async Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion)
@@ -94,11 +94,33 @@ namespace IngresosPlatform.Client.Services
             return ingresoss;
         }
 
-        public async Task<List<IngresoDTO>> ObtenerIngresosPendSegunProveedor(int? proveedorId)
+        public async Task<List<IngresoDTO>> ObtenerIngresosNoAutXProveedor(int? proveedorId)
         {
             if (proveedorId != null)
             {
-                var response = await httpClient.GetAsync($"api/ingresosPendientesxProveedor/{proveedorId.Value}");
+                var response = await httpClient.GetAsync($"api/Ingreso/ingresosNoAutorizadosxProveedor/{proveedorId.Value}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var ingresos = JsonConvert.DeserializeObject<List<IngresoDTO>>(content);
+                    return ingresos;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<IngresoDTO>> ObtenerIngresosAutXProveedor(int? proveedorId)
+        {
+            if (proveedorId != null)
+            {
+                var response = await httpClient.GetAsync($"api/Ingreso/ingresosAutorizadosxProveedor/{proveedorId.Value}");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
