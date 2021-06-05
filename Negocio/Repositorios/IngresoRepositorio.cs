@@ -60,6 +60,7 @@ namespace Negocio.Repositorios
                          && t.Fecha < ingreso.FechaFin.AddDays(1) && t.Funcionario.Id == ingreso.Funcionario.Id))
                         {
                             ingreso.EstadoAutorizacion = SD.TipoAutIng.NoAutorizado.ToString();
+                            ingreso.Comentarios = "Parte del rango de fechas solicitadas ya estan ingresadas. Verifique";
                         }
                         else
                         {
@@ -73,17 +74,17 @@ namespace Negocio.Repositorios
                         return SD.IngresosReturn.OK.ToString();
                     }
                     else {
-                        return SD.IngresosReturn.Revisar.ToString();
+                        return SD.IngresosReturn.REVISAR.ToString();
                     } 
                 }
                 else
                 {
-                    return SD.IngresosReturn.Error.ToString();
+                    return SD.IngresosReturn.ERROR.ToString();
                 }
             }
             catch (Exception e)
             {
-                return SD.IngresosReturn.Error.ToString();
+                return SD.IngresosReturn.ERROR.ToString();
             }
         }
 
@@ -139,5 +140,23 @@ namespace Negocio.Repositorios
                 return null;
             }
         }
+        public async Task<List<IngresoDTO>> ObtenerPendientesxProveedor(int proveedorId)
+        {
+            try
+            {
+                List<IngresoDTO> ingresos =
+                    mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
+                    .Include(i => i.Proveedor)
+                    .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.NoAutorizado.ToString()
+                            && ing.Proveedor.Id == proveedorId).ToList());
+                return ingresos;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
+
+
 }

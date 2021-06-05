@@ -1,4 +1,4 @@
-﻿@page "/cargaIngresos"
+﻿@page "/CargaIngresos"
 @inject IServiceFuncionario serviceFuncionario
 @inject IServiceIngreso serviceIngreso
 @inject ILocalStorageService localStorage
@@ -13,6 +13,7 @@
         <DataAnnotationsValidator />
         <div class="row">
             <div class="col">
+                <a href="C:\Users\Alex\Desktop\Blazor IngresosPlatfornm\IngresosPlatform\IngresosPlatform\Client\Pages\Proveedor\NuevosIngresos.razor">C:\Users\Alex\Desktop\Blazor IngresosPlatfornm\IngresosPlatform\IngresosPlatform\Client\Pages\Proveedor\NuevosIngresos.razor</a>
                 <label>Cedula*</label>
                 <InputText @bind-Value="ingresoIndividual.Funcionario.Cedula" class="form-control" readonly />
                 <ValidationMessage For="@( () => ingresoIndividual.Funcionario.Cedula)" />
@@ -136,7 +137,6 @@
             }
             ingresoIndividual.Proveedor = usuarioDTO.Proveedor;
             ingresoIndividual.Fecha = DateTime.Now;
-            ingresoIndividual.EstadoAutorizacion = SD.TipoAutIng.Pendiente.ToString();
             //bool hayDuplicados = ingresosDTO.GroupBy(g => g.Funcionario.Id).Any(c => c.Count() > 1);
             ingresosDTO.Add(ingresoIndividual);
             ReiniciarIngreso();
@@ -171,17 +171,24 @@
     }
     private async Task AgregarIngresos()
     {
-        bool resultado = await serviceIngreso.AgregarIngresos(ingresosDTO);
-        if (resultado)
+        string resultado = await serviceIngreso.AgregarIngresos(ingresosDTO);
+
+        if (resultado == SD.IngresosReturn.OK.ToString())
         {
             await js.MsgExitoso("Se han enviado las solicitudes de ingreso");
-            nav.NavigateTo("/cargaIngresos", true);
+            nav.NavigateTo("/CargaIngresos", true);
         }
-        else
+
+        if (resultado == SD.IngresosReturn.REVISAR.ToString())
         {
-            await js.MsgError("se ha producido un error");
+            await js.MsgAdvertencia("Algunas solicitudes han sido rechazadas porque algun dia del rango enviado ya está registrado. Revise");
+            nav.NavigateTo("/Revisiones", true);
         }
-}
+        if (resultado == SD.IngresosReturn.ERROR.ToString())
+        {
+            await js.MsgError("Se ha producido un error");
+        }
+    }
 
 }
 

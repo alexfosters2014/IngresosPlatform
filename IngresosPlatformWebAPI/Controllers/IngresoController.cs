@@ -119,9 +119,18 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-
-
-
-
+        [HttpGet("ingresosPendientesxProveedor/{proveedorId:int}")]
+        public async Task<IActionResult> IngresosPendientesXProveedor(int proveedorId)
+        {
+            List<IngresoDTO> ingresos = await ingresoRepositorio.ObtenerPendientes();
+            if (ingresos == null)
+            {
+                return BadRequest();
+            }
+                return Ok(ingresos);
         }
+
+
+
+    }
 }

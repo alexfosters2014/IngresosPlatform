@@ -12,6 +12,10 @@ namespace IngresosPlatform.Client.Helper
         {
             await js.InvokeVoidAsync("MostrarMsg", "success",mensaje);
         }
+        public static async ValueTask MsgAdvertencia(this IJSRuntime js, string mensaje)
+        {
+            await js.InvokeVoidAsync("MostrarMsg", "warning", mensaje);
+        }
         public static async ValueTask MsgError(this IJSRuntime js, string mensaje)
         {
             await js.InvokeVoidAsync("MostrarMsg", "error", mensaje);
