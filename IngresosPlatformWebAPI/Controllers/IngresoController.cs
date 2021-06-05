@@ -54,15 +54,15 @@ namespace IngresosPlatformWebAPI.Controllers
             if (ingresosNuevos != null && ingresosNuevos.Count > 0)
             {
                 var resultado = await ingresoRepositorio.Agregar(ingresosNuevos);
-                if (resultado == 0)
+                if (resultado == SD.IngresosReturn.REVISAR.ToString())
                 {
-                    return BadRequest(false);
+                    return BadRequest(SD.IngresosReturn.REVISAR.ToString());
                 }
-                return Ok(true);
+                return Ok(SD.IngresosReturn.OK.ToString());
             }
             else
             {
-                return BadRequest(false);
+                return BadRequest(SD.IngresosReturn.ERROR.ToString());
             }
         }
 

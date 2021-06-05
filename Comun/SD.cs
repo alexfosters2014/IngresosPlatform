@@ -21,5 +21,11 @@ namespace Comun
             Autorizado,
             NoAutorizado
         }
+        public enum IngresosReturn
+        {
+            OK,
+            REVISAR,
+            ERROR
+        }
     }
 }

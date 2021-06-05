@@ -44,43 +44,46 @@ namespace Negocio.Repositorios
             }
         }
 
-        public async Task<int> Agregar(List<IngresoDTO> ingresosDTO)
+        public async Task<string> Agregar(List<IngresoDTO> ingresosDTO)
         {
+            int contador = 0;
             try
             {
                 if (ingresosDTO != null && ingresosDTO.Count > 0)
                 {
                     foreach (IngresoDTO ingDTO in ingresosDTO)
                     {
-
                         Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingDTO);
-
-                        //buscar el funcionario y el proveedor unchanged
-                        //Funcionario buscadoF = null;
-                        //Proveedor buscadoP = null;
-                        //buscadoF = await db.Funcionarios.FindAsync(ingreso.Funcionario.Id);
-                        //buscadoP = await db.Proveedores.FindAsync(ingreso.Proveedor.Id);
-                        //if (buscadoF == null && buscadoP == null) { return 0; }
-
-                        //db.Entry(buscadoF).State = EntityState.Unchanged;
-                        //db.Entry(buscadoP).State = EntityState.Unchanged;
-                        //ingreso.Proveedor = buscadoP;
-                        //ingreso.Funcionario = buscadoF;
                         db.Entry(ingreso.Proveedor).State = EntityState.Unchanged;
                         db.Entry(ingreso.Funcionario).State = EntityState.Unchanged;
-
+                        if (await db.IngresosDiarios.AnyAsync(t => t.Fecha >= ingreso.FechaInicio
+                         && t.Fecha < ingreso.FechaFin.AddDays(1) && t.Funcionario.Id == ingreso.Funcionario.Id))
+                        {
+                            ingreso.EstadoAutorizacion = SD.TipoAutIng.NoAutorizado.ToString();
+                        }
+                        else
+                        {
+                            ingreso.EstadoAutorizacion = SD.TipoAutIng.Pendiente.ToString();
+                            contador++;
+                        }
                         var addIngreso = await db.Ingresos.AddAsync(ingreso);
                     }
-                    return await db.SaveChangesAsync();
+                    await db.SaveChangesAsync();
+                    if (ingresosDTO.Count == contador) {
+                        return SD.IngresosReturn.OK.ToString();
+                    }
+                    else {
+                        return SD.IngresosReturn.Revisar.ToString();
+                    } 
                 }
                 else
                 {
-                    return 0;
+                    return SD.IngresosReturn.Error.ToString();
                 }
             }
             catch (Exception e)
             {
-                return 0;
+                return SD.IngresosReturn.Error.ToString();
             }
         }
 

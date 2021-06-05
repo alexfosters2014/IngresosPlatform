@@ -9,7 +9,7 @@ namespace Negocio.Repositorios
 {
     public interface IIngresoRepositorio
     {
-        public Task<int> Agregar(List<IngresoDTO> ingresosDTO);
+        public Task<string> Agregar(List<IngresoDTO> ingresosDTO);
         public Task<int> Borrar(int ingresoId);
         public Task<IngresoDTO> Actualizar(IngresoDTO ingresoDTO);
         public Task<List<IngresoDTO>> ObtenerPendientes();

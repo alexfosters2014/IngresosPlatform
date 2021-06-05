@@ -12,7 +12,14 @@
                 mensaje,
                 'error'
             )
-        }
+    }
+    if (tipo === "warning") {
+        Swal.fire(
+            'Advertencia!',
+            mensaje,
+            'warning'
+        )
+    }
 }
 
 function ConfirmarOperacion (pregunta) {
