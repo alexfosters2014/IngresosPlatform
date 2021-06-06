@@ -1,7 +1,73 @@
-﻿@page "/Login"
+﻿@page "/"
+@layout EmptyLayout
+@inject IServiceUsuario serviceUsuario
+@inject ILocalStorageService localStorage
+@inject NavigationManager nav
+@inject IJSRuntime js
 
-<h3>Login</h3>
+<div class="d-flex justify-content-center">
+    <div style ="margin-top:15vh;">
 
-@code {
+        <div class="recuadroLogin">
+            <section class="row">
+                <div class="col-12">
+                    <h3> Login</h3>
+                </div>
+            </section>
+            <div class="dividerLogin"></div>
 
-}
+            <section class="row">
+                <div class="col">
+                    <EditForm Model="vmLogin" OnValidSubmit="Loguearse">
+                        <DataAnnotationsValidator />
+                        <div class="d-flex justify-content-center">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label for="usuario">Usuario</label>
+                                    <InputText @bind-Value="vmLogin.Usuario" id="usuario" class="form-control" />
+                                    <ValidationMessage For="@( () => vmLogin.Usuario)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label for="rut">Contraseña</label>
+                                    <InputText @bind-Value="vmLogin.Password" id="rut" class="form-control" />
+                                    <ValidationMessage For="@( () => vmLogin.Password)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divider"></div>
+
+                        <div class="col text-center">
+                            <button type="submit" class="btn btn-primary">Loguearme</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </section>
+        </div>
+         </div>
+    </div>
+
+    @code {
+        VMLogin vmLogin = new VMLogin();
+
+        private async void Loguearse()
+        {
+            UsuarioDTO usuarioDTO = null;
+
+            usuarioDTO = await serviceUsuario.Login(vmLogin);
+            if (usuarioDTO != null)
+            {
+                await localStorage.SetItemAsync(SD.LocalUsuario, usuarioDTO);
+                nav.NavigateTo("/index");
+            }
+            else
+            {
+                await js.MsgError("No se ha podido iniciar sesion. Verifique usuario y contraseña, o en su defecto la conexion a internet");
+            }
+        }
+    }
+    }

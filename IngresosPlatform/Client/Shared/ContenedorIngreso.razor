@@ -40,10 +40,10 @@
                             <tr>
                                 <td>@ing.Funcionario.Cedula</td>
                                 <td>@ing.Funcionario.Nombre</td>
-                                <td>@ing.EntradaPlanificada</td>
-                                <td>@ing.SalidaPlanificada</td>
-                                <td>@ing.FechaInicio</td>
-                                <td>@ing.FechaFin</td>
+                                <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                                <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                                <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                                <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
                                 <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
                                 <td>
                                     <a href="" @onclick="(() => IngresoAutorizado(ing, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>

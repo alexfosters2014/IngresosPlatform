@@ -7,6 +7,18 @@ img.nuevoBoton:hover{
     width: 60px;
 }
 
+.recuadroLogin {
+    -webkit-box-shadow: 5px 5px 21px 2px rgba(0,0,0,0.79);
+    box-shadow: 5px 5px 21px 2px rgba(0,0,0,0.79);
+    border: 1px solid;
+    border-color: grey;
+    padding: 30px;
+    border-radius: 20px;
+    background-image: url(../img/login.png);
+    background-repeat:no-repeat;
+    background-size:contain;
+    width:500px;
+}
 
 tr.colorFila{
     background-color:white;
@@ -33,6 +45,9 @@ tr.colorFila{
 .divider{
    padding-top:30px;
 }
+.dividerLogin {
+    padding-top: 120px;
+}
 
 .botonPDFVisor {
     height: 50px;
@@ -43,3 +58,11 @@ tr.colorFila{
         -webkit-filter: invert(100%);
         filter: invert(100%);
     }
+
+.fondo {
+    background: url("../img/fondo.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}

@@ -43,8 +43,8 @@ namespace IngresosPlatformWebAPI.Controllers
                 });
             }
             MailDTO mail = await mailRepositorio.CargarConfigMail();
-            string mensaje= $"Bienvenidos a Ingresos Platform. Su usuario es su RUT y la contraseña inicial es: {usuarioNuevo.PassInicial}, la cual deberá cambiar una vez autentificado al sistema";
-            if (await mail.EnvioAutentificacionProveedor(usuarioNuevo.Email, mensaje)){
+            string mensaje = $"Bienvenidos a Ingresos Platform. Su usuario es su RUT y la contraseña inicial es: {usuarioNuevo.PassInicial}, la cual deberá cambiar una vez autentificado al sistema";
+            if (await mail.EnvioAutentificacionProveedor(usuarioNuevo.Email, mensaje)) {
                 return Ok(usuarioNuevo);
             }
             else
@@ -57,7 +57,7 @@ namespace IngresosPlatformWebAPI.Controllers
                 });
             }
 
-            
+
         }
 
         [HttpDelete("{usuarioId}")]
@@ -77,6 +77,23 @@ namespace IngresosPlatformWebAPI.Controllers
                 return BadRequest(null);
             }
 
+        }
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] VMLogin vmLogin)
+        {
+            if (vmLogin != null)
+            { 
+            var resultado = await usuarioRepositorio.Login(vmLogin);
+            if (resultado == null)
+                {
+                    return BadRequest(null); ;
+                }
+            return Ok(resultado);
+            }
+            else
+                {
+                    return BadRequest(null);
+                }
         }
     }
 }

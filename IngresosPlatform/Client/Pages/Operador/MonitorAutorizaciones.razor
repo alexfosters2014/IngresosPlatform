@@ -1,10 +1,10 @@
 ﻿@page "/Autorizaciones"
 @inject IServiceIngreso serviceIngreso
-
+@inject NavigationManager nav
 
 <h3>Monitor de Autorizaciones</h3>
 <div class="d-flex flex-row-reverse">
-    <img src="/img/actualizar.png" class="botonPDFVisor" />
+    <img src="/img/actualizar.png" class="botonPDFVisor" @onclick="Refrescar"/>
 </div>
 
 @if (ingresosXProv != null && ingresosXProv.Any())
@@ -44,6 +44,10 @@ else
         {
             Console.WriteLine("Hubo un error");
         }
+    }
+    private void Refrescar()
+    {
+        nav.NavigateTo("/Autorizaciones",true);
     }
 
 }

@@ -1,6 +1,8 @@
+@inject ILocalStorageService localStorage
+
 <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayoutOperador)" />
+        <RouteView RouteData="@routeData" DefaultLayout="@layoutActual" />
     </Found>
     <NotFound>
         <LayoutView Layout="@typeof(MainLayoutProveedor)">
@@ -8,3 +10,35 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code
+{
+    private Type layoutActual = typeof(MainLayoutProveedor);
+
+    protected override void OnInitialized()
+    {
+        CargarLayout();
+    }
+    private async void CargarLayout()
+    {
+        UsuarioDTO usuarioDTO = null;
+        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+
+        if (usuarioDTO != null)
+        {
+            if (usuarioDTO.TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
+            {
+                layoutActual = typeof(MainLayoutProveedor);
+            }
+            if (usuarioDTO.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString())
+            {
+                layoutActual = typeof(MainLayoutProveedor);
+            }
+            else
+            {
+                layoutActual = typeof(MainLayoutProveedor); ///cambiar por el del portero
+            }
+        }
+    }
+
+}

@@ -84,14 +84,6 @@ else if (funcionarios != null && funcionarios.Count == 0)
 
     protected override async Task OnInitializedAsync()
     {
-        ProveedorDTO pro = await serviceProveedor.ObtenerProveedor(2);
-        UsuarioDTO usu = new UsuarioDTO()
-        {
-            Id = 2,
-            Proveedor = pro
-        };
-        await localStorage.SetItemAsync(SD.LocalUsuario, usu);
-
         await CargarProveedores();
         //por mientras lo inicializo
 

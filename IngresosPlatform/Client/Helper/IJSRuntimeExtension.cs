@@ -30,7 +30,7 @@ namespace IngresosPlatform.Client.Helper
         }
         public static async ValueTask<string> OnInputText(this IJSRuntime js)
         {
-            return await js.InvokeAsync<string>("OnInputText", "Comentarios!", "Ingreso el comentario que recibirá el proveedor:");
+            return await js.InvokeAsync<string>("OnInputText", "Comentarios!", "Ingrese un comentario el cual recibirá el proveedor:");
         }
 
     }

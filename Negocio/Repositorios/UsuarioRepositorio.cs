@@ -91,6 +91,21 @@ namespace Negocio.Repositorios
                 return null;
             }
         }
+        public async Task<UsuarioDTO> Login(VMLogin vmLogin)
+        {
+            try
+            {
+                vmLogin.Password = Encriptacion.GetSHA256(vmLogin.Password);
+                UsuarioDTO usuario = mapper.Map<Usuario, UsuarioDTO>(await db.Usuarios.Include(i => i.Proveedor)
+                                                                    .SingleAsync(u => u.UsuarioNombre == vmLogin.Usuario &&
+                                                                                      u.Password == vmLogin.Password));
+                return usuario;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
 
         public async Task<List<UsuarioDTO>> ObtenerTodos()
         {

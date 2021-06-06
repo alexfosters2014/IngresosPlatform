@@ -52,6 +52,22 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
+        public async Task<UsuarioDTO> Login(VMLogin vmLogin)
+        {
+            var response = await httpClient.PostAsJsonAsync($"/api/Usuario/Login", vmLogin);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var usuario = JsonConvert.DeserializeObject<UsuarioDTO>(content);
+                return usuario;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public Task<UsuarioDTO> Obtener(int? usuarioId)
         {
             throw new NotImplementedException();
