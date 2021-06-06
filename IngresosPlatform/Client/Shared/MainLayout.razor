@@ -1,0 +1,34 @@
+﻿@inherits LayoutComponentBase
+@inject ILocalStorageService localStorage
+
+<div class="page">
+    <div class="sidebar">
+        @if (usuario.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString())
+        {
+            <NavMenuOperador />
+        }
+        @if (usuario.TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
+        {
+            <NavMenuProveedor />
+        }
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4">
+            <a href="http://blazor.net" target="_blank" class="ml-md-auto">Salir</a>
+        </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>
+</div>
+
+@code{
+    UsuarioDTO usuario { get; set; } = null;
+
+    protected  async override Task OnInitializedAsync()
+    {
+        usuario = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+    }
+}
