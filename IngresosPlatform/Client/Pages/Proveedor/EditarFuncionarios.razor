@@ -9,337 +9,343 @@
 @inject IServiceArchivo serviceArchivo
 
 <div class="container">
-    <h3>Nuevo Proveedor</h3>
-
-    <p style="font-size:small;color:orange">Recuerde que el tamaño de los archivos deben ser hasta 2Mb</p>
-
-    <section class="row">
-        <div class="col-6">
-            <EditForm Model="funcionarioDTO" OnValidSubmit="EditarFuncionario">
-                <DataAnnotationsValidator />
-                <div class="row recuadro">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="rut">Nombre de funcionario*</label>
-                            <InputText @bind-Value="funcionarioDTO.Nombre" id="rut" class="form-control" />
-                            <ValidationMessage For="@( () => funcionarioDTO.Nombre)" />
+    <div class="d-flex justify-content-center">
+        <h3>Nuevo Proveedor</h3>
+    </div>
+    <div class="d-flex justify-content-center">
+        <section class="row">
+            <div class="col-8">
+                <p style="font-size:small;color:orange">Recuerde que el tamaño de los archivos deben ser hasta 2Mb</p>
+            </div>
+        </section>
+        <section class="row">
+            <div class="col-6">
+                <EditForm Model="funcionarioDTO" OnValidSubmit="EditarFuncionario">
+                    <DataAnnotationsValidator />
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="rut">Nombre de funcionario*</label>
+                                <InputText @bind-Value="funcionarioDTO.Nombre" id="rut" class="form-control" />
+                                <ValidationMessage For="@( () => funcionarioDTO.Nombre)" />
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <div class="divider"></div>
+
+                    <div class="row recuadro">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cedula">Numero de Cedula*</label>
+                                <InputText @bind-Value="funcionarioDTO.Cedula" id="cedula" class="form-control" />
+                                <ValidationMessage For="@( () => funcionarioDTO.Cedula)" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="vtoCedula">Vto. de Cedula*</label>
+                                <InputDate @bind-Value="funcionarioDTO.VtoCedula" id="vtoCedula" class="form-control" />
+                                <ValidationMessage For="@( () => funcionarioDTO.VtoCedula)" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refCedula" @onchange="SubirPDF_PathCedula" />
+                                <ValidationMessage For="@( () => funcionarioDTO.PathCedula)" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(funcionarioDTO.PathCedula))
+                            {
+                                <a href="@funcionarioDTO.PathCedula" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="row recuadro">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="catLibreta">Categoria de libreta conducir</label>
+                                <InputText @bind-Value="funcionarioDTO.CategoriaLibreta" id="catLibreta" class="form-control" />
+                                <ValidationMessage For="@( () => funcionarioDTO.CategoriaLibreta)" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="libConducir">Vto. de libreta de conducir</label>
+                                <InputDate @bind-Value="funcionarioDTO.VtoLibreta" id="libConducir" class="form-control" />
+                                <ValidationMessage For="@( () => funcionarioDTO.VtoLibreta)" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refLibreta" @onchange="SubirPDF_PathLibreta" />
+                                <ValidationMessage For="@( () => funcionarioDTO.PathLibreta)" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(funcionarioDTO.PathLibreta))
+                            {
+                                <a href="@funcionarioDTO.PathLibreta" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="row recuadro">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="carnesalud">Vto. de carne de salud</label>
+                                <InputDate @bind-Value="funcionarioDTO.VtoCarneSalud" id="carnesalud" class="form-control" />
+                                <ValidationMessage For="@( () => funcionarioDTO.VtoCarneSalud)" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refCarneSalud" @onchange="SubirPDF_PathCarneSalud" />
+                                <ValidationMessage For="@( () => funcionarioDTO.PathCarneSalud)" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(funcionarioDTO.PathCarneSalud))
+                            {
+                                <a href="@funcionarioDTO.PathCarneSalud" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="row recuadro">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="vtoCMA">Vto. de C. Manipulación de alimentos</label>
+                                <InputDate @bind-Value="funcionarioDTO.VtoCMAlimentos" id="vtoCMA" class="form-control" />
+                                <ValidationMessage For="@( () => funcionarioDTO.VtoCMAlimentos)" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refCarneMA" @onchange="SubirPDF_PathMA" />
+                                <ValidationMessage For="@( () => funcionarioDTO.PathCMAlimentos)" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(funcionarioDTO.PathCMAlimentos))
+                            {
+                                <a href="@funcionarioDTO.PathCMAlimentos" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="row recuadro">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="altBps">Fecha de alta BPS</label>
+                                <InputDate @bind-Value="funcionarioDTO.AltaBps" id="altBps" class="form-control" />
+                                <ValidationMessage For="@( () => funcionarioDTO.AltaBps)" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refAltaBPS" @onchange="SubirPDF_PathAltaBPS" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(funcionarioDTO.PathAltaBps))
+                            {
+                                <a href="@funcionarioDTO.PathAltaBps" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    @if (!carga)
+                    {
+                        <div class="col text-center">
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                            <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+                        </div>
+                    }
+                </EditForm>
                 <div class="divider"></div>
+            </div>
+        </section>
 
-                <div class="row recuadro">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="cedula">Numero de Cedula*</label>
-                            <InputText @bind-Value="funcionarioDTO.Cedula" id="cedula" class="form-control" />
-                            <ValidationMessage For="@( () => funcionarioDTO.Cedula)" />
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="vtoCedula">Vto. de Cedula*</label>
-                            <InputDate @bind-Value="funcionarioDTO.VtoCedula" id="vtoCedula" class="form-control" />
-                            <ValidationMessage For="@( () => funcionarioDTO.VtoCedula)" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refCedula" @onchange="SubirPDF_PathCedula" />
-                            <ValidationMessage For="@( () => funcionarioDTO.PathCedula)" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        @if (!string.IsNullOrEmpty(funcionarioDTO.PathCedula))
-                        {
-                            <a href="@funcionarioDTO.PathCedula" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
-                        }
-                    </div>
-                </div>
+        <section class="row">
+            @if (carga)
+            {
+                <Loading></Loading>
+            }
+        </section>
 
-                <div class="divider"></div>
+    </div>
+    </div>
+        @code {
+            [Parameter]
+            public int? funcionarioId { get; set; }
 
-                <div class="row recuadro">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="catLibreta">Categoria de libreta conducir</label>
-                            <InputText @bind-Value="funcionarioDTO.CategoriaLibreta" id="catLibreta" class="form-control" />
-                            <ValidationMessage For="@( () => funcionarioDTO.CategoriaLibreta)" />
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="libConducir">Vto. de libreta de conducir</label>
-                            <InputDate @bind-Value="funcionarioDTO.VtoLibreta" id="libConducir" class="form-control" />
-                            <ValidationMessage For="@( () => funcionarioDTO.VtoLibreta)" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refLibreta" @onchange="SubirPDF_PathLibreta" />
-                            <ValidationMessage For="@( () => funcionarioDTO.PathLibreta)" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        @if (!string.IsNullOrEmpty(funcionarioDTO.PathLibreta))
-                        {
-                            <a href="@funcionarioDTO.PathLibreta" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
-                        }
-                    </div>
-                </div>
+            private bool carga = false;
 
-                <div class="divider"></div>
+            ElementReference refCedula;
+            ElementReference refLibreta;
+            ElementReference refCarneSalud;
+            ElementReference refCarneMA;
+            ElementReference refAltaBPS;
 
-                <div class="row recuadro">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="carnesalud">Vto. de carne de salud</label>
-                            <InputDate @bind-Value="funcionarioDTO.VtoCarneSalud" id="carnesalud" class="form-control" />
-                            <ValidationMessage For="@( () => funcionarioDTO.VtoCarneSalud)" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refCarneSalud" @onchange="SubirPDF_PathCarneSalud" />
-                            <ValidationMessage For="@( () => funcionarioDTO.PathCarneSalud)" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        @if (!string.IsNullOrEmpty(funcionarioDTO.PathCarneSalud))
-                        {
-                            <a href="@funcionarioDTO.PathCarneSalud" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
-                        }
-                    </div>
-                </div>
+            FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
 
-                <div class="divider"></div>
+            protected override async Task OnInitializedAsync()
+            {
+                await CargarFunconarios();
+            }
+            protected override async void OnParametersSet()
+            {
+                await CargarFunconarios();
+            }
 
-                <div class="row recuadro">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="vtoCMA">Vto. de C. Manipulación de alimentos</label>
-                            <InputDate @bind-Value="funcionarioDTO.VtoCMAlimentos" id="vtoCMA" class="form-control" />
-                            <ValidationMessage For="@( () => funcionarioDTO.VtoCMAlimentos)" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refCarneMA" @onchange="SubirPDF_PathMA" />
-                            <ValidationMessage For="@( () => funcionarioDTO.PathCMAlimentos)" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        @if (!string.IsNullOrEmpty(funcionarioDTO.PathCMAlimentos))
-                        {
-                            <a href="@funcionarioDTO.PathCMAlimentos" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
-                        }
-                    </div>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="row recuadro">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="altBps">Fecha de alta BPS</label>
-                            <InputDate @bind-Value="funcionarioDTO.AltaBps" id="altBps" class="form-control" />
-                            <ValidationMessage For="@( () => funcionarioDTO.AltaBps)" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <input type="file" accept=".pdf" @ref="refAltaBPS" @onchange="SubirPDF_PathAltaBPS" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        @if (!string.IsNullOrEmpty(funcionarioDTO.PathAltaBps))
-                        {
-                            <a href="@funcionarioDTO.PathAltaBps" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
-                        }
-                    </div>
-                </div>
-                <div class="divider"></div>
-                @if (!carga)
+            public async Task CargarFunconarios()
+            {
+                if (funcionarioId != null)
                 {
-                    <div class="col text-center">
-                        <button type="submit" class="btn btn-primary">Agregar</button>
-                        <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
-                    </div>
+                    var resultado = await serviceFuncionario.Obtener(funcionarioId);
+
+                    if (resultado == null)
+                    {
+                        Console.WriteLine("Hubo un error");
+                    }
+                    else
+                    {
+                        funcionarioDTO = resultado;
+                    }
                 }
-            </EditForm>
-            <div class="divider"></div>
-        </div>
-    </section>
-
-    <section class="row">
-        @if (carga)
-        {
-            <Loading></Loading>
-        }
-    </section>
-
-</div>
-
-@code {
-    [Parameter]
-    public int? funcionarioId { get; set; }
-
-    private bool carga = false;
-
-    ElementReference refCedula;
-    ElementReference refLibreta;
-    ElementReference refCarneSalud;
-    ElementReference refCarneMA;
-    ElementReference refAltaBPS;
-
-    FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
-
-    protected override async Task OnInitializedAsync()
-    {
-        await CargarFunconarios();
-    }
-    protected override async void OnParametersSet()
-    {
-        await CargarFunconarios();
-    }
-
-    public async Task CargarFunconarios()
-    {
-        if (funcionarioId != null)
-        {
-            var resultado = await serviceFuncionario.Obtener(funcionarioId);
-
-            if (resultado == null)
-            {
-                Console.WriteLine("Hubo un error");
+                else
+                {
+                    Console.WriteLine("El id de proveedor es nulo");
+                }
             }
-            else
+
+            public void Cancelar()
             {
-                funcionarioDTO = resultado;
+                nav.NavigateTo("/Funcionarios");
+            }
+
+            public async Task EditarFuncionario()
+            {
+                carga = true;
+                var resultado = await serviceFuncionario.Actualizar(funcionarioDTO);
+
+                if (resultado == null)
+                {
+                    Console.WriteLine("Hubo un error");
+                    await js.MsgError("Hubo un error");
+                }
+                else
+                {
+                    nav.NavigateTo("/Funcionarios", true);
+                }
+            }
+
+            private async void SubirPDF_PathCedula()
+            {
+                var file = (await fileReader.CreateReference(refCedula).EnumerateFilesAsync()).FirstOrDefault();
+                if (file != null)
+                {
+                    string nuevaPath = await FileStream(file, funcionarioDTO.PathCedula);
+                    if (nuevaPath != null || nuevaPath != "")
+                    {
+                        funcionarioDTO.PathCedula = nuevaPath;
+                        StateHasChanged();
+                        await js.MsgExitoso("Archivo subido exitosamente");
+                    }
+                    else
+                    {
+                        await js.MsgError("No se pudo subir el archivo");
+                    }
+                }
+            }
+
+            private async void SubirPDF_PathLibreta()
+            {
+                var file = (await fileReader.CreateReference(refLibreta).EnumerateFilesAsync()).FirstOrDefault();
+                string nuevaPath = await FileStream(file, funcionarioDTO.PathLibreta);
+                if (nuevaPath != null || nuevaPath != "")
+                {
+                    funcionarioDTO.PathLibreta = nuevaPath;
+                    StateHasChanged();
+                    await js.MsgExitoso("Archivo subido exitosamente");
+                }
+                else
+                {
+                    await js.MsgError("No se pudo subir el archivo");
+                }
+            }
+
+            private async void SubirPDF_PathCarneSalud()
+            {
+                var file = (await fileReader.CreateReference(refCarneSalud).EnumerateFilesAsync()).FirstOrDefault();
+                string nuevaPath = await FileStream(file, funcionarioDTO.PathCarneSalud);
+                if (nuevaPath != null || nuevaPath != "")
+                {
+                    funcionarioDTO.PathCarneSalud = nuevaPath;
+                    StateHasChanged();
+                    await js.MsgExitoso("Archivo subido exitosamente");
+                }
+                else
+                {
+                    await js.MsgError("No se pudo subir el archivo");
+                }
+            }
+
+            private async void SubirPDF_PathMA()
+            {
+                var file = (await fileReader.CreateReference(refCarneMA).EnumerateFilesAsync()).FirstOrDefault();
+                string nuevaPath = await FileStream(file, funcionarioDTO.PathCMAlimentos);
+                if (nuevaPath != null || nuevaPath != "")
+                {
+                    funcionarioDTO.PathCMAlimentos = nuevaPath;
+                    StateHasChanged();
+                    await js.MsgExitoso("Archivo subido exitosamente");
+                }
+                else
+                {
+                    await js.MsgError("No se pudo subir el archivo");
+                }
+            }
+
+            private async void SubirPDF_PathAltaBPS()
+            {
+                var file = (await fileReader.CreateReference(refAltaBPS).EnumerateFilesAsync()).FirstOrDefault();
+                string nuevaPath = await FileStream(file, funcionarioDTO.PathAltaBps);
+                if (nuevaPath != null || nuevaPath != "")
+                {
+                    funcionarioDTO.PathAltaBps = nuevaPath;
+                    StateHasChanged();
+                    await js.MsgExitoso("Archivo subido exitosamente");
+                }
+                else
+                {
+                    await js.MsgError("No se pudo subir el archivo");
+                }
+            }
+            private async Task<string> FileStream(IFileReference file, string patAnterior)
+            {
+                //validar size menor a 2Mb
+                if (file == null) return "";
+
+                var fileInfo = await file.ReadFileInfoAsync();
+                Stream fileStream = null;
+
+                using (var ms = await file.CreateMemoryStreamAsync((int)fileInfo.Size))
+                {
+                    fileStream = new MemoryStream(ms.ToArray());
+                }
+                string nuevaPath = await serviceArchivo.ActualizarArchivo(fileStream, fileInfo.Name, patAnterior);
+                fileStream.Dispose();
+                return nuevaPath;
             }
         }
-        else
-        {
-            Console.WriteLine("El id de proveedor es nulo");
-        }
-    }
-
-    public void Cancelar()
-    {
-        nav.NavigateTo("/Funcionarios");
-    }
-
-    public async Task EditarFuncionario()
-    {
-        carga = true;
-        var resultado = await serviceFuncionario.Actualizar(funcionarioDTO);
-
-        if (resultado == null)
-        {
-            Console.WriteLine("Hubo un error");
-            await js.MsgError("Hubo un error");
-        }
-        else
-        {
-            nav.NavigateTo("/Funcionarios", true);
-        }
-    }
-
-    private async void SubirPDF_PathCedula()
-    {
-        var file = (await fileReader.CreateReference(refCedula).EnumerateFilesAsync()).FirstOrDefault();
-        if (file != null) {
-            string nuevaPath = await FileStream(file, funcionarioDTO.PathCedula);
-            if (nuevaPath != null || nuevaPath != "")
-            {
-                funcionarioDTO.PathCedula = nuevaPath;
-                StateHasChanged();
-                await js.MsgExitoso("Archivo subido exitosamente");
-            }
-            else
-            {
-                await js.MsgError("No se pudo subir el archivo");
-            }
-        }
-    }
-
-    private async void SubirPDF_PathLibreta()
-    {
-        var file = (await fileReader.CreateReference(refLibreta).EnumerateFilesAsync()).FirstOrDefault();
-        string nuevaPath = await FileStream(file, funcionarioDTO.PathLibreta);
-        if (nuevaPath != null || nuevaPath != "")
-        {
-            funcionarioDTO.PathLibreta = nuevaPath;
-            StateHasChanged();
-            await js.MsgExitoso("Archivo subido exitosamente");
-        }
-        else
-        {
-            await js.MsgError("No se pudo subir el archivo");
-        }
-    }
-
-    private async void SubirPDF_PathCarneSalud()
-    {
-        var file = (await fileReader.CreateReference(refCarneSalud).EnumerateFilesAsync()).FirstOrDefault();
-        string nuevaPath = await FileStream(file, funcionarioDTO.PathCarneSalud);
-        if (nuevaPath != null || nuevaPath != "")
-        {
-            funcionarioDTO.PathCarneSalud = nuevaPath;
-            StateHasChanged();
-            await js.MsgExitoso("Archivo subido exitosamente");
-        }
-        else
-        {
-            await js.MsgError("No se pudo subir el archivo");
-        }
-    }
-
-    private async void SubirPDF_PathMA()
-    {
-        var file = (await fileReader.CreateReference(refCarneMA).EnumerateFilesAsync()).FirstOrDefault();
-        string nuevaPath = await FileStream(file, funcionarioDTO.PathCMAlimentos);
-        if (nuevaPath != null || nuevaPath != "")
-        {
-            funcionarioDTO.PathCMAlimentos = nuevaPath;
-            StateHasChanged();
-            await js.MsgExitoso("Archivo subido exitosamente");
-        }
-        else
-        {
-            await js.MsgError("No se pudo subir el archivo");
-        }
-    }
-
-    private async void SubirPDF_PathAltaBPS()
-    {
-        var file = (await fileReader.CreateReference(refAltaBPS).EnumerateFilesAsync()).FirstOrDefault();
-        string nuevaPath = await FileStream(file, funcionarioDTO.PathAltaBps);
-        if (nuevaPath != null || nuevaPath != "")
-        {
-            funcionarioDTO.PathAltaBps = nuevaPath;
-            StateHasChanged();
-            await js.MsgExitoso("Archivo subido exitosamente");
-        }
-        else
-        {
-            await js.MsgError("No se pudo subir el archivo");
-        }
-    }
-    private async Task<string> FileStream(IFileReference file,string patAnterior)
-    {
-        //validar size menor a 2Mb
-        if (file == null) return "";
-
-        var fileInfo = await file.ReadFileInfoAsync();
-        Stream fileStream = null;
-
-        using (var ms = await file.CreateMemoryStreamAsync((int)fileInfo.Size))
-        {
-            fileStream = new MemoryStream(ms.ToArray());
-        }
-        string nuevaPath = await serviceArchivo.ActualizarArchivo(fileStream, fileInfo.Name, patAnterior);
-        fileStream.Dispose();
-        return nuevaPath;
-    }
-}

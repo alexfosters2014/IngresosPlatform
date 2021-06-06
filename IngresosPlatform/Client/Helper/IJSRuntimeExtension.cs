@@ -28,6 +28,10 @@ namespace IngresosPlatform.Client.Helper
         {
            await js.InvokeVoidAsync("OpenWindow", url);
         }
+        public static async ValueTask<string> OnInputText(this IJSRuntime js)
+        {
+            return await js.InvokeAsync<string>("OnInputText", "Comentarios!", "Ingreso el comentario que recibirá el proveedor:");
+        }
 
     }
 }

@@ -29,6 +29,8 @@ namespace Negocio.Repositorios
                 {
                     Ingreso ingresoDB = await db.Ingresos.Include(i => i.Proveedor).SingleAsync(s => s.Id == ingresoDTO.Id);
                     Ingreso ingreso = mapper.Map<IngresoDTO, Ingreso>(ingresoDTO, ingresoDB);
+                    db.Entry(ingreso.Proveedor).State = EntityState.Unchanged;
+                    db.Entry(ingreso.Funcionario).State = EntityState.Unchanged;
                     var updateIngreso = db.Ingresos.Update(ingreso);
                     await db.SaveChangesAsync();
                     return mapper.Map<Ingreso, IngresoDTO>(updateIngreso.Entity);

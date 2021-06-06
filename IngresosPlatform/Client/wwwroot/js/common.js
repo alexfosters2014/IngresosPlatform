@@ -65,4 +65,27 @@ function OpenWindow(url) {
     window.open(url, 'Visor', 'width=800,height=860,scrollbars=no,toolbar=no,location=no, left='+ parseInt(window.innerWidth - 160)+'');
 }
 
+function OnInputText(titulo, mensaje) {
+    return new Promise(resolve => {
+        Swal.fire({
+            title: titulo,
+            text: mensaje,
+            input: 'text',
+            showCancelButton: true,
+            confirmButtonColor: '#00b347',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'OK',
+            cancelButtonColor: '#d33',
+            cancelButtonText: "CANCELAR"
+        }).then((result) => {
+            if (!result.isConfirmed) {
+                resolve("NOTCONFIRMED");
+            }else if (result.value) {
+                resolve(result.value);
+            } else {
+                resolve("");
+            }
+        })
+    })
+}
 
