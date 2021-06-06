@@ -8,7 +8,7 @@ namespace Modelo
 {
     public class IngresoXProveedorDTO
     {
-        public ProveedorDTO Proveedor { get; set; }
+        public int ProveedorId { get; set; }
         public List<IngresoDTO> Ingresos { get; set; }
     }
 }

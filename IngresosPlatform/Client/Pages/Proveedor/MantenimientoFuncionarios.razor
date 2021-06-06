@@ -3,6 +3,8 @@
 @inject NavigationManager nav
 @inject IJSRuntime js
 @inject ILocalStorageService localStorage
+@inject IServiceProveedor serviceProveedor
+
 
 <h3>Mantenimiento de Funcionarios</h3>
 
@@ -82,20 +84,10 @@ else if (funcionarios != null && funcionarios.Count == 0)
 
     protected override async Task OnInitializedAsync()
     {
-        ProveedorDTO pro = new ProveedorDTO()
-        {
-            Id = 1,
-            Direccion="assd",
-            Activo=true,
-            Email="ale@gmail.com",
-            RazonSocial="raaa",
-            NombreFantasia="nombrefantasia",
-            Rubro="seguridad",
-            Rut="21620127915"
-        };
+        ProveedorDTO pro = await serviceProveedor.ObtenerProveedor(2);
         UsuarioDTO usu = new UsuarioDTO()
         {
-            Id = 1,
+            Id = 2,
             Proveedor = pro
         };
         await localStorage.SetItemAsync(SD.LocalUsuario, usu);

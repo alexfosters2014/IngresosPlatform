@@ -2,7 +2,7 @@
 @using Comun
 @inject IServiceIngreso serviceIngreso
 
-<div hidden="@visible">
+<div class="recuadroAutorizaciones">
     <div class="row">
         <div class="col">
             <h2>@proveedorDTO.Rut</h2>
@@ -28,9 +28,8 @@
                     <th scope="col">Hora salida</th>
                     <th scope="col">Desde</th>
                     <th scope="col">Hasta</th>
-                    <th scope="col">Ver</th>
-                    <th scope="col">Autorizaciones</th>
-                    <th scope="col">Comentarios</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -43,9 +42,7 @@
                         <td>@ing.SalidaPlanificada</td>
                         <td>@ing.FechaInicio</td>
                         <td>@ing.FechaFin</td>
-                        <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
-                        <td>@ing.FechaFin</td>
-                        <td>@ing.FechaFin</td>
+                        <td><a href="/Funcionario/@ing.Funcionario.Id" target="_blank" class="btn btn-primary">Ver</a></td>
                         <td>
                             <a href="" @onclick="(() => IngresoAutorizado(ing.Id, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
                             <a href="" @onclick="(() => IngresoAutorizado(ing.Id,SD.TipoAutIng.NOAUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
@@ -71,10 +68,18 @@
     {
         visible = false;
     }
+    //protected override async Task OnInitializedAsync()
+    //{
 
-    private async Task VerDatosFuncionario(int funcinoarioId)
+    //}
+    //    protected override Task OnParametersSetAsync()
+    //    {
+
+    //    }
+
+    private async Task VerDatosFuncionario(int funcionarioId)
     {
-        await js.InvokeVoidAsync("open", $"/Funcionario/{funcinoarioId}", "_blank");
+        await js.InvokeVoidAsync("open", $"/Funcionario/{funcionarioId}", "_blank");
     }
     private async Task IngresoAutorizado(int ingresoId,string autorizado)
     {

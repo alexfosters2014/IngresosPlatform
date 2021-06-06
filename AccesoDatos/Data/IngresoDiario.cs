@@ -18,8 +18,8 @@ namespace AccesoDatos.Data
         public DateTime EntradaPlanificada { get; set; }
         [Required]
         public DateTime SalidaPlanificada { get; set; }
-        public DateTime EntradaEfectiva { get; set; }
-        public DateTime SalidaEfectiva { get; set; }
+        public DateTime? EntradaEfectiva { get; set; }
+        public DateTime? SalidaEfectiva { get; set; }
         public string Comentarios { get; set; }
         public virtual Proveedor Proveedor { get; set; }
         public int FuncionarioId { get; set; }

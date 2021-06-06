@@ -51,8 +51,6 @@ namespace Negocio.Repositorios
             List<Ingreso> ingresos = null;
             try
             {
-
-                //db.Ingresos.AsNoTracking().ToList();
                 if (ingresosDTO != null && ingresosDTO.Count > 0)
                 {
                     ingresos = mapper.Map<List<IngresoDTO>, List<Ingreso>>(ingresosDTO);
@@ -141,6 +139,7 @@ namespace Negocio.Repositorios
                 List<IngresoDTO> ingresos =
                     mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
                     .Include(i => i.Proveedor)
+                    .Include(i => i.Funcionario)
                     .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.PENDIENTE.ToString()).ToList());
                 return ingresos;
             }

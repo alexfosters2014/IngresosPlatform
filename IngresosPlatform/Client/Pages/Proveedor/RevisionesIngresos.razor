@@ -39,6 +39,10 @@
         </tbody>
     </table>
 }
+else if (ingresosDTO != null && ingresosDTO.Count == 0)
+{
+    <p> No hay nuevas autorizaciones a procesar</p>
+}
 else
 {
     <Loading />

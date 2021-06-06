@@ -31,11 +31,19 @@ namespace IngresosPlatformWebAPI.Controllers
             if (ingresos.Count > 0)
             {
 
+                //var ingresosProveedor = ingresos.GroupBy(g => g.Proveedor.Id);
+
+                //foreach(var ing in ingresosProveedor)
+                //{
+                //    var provId = ing.Key;
+                //    var lista = ing.ToList();
+                //}
+
                 List<IngresoXProveedorDTO> ingXProveedor = ingresos
-                                      .GroupBy(g => g.Proveedor)
+                                      .GroupBy(g => g.Proveedor.Id)
                                       .Select(s => new IngresoXProveedorDTO()
                                       {
-                                          Proveedor = s.Key,
+                                          ProveedorId = s.Key,
                                           Ingresos = s.ToList()
                                       }).ToList();
 

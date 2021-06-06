@@ -1,5 +1,4 @@
 ﻿@page "/Funcionario/{funcionarioId:int}"
-@layout EmptyLayout
 @inject IJSRuntime js
 @inject IServiceFuncionario serviceFuncionario
 
@@ -12,7 +11,7 @@
         </tr>
         <tr>
             <td><LabelFull Titulo="Numero de Cedula" Dato="@funcionarioDTO.Cedula" /></td>
-            <td><LabelFull Titulo="Vencimiento de Cedula" Dato="@funcionarioDTO.VtoCedula.ToShortDateString()" /></td>
+            <td><LabelFull Titulo="Vencimiento de Cedula" Dato="@funcionarioDTO.VtoCedula.ToString("dd/MM/yyyy")" /></td>
             <td>
                 @if (funcionarioDTO.PathCedula.Length > 0)
                 {
@@ -22,7 +21,7 @@
         </tr>
         <tr>
             <td><LabelFull Titulo="Categoria libreta conducir" Dato="@funcionarioDTO.CategoriaLibreta" /></td>
-            <td><LabelFull Titulo="Vencimiento libreta de conducir" Dato="@funcionarioDTO.VtoLibreta.Value.ToShortDateString()" /></td>
+            <td><LabelFull Titulo="Vencimiento libreta de conducir" Dato="@funcionarioDTO.VtoLibreta.Value.ToString("dd/MM/yyyy")" /></td>
             <td>
                 @if (funcionarioDTO.PathLibreta.Length > 0)
                 {
@@ -31,7 +30,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2"><LabelFull Titulo="Vencimiento carne de salud" Dato="@funcionarioDTO.VtoCarneSalud.Value.ToShortDateString()" /></td>
+            <td colspan="2"><LabelFull Titulo="Vencimiento carne de salud" Dato="@funcionarioDTO.VtoCarneSalud.Value.ToString("dd/MM/yyyy")" /></td>
             <td>
                 @if (funcionarioDTO.PathCarneSalud.Length > 0)
                 {
@@ -40,7 +39,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2"><LabelFull Titulo="Vencimiento carne de manipulacion de alimentos" Dato="@funcionarioDTO.VtoCMAlimentos.Value.ToShortDateString()" /></td>
+            <td colspan="2"><LabelFull Titulo="Vencimiento carne de manipulacion de alimentos" Dato="@funcionarioDTO.VtoCMAlimentos.Value.ToString("dd/MM/yyyy")" /></td>
             <td>
                 @if (funcionarioDTO.PathCMAlimentos.Length > 0)
                 {
@@ -49,7 +48,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2"><LabelFull Titulo="Fecha de alta BPS" Dato="@funcionarioDTO.AltaBps.Value.ToShortDateString()" /></td>
+            <td colspan="2"><LabelFull Titulo="Fecha de alta BPS" Dato="@funcionarioDTO.AltaBps.Value.ToString("dd/MM/yyyy")" /></td>
             <td>
                 @if (funcionarioDTO.PathAltaBps.Length > 0)
                 {
@@ -71,17 +70,19 @@
     {
         await js.WindowPopUp(url);
     }
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        await CargaFuncionario();
     }
-    protected override void OnParametersSet()
+
+    protected async override Task OnParametersSetAsync()
     {
-        base.OnParametersSet();
+        await CargaFuncionario();
     }
 
     private async Task CargaFuncionario()
     {
         funcionarioDTO = await serviceFuncionario.Obtener(funcionarioId);
+
     }
 }

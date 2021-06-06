@@ -8,7 +8,7 @@
 {
                @foreach (IngresoXProveedorDTO ing in ingresosXProv)
                    {
-                   <ContenedorIngreso proveedorDTO="@ing.Proveedor" ingresosDTO="@ing.Ingresos"/>
+                   <ContenedorIngreso proveedorDTO="@ing.Ingresos.First().Proveedor" ingresosDTO="@ing.Ingresos"/>
                    }
  }
 else if (ingresosXProv != null && ingresosXProv.Count == 0)
