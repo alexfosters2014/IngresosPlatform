@@ -33,3 +33,13 @@ tr.colorFila{
 .divider{
    padding-top:30px;
 }
+
+.botonPDFVisor {
+    height: 50px;
+    width: 50px;
+}
+
+.botonPDFVisor:hover {
+        -webkit-filter: invert(100%);
+        filter: invert(100%);
+    }

@@ -1,40 +1,46 @@
 ﻿@page "/Funcionario/{funcionarioId:int}"
+@layout EmptyLayout
 @inject IJSRuntime js
 @inject IServiceFuncionario serviceFuncionario
 
 <h4>Visor Funcionario</h4>
 
-<table class="table table-borderless">
-    <tbody>
-        <tr>
-            <td colspan="3"><LabelFull Titulo="Nombre" Dato="@funcionarioDTO.Nombre" /></td>
-        </tr>
-        <tr>
-            <td><LabelFull Titulo="Numero de Cedula" Dato="@funcionarioDTO.Cedula" /></td>
-            <td><LabelFull Titulo="Vencimiento de Cedula" Dato="@funcionarioDTO.VtoCedula.ToString("dd/MM/yyyy")" /></td>
-            <td>
-                @if (funcionarioDTO.PathCedula.Length > 0)
-                {
-                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCedula))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
-                }
-            </td>
-        </tr>
-        <tr>
-            <td><LabelFull Titulo="Categoria libreta conducir" Dato="@funcionarioDTO.CategoriaLibreta" /></td>
-            <td><LabelFull Titulo="Vencimiento libreta de conducir" Dato="@funcionarioDTO.VtoLibreta.Value.ToString("dd/MM/yyyy")" /></td>
-            <td>
-                @if (funcionarioDTO.PathLibreta.Length > 0)
-                {
-                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathLibreta))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
-                }
-            </td>
-        </tr>
-        <tr>
+@if (funcionarioDTO != null)
+{
+<div class="container">
+    <table class="table table-borderless col-6 recuadroAutorizaciones">
+        <tbody>
+            <tr>
+                <td colspan="3"><LabelFull Titulo="Nombre" Dato="@funcionarioDTO.Nombre" /></td>
+            </tr>
+            <tr>
+                <td><LabelFull Titulo="Numero de Cedula" Dato="@funcionarioDTO.Cedula" /></td>
+                <td><LabelFull Titulo="Vencimiento de Cedula" Dato="@funcionarioDTO.VtoCedula.ToString("dd/MM/yyyy")" /></td>
+                <td>
+                    @if (funcionarioDTO.PathCedula.Length > 0)
+                    {
+                        <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCedula))" @onclick:preventDefault><img class="botonPDFVisor" src="/img/archivopdf.png"></a>
+                    }
+                </td>
+            </tr>
+            @if (funcionarioDTO.CategoriaLibreta !=null ) { 
+            <tr>
+                <td><LabelFull Titulo="Categoria libreta conducir" Dato="@funcionarioDTO.CategoriaLibreta" /></td>
+                <td><LabelFull Titulo="Vencimiento libreta de conducir" Dato="@funcionarioDTO.VtoLibreta.Value.ToString("dd/MM/yyyy")" /></td>
+                <td>
+                    @if (funcionarioDTO.PathLibreta.Length > 0)
+                    {
+                        <a href="" @onclick="(() => PopPage(funcionarioDTO.PathLibreta))" @onclick:preventDefault><img class="botonPDFVisor" src="/img/archivopdf.png"></a>
+                    }
+                </td>
+            </tr>
+            }
+            <tr>
             <td colspan="2"><LabelFull Titulo="Vencimiento carne de salud" Dato="@funcionarioDTO.VtoCarneSalud.Value.ToString("dd/MM/yyyy")" /></td>
             <td>
                 @if (funcionarioDTO.PathCarneSalud.Length > 0)
                 {
-                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCarneSalud))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
+                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCarneSalud))" @onclick:preventDefault><img class="botonPDFVisor" src="/img/archivopdf.png"></a>
                 }
             </td>
         </tr>
@@ -43,7 +49,7 @@
             <td>
                 @if (funcionarioDTO.PathCMAlimentos.Length > 0)
                 {
-                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCMAlimentos))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
+                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCMAlimentos))" @onclick:preventDefault><img class="botonPDFVisor" src="/img/archivopdf.png"></a>
                 }
             </td>
         </tr>
@@ -52,13 +58,15 @@
             <td>
                 @if (funcionarioDTO.PathAltaBps.Length > 0)
                 {
-                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathAltaBps))" @onclick:preventDefault><img class="nuevoBoton" src="/img/archivopdf.png"></a>
+                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathAltaBps))" @onclick:preventDefault><img class="botonPDFVisor" src="/img/archivopdf.png"></a>
                 }
             </td>
         </tr>
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 
+}
 
 @code {
     [Parameter]
@@ -82,6 +90,7 @@
 
     private async Task CargaFuncionario()
     {
+        string sss = "";
         funcionarioDTO = await serviceFuncionario.Obtener(funcionarioId);
 
     }

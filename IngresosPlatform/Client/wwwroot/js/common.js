@@ -62,7 +62,7 @@ function ConfirmarOperacion (pregunta) {
 }
 
 function OpenWindow(url) {
-    window.open(url, 'Visor', 'width=800,height=860,scrollbars=no,toolbar=no,location=no');
+    window.open(url, 'Visor', 'width=800,height=860,scrollbars=no,toolbar=no,location=no, left='+ parseInt(window.innerWidth - 160)+'');
 }
 
 

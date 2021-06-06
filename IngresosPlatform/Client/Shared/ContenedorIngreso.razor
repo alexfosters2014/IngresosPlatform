@@ -19,7 +19,7 @@
     </div>
 
     <div class="row">
-        <table class="table table-striped">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th scope="col">Cedula</th>
@@ -42,7 +42,7 @@
                         <td>@ing.SalidaPlanificada</td>
                         <td>@ing.FechaInicio</td>
                         <td>@ing.FechaFin</td>
-                        <td><a href="/Funcionario/@ing.Funcionario.Id" target="_blank" class="btn btn-primary">Ver</a></td>
+                        <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
                         <td>
                             <a href="" @onclick="(() => IngresoAutorizado(ing.Id, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
                             <a href="" @onclick="(() => IngresoAutorizado(ing.Id,SD.TipoAutIng.NOAUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
