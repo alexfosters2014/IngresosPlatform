@@ -14,10 +14,12 @@ namespace IngresosPlatformWebAPI.Controllers
     public class IngresoController : Controller
     {
         private readonly IIngresoRepositorio ingresoRepositorio;
+        private readonly IIngresoDiarioRepositorio ingresoDiarioRepositorio;
 
-        public IngresoController(IIngresoRepositorio _ingresoRepositorio)
+        public IngresoController(IIngresoRepositorio _ingresoRepositorio, IIngresoDiarioRepositorio _ingresoDiarioRepositorio)
         {
             ingresoRepositorio = _ingresoRepositorio;
+            ingresoDiarioRepositorio = _ingresoDiarioRepositorio;
         }
 
         [HttpGet]
@@ -65,6 +67,12 @@ namespace IngresosPlatformWebAPI.Controllers
             {
                 var resultado = await ingresoRepositorio.Actualizar(ingresoEstado);
                 if (resultado == null)
+                {
+                    return BadRequest();
+                }
+                // registrar el ingreso
+                var resultado2 = await ingresoDiarioRepositorio.Agregar(resultado);
+                if (resultado2 < 0)
                 {
                     return BadRequest();
                 }

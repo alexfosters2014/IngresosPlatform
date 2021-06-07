@@ -43,6 +43,7 @@ namespace IngresosPlatformWebAPI
             services.AddScoped<IMailRepositorio, MailRepositorio>();
             services.AddScoped<IIngresoRepositorio, IngresoRepositorio>();
             services.AddScoped<IFuncionarioRepositorio, FuncionarioRepositorio>();
+            services.AddScoped<IIngresoDiarioRepositorio, IngresoDiarioRepositorio>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
