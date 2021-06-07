@@ -19,7 +19,7 @@ namespace IngresosPlatform.Client.Services
         }
         public async Task<IngresoDTO> ActualizarIngreso(IngresoDTO ingresoDTO)
         {
-            var response = await httpClient.PostAsJsonAsync("/api/Ingreso", ingresoDTO);
+            var response = await httpClient.PostAsJsonAsync("/api/Ingreso/Actualizar", ingresoDTO);
                 var content = await response.Content.ReadAsStringAsync();
                 var ingresoActualizado = JsonConvert.DeserializeObject<IngresoDTO>(content);
                 return ingresoActualizado;

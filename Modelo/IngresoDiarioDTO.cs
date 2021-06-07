@@ -16,8 +16,8 @@ namespace Modelo
         public DateTime EntradaPlanificada { get; set; }
         [Required]
         public DateTime SalidaPlanificada { get; set; }
-        public DateTime EntradaEfectiva { get; set; }
-        public DateTime SalidaEfectiva { get; set; }
+        public DateTime? EntradaEfectiva { get; set; }
+        public DateTime? SalidaEfectiva { get; set; }
         public string Comentarios { get; set; }
         public virtual ProveedorDTO Proveedor { get; set; }
         public FuncionarioDTO Funcionario { get; set; }

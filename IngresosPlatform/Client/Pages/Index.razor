@@ -1,6 +1,38 @@
-﻿@page "/"
+﻿@page "/index"
+@inject NavigationManager nav
+@inject ILocalStorageService localStorage
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
+
+@code{
+    //UsuarioDTO usuarioDTO = null;
+
+    //protected override void OnInitialized()
+    //{
+    //    Verificador();
+    //}
+
+    //private async void Verificador()
+    //{
+    //    UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+    //    if (usuarioDTO == null)
+    //    {
+    //        nav.NavigateTo("/");
+    //    }
+    //    else if (usuarioDTO.TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
+    //    {
+
+    //    }
+    //    if (usuarioDTO.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString())
+    //    {
+
+    //    }
+    //    else
+    //    {
+    //        ///cambiar por el del portero
+    //    }
+    //}
+}

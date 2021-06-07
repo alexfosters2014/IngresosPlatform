@@ -2,63 +2,65 @@
 @using Comun
 @inject IServiceIngreso serviceIngreso
 
-<div hidden="@visible">
-    <div class="row">
-        <div class="col">
-            <h2>@proveedorDTO.Rut</h2>
+@if (ingresosDTO.Count > 0)
+{
+    <div class="recuadroAutorizaciones">
+        <div class="row">
+            <div class="col">
+                <h2>@proveedorDTO.Rut</h2>
+            </div>
+            <div class="col">
+                <h2>@proveedorDTO.RazonSocial</h2>
+            </div>
+            <div class="col">
+                <h2>@proveedorDTO.NombreFantasia</h2>
+            </div>
+            <div class="col">
+                <h2>@ingresosDTO.Count</h2>
+            </div>
         </div>
-        <div class="col">
-            <h2>@proveedorDTO.RazonSocial</h2>
-        </div>
-        <div class="col">
-            <h2>@proveedorDTO.NombreFantasia</h2>
-        </div>
-        <div class="col">
-            <h2>@ingresosDTO.Count</h2>
-        </div>
-    </div>
 
-    <div class="row">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Cedula</th>
-                    <th scope="col">Funcionario</th>
-                    <th scope="col">Hora entrada</th>
-                    <th scope="col">Hora salida</th>
-                    <th scope="col">Desde</th>
-                    <th scope="col">Hasta</th>
-                    <th scope="col">Ver</th>
-                    <th scope="col">Autorizaciones</th>
-                    <th scope="col">Comentarios</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var ing in ingresosDTO)
-                {
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
                     <tr>
-                        <td>@ing.Funcionario.Cedula</td>
-                        <td>@ing.Funcionario.Nombre</td>
-                        <td>@ing.EntradaPlanificada</td>
-                        <td>@ing.SalidaPlanificada</td>
-                        <td>@ing.FechaInicio</td>
-                        <td>@ing.FechaFin</td>
-                        <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
-                        <td>@ing.FechaFin</td>
-                        <td>@ing.FechaFin</td>
-                        <td>
-                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
-                            <a href="" @onclick="(() => IngresoAutorizado(ing.Id,SD.TipoAutIng.NOAUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
-                        </td>
+                        <th scope="col">Cedula</th>
+                        <th scope="col">Funcionario</th>
+                        <th scope="col">Hora entrada</th>
+                        <th scope="col">Hora salida</th>
+                        <th scope="col">Desde</th>
+                        <th scope="col">Hasta</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
-                }
-                <tr>
-                    <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="AutorizarTodos" />Autorizar Todos</td>
-                </tr>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var ing in ingresosDTO)
+                    {
+                            <tr>
+                                <td>@ing.Funcionario.Cedula</td>
+                                <td>@ing.Funcionario.Nombre</td>
+                                <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                                <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                                <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                                <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+                                <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
+                                <td>
+                                    <a href="" @onclick="(() => IngresoAutorizado(ing, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
+                                    <a href="" @onclick="(() => IngresoNOAutorizado(ing,SD.TipoAutIng.NOAUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
+                                </td>
+                            </tr>
+                    }
+                    @*<tr>
+                            <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="AutorizarTodos" />Autorizar Todos</td>
+                        </tr>*@
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+}
+
+
 @code {
     [Parameter]
     public List<IngresoDTO> ingresosDTO { get; set; }
@@ -71,25 +73,70 @@
     {
         visible = false;
     }
+    //protected override async Task OnInitializedAsync()
+    //{
 
-    private async Task VerDatosFuncionario(int funcinoarioId)
+    //}
+    //    protected override Task OnParametersSetAsync()
+    //    {
+
+    //    }
+
+    private async Task VerDatosFuncionario(int funcionarioId)
     {
-        await js.InvokeVoidAsync("open", $"/Funcionario/{funcinoarioId}", "_blank");
+        await js.InvokeVoidAsync("open", $"/Funcionario/{funcionarioId}", "_blank");
     }
-    private async Task IngresoAutorizado(int ingresoId,string autorizado)
+    private async Task IngresoAutorizado(IngresoDTO ingDTO, string autorizado)
     {
-        bool resultado = await serviceIngreso.AutorizarIngreso(ingresoId, autorizado);
-        if (resultado)
+        bool confirmacion = await js.MsgConfirmacion("Desea confirmar la habilitación de ingreso al funcionario seleccionado?");
+        if (confirmacion)
         {
-            //mensaje de success
-            visible = false;
-            StateHasChanged();
-        }
-        else
-        {
-            //mensaje de error
+            ingDTO.EstadoAutorizacion = SD.TipoAutIng.AUTORIZADO.ToString();
+            IngresoDTO resultado = await serviceIngreso.ActualizarIngreso(ingDTO);
+            if (resultado != null)
+            {
+                await js.MsgExitoso("Se autorizó exitosamente");
+                ingresosDTO.Remove(ingDTO);
+                StateHasChanged();
+            }
+            else
+            {
+                ingDTO.EstadoAutorizacion = SD.TipoAutIng.PENDIENTE.ToString();
+                await js.MsgError("No se pudo realizar la autorización");
+            }
         }
     }
+
+    private async Task IngresoNOAutorizado(IngresoDTO ingDTO, string autorizado)
+    {
+        string comentarios = await js.OnInputText();
+        if (comentarios != "NOTCONFIRMED")
+        {
+            if (!string.IsNullOrEmpty(comentarios))
+            {
+                ingDTO.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
+                ingDTO.Comentarios = comentarios;
+                IngresoDTO resultado = await serviceIngreso.ActualizarIngreso(ingDTO);
+                if (resultado != null)
+                {
+                    await js.MsgExitoso("Se envió la no autorización exitosamente");
+                    ingresosDTO.Remove(ingDTO);
+                    StateHasChanged();
+                }
+                else
+                {
+                    ingDTO.EstadoAutorizacion = SD.TipoAutIng.PENDIENTE.ToString();
+                    ingDTO.Comentarios = "";
+                    await js.MsgError("No se pudo realizar la autorización");
+                }
+            }
+            else
+            {
+                await js.MsgAdvertencia("Debe poner un comentario para que el proveedor vea porque no se autorizó");
+            }
+        }
+    }
+
     private async Task AutorizarTodos()
     {
 

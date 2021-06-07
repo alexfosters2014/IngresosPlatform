@@ -1,0 +1,48 @@
+﻿@inherits LayoutComponentBase
+@inject ILocalStorageService localStorage
+@inject NavigationManager nav 
+
+<div class="page">
+    <div class="sidebar">
+        @if (TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString())
+            {
+                <NavMenuOperador />
+            }
+        @if (TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
+            {
+                 <NavMenuProveedor />
+            }
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4">
+            <a href="" @onclick="Salir" @onclick:preventDefault>Cerrar Sesión</a>
+        </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>
+</div>
+
+@code{      
+    UsuarioDTO usuario = null;
+    string TipoUsuario = "";
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("inicializado");
+        CargaMenu();
+    }
+
+    private async void CargaMenu()
+    {
+        usuario = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        TipoUsuario = usuario.TipoUsuario;
+        StateHasChanged();
+    }
+    private async void Salir()
+    {
+        await localStorage.ClearAsync();
+        nav.NavigateTo("/");
+    }
+}

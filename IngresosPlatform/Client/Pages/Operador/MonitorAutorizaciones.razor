@@ -1,14 +1,17 @@
 ﻿@page "/Autorizaciones"
 @inject IServiceIngreso serviceIngreso
-
+@inject NavigationManager nav
 
 <h3>Monitor de Autorizaciones</h3>
+<div class="d-flex flex-row-reverse">
+    <img src="/img/actualizar.png" class="botonPDFVisor" @onclick="Refrescar"/>
+</div>
 
 @if (ingresosXProv != null && ingresosXProv.Any())
 {
                @foreach (IngresoXProveedorDTO ing in ingresosXProv)
                    {
-                   <ContenedorIngreso proveedorDTO="@ing.Proveedor" ingresosDTO="@ing.Ingresos"/>
+                   <ContenedorIngreso proveedorDTO="@ing.Ingresos.First().Proveedor" ingresosDTO="@ing.Ingresos"/>
                    }
  }
 else if (ingresosXProv != null && ingresosXProv.Count == 0)
@@ -41,6 +44,10 @@ else
         {
             Console.WriteLine("Hubo un error");
         }
+    }
+    private void Refrescar()
+    {
+        nav.NavigateTo("/Autorizaciones",true);
     }
 
 }
