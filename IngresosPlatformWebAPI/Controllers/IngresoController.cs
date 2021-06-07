@@ -14,10 +14,12 @@ namespace IngresosPlatformWebAPI.Controllers
     public class IngresoController : Controller
     {
         private readonly IIngresoRepositorio ingresoRepositorio;
+        private readonly IIngresoDiarioRepositorio ingresoDiarioRepositorio;
 
-        public IngresoController(IIngresoRepositorio _ingresoRepositorio)
+        public IngresoController(IIngresoRepositorio _ingresoRepositorio, IIngresoDiarioRepositorio _ingresoDiarioRepositorio)
         {
             ingresoRepositorio = _ingresoRepositorio;
+            ingresoDiarioRepositorio = _ingresoDiarioRepositorio;
         }
 
         [HttpGet]
@@ -28,17 +30,6 @@ namespace IngresosPlatformWebAPI.Controllers
             {
                 return BadRequest();
             }
-            if (ingresos.Count > 0)
-            {
-
-                //var ingresosProveedor = ingresos.GroupBy(g => g.Proveedor.Id);
-
-                //foreach(var ing in ingresosProveedor)
-                //{
-                //    var provId = ing.Key;
-                //    var lista = ing.ToList();
-                //}
-
                 List<IngresoXProveedorDTO> ingXProveedor = ingresos
                                       .GroupBy(g => g.Proveedor.Id)
                                       .Select(s => new IngresoXProveedorDTO()
@@ -48,11 +39,6 @@ namespace IngresosPlatformWebAPI.Controllers
                                       }).ToList();
 
                 return Ok(ingXProveedor);
-            }
-            else
-            {
-                return BadRequest();
-            }
         }
 
         [HttpPost]
@@ -81,6 +67,12 @@ namespace IngresosPlatformWebAPI.Controllers
             {
                 var resultado = await ingresoRepositorio.Actualizar(ingresoEstado);
                 if (resultado == null)
+                {
+                    return BadRequest();
+                }
+                // registrar el ingreso
+                var resultado2 = await ingresoDiarioRepositorio.Agregar(resultado);
+                if (resultado2 < 0)
                 {
                     return BadRequest();
                 }

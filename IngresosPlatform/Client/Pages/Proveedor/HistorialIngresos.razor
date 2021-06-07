@@ -4,7 +4,7 @@
 @inject IJSRuntime js
 @inject NavigationManager nav
 
-<h3>Historial de Ingresos</h3>
+<h3>Historial de Ingresos Autorizados</h3>
 
 
 @if (ingresosDTO != null && ingresosDTO.Any())
@@ -57,7 +57,7 @@ else
     private async Task CargarIngresos()
     {
         usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-        ingresosDTO = await serviceIngreso.ObtenerIngresosNoAutXProveedor(usuarioDTO.Proveedor.Id);
+        ingresosDTO = await serviceIngreso.ObtenerIngresosAutXProveedor(usuarioDTO.Proveedor.Id);
     }
 
 }

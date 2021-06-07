@@ -20,6 +20,7 @@ namespace Negocio.Mapper
             CreateMap<IngresoDTO, Ingreso>().ReverseMap();
             CreateMap<FuncionarioDTO, Funcionario>().ReverseMap();
             CreateMap<IngresoDiarioDTO, IngresoDiario>().ReverseMap();
+            CreateMap<IngresoDiarioDTO, IngresoDTO>().ReverseMap();
         }
     }
 }

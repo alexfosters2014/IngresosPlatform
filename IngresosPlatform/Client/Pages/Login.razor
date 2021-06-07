@@ -10,8 +10,8 @@
 
         <div class="recuadroLogin">
             <section class="row">
-                <div class="col-12">
-                    <h3> Login</h3>
+                <div class="col-3">
+                    <h1 style="font-family:Gabriola;font-weight:bold;margin-top:15px;">Login</h1>
                 </div>
             </section>
             <div class="dividerLogin"></div>
@@ -24,7 +24,7 @@
                             <div class="col-8">
                                 <div class="form-group">
                                     <label for="usuario">Usuario</label>
-                                    <InputText @bind-Value="vmLogin.Usuario" id="usuario" class="form-control" />
+                                    <InputText @bind-Value="vmLogin.Usuario" id="usuario" class="form-control" placeholder="Ingrese su usuario"/>
                                     <ValidationMessage For="@( () => vmLogin.Usuario)" />
                                 </div>
                             </div>
@@ -34,7 +34,7 @@
                             <div class="col-8">
                                 <div class="form-group">
                                     <label for="rut">Contraseña</label>
-                                    <InputText @bind-Value="vmLogin.Password" id="rut" class="form-control" />
+                                    <InputText type="password" @bind-Value="vmLogin.Password" id="rut" class="form-control" placeholder="Ingrese su contraseña"/>
                                     <ValidationMessage For="@( () => vmLogin.Password)" />
                                 </div>
                             </div>
