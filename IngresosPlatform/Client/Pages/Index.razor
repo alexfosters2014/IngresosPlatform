@@ -8,31 +8,31 @@ Welcome to your new app.
 
 
 @code{
-    UsuarioDTO usuarioDTO = null;
+    //UsuarioDTO usuarioDTO = null;
 
-    protected override void OnInitialized()
-    {
-        Verificador();
-    }
+    //protected override void OnInitialized()
+    //{
+    //    Verificador();
+    //}
 
-    private async void Verificador()
-    {
-        UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-        if (usuarioDTO == null)
-        {
-            nav.NavigateTo("/");
-        }
-        else if (usuarioDTO.TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
-        {
-          
-        }
-        if (usuarioDTO.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString())
-        {
-           
-        }
-        else
-        {
-            ///cambiar por el del portero
-        }
-    }
+    //private async void Verificador()
+    //{
+    //    UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+    //    if (usuarioDTO == null)
+    //    {
+    //        nav.NavigateTo("/");
+    //    }
+    //    else if (usuarioDTO.TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
+    //    {
+
+    //    }
+    //    if (usuarioDTO.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString())
+    //    {
+
+    //    }
+    //    else
+    //    {
+    //        ///cambiar por el del portero
+    //    }
+    //}
 }
