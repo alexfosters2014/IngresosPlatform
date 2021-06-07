@@ -21,9 +21,27 @@ namespace Negocio.Repositorios
             mapper = _mapper;
         }
 
-        public Task<IngresoDiarioDTO> Actualizar(IngresoDiarioDTO funcionarioDTO)
+        public async Task<IngresoDiarioDTO> Actualizar(IngresoDiarioDTO funcionarioDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (funcionarioDTO != null)
+                {
+                    IngresoDiario ingDiarioBD = await db.IngresosDiarios.FindAsync(funcionarioDTO.Id);
+                    IngresoDiario ingresoDiario = mapper.Map<IngresoDiarioDTO, IngresoDiario>(funcionarioDTO, ingDiarioBD);
+                    var updateIngresoDiario = db.IngresosDiarios.Update(ingresoDiario);
+                    await db.SaveChangesAsync();
+                    return mapper.Map<IngresoDiario, IngresoDiarioDTO>(updateIngresoDiario.Entity);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<int> Agregar(IngresoDTO ingresoDTO)
@@ -78,6 +96,39 @@ namespace Negocio.Repositorios
         }
 
         public Task<int> Borrar(int ingresoId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> CantidadIngresosDia(DateTime fecha)
+        {//tener en cuenta que la fecha recibida debe ser exacta
+            try
+            {
+                int cantidad = await db.IngresosDiarios.CountAsync(c => c.Fecha == fecha);
+                return cantidad;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        public async Task<List<IngresoDiarioDTO>> ObtenerSinMarcaciones(DateTime fecha)
+        {//tener en cuenta que la fecha recibida debe ser exacta
+            try
+            {
+               List<IngresoDiario> ingresosDiarios = db.IngresosDiarios.Where(c => c.Fecha == fecha && (
+                                                      c.EntradaEfectiva == null || c.SalidaEfectiva == null)).ToList();
+                List<IngresoDiarioDTO> ingsDiariosDTO = mapper.Map<List<IngresoDiario>, List<IngresoDiarioDTO>>(ingresosDiarios);
+                return ingsDiariosDTO;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public Task<List<IngresoDiarioDTO>> ObtenerTodos()
         {
             throw new NotImplementedException();
         }
