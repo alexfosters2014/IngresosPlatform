@@ -74,6 +74,7 @@ h1,h2,h3,h4{
     height: calc(100vh - 100px);
     overflow-y:auto;
     overflow-x: scroll; 
+    margin-top:40px;
 }
 .listPorteria {
     text-decoration: none;
