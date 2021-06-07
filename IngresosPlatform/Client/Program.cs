@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tewr.Blazor.FileReader;
 using Radzen;
+using MudBlazor.Services;
 
 namespace IngresosPlatform.Client
 {
@@ -28,6 +29,7 @@ namespace IngresosPlatform.Client
             builder.Services.AddScoped<IServiceFuncionario, ServiceFuncionario>();
             builder.Services.AddScoped<IServiceArchivo, ServiceArchivo>();
 
+            builder.Services.AddMudServices();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
 

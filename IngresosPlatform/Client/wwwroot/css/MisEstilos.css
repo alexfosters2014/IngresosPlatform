@@ -69,3 +69,22 @@ tr.colorFila{
 h1,h2,h3,h4{
     color: rgb(51,65,255);
 }
+
+.myScrollBar {
+    height: calc(100vh - 100px);
+    overflow-y:auto;
+    overflow-x: scroll; 
+}
+.listPorteria {
+    text-decoration: none;
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 25px;
+}
+    .listPorteria:hover {
+        background-color: rgba(135, 135, 135, 0.3);
+        text-decoration: none;
+        color: black;
+        font-family: 'Roboto', sans-serif;
+        font-size: 25px;
+    }
