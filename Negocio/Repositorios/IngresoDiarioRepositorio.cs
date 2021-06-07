@@ -31,6 +31,7 @@ namespace Negocio.Repositorios
             try
             {
                 Proveedor proveedor = await db.Proveedores.FindAsync(ingresoDTO.Proveedor.Id);
+                Funcionario funcionario = await db.Funcionarios.FindAsync(ingresoDTO.Funcionario.Id);
 
                 IngresoDiarioDTO ingDiarioDTO = mapper.Map<IngresoDTO, IngresoDiarioDTO>(ingresoDTO);
 
@@ -38,6 +39,7 @@ namespace Negocio.Repositorios
                 {
                     IngresoDiario ingDiarioBD= mapper.Map<IngresoDiarioDTO, IngresoDiario>(ingDiarioDTO);
                     ingDiarioBD.Proveedor = proveedor;
+                    ingDiarioBD.Funcionario = funcionario;
                     db.Entry(ingDiarioBD.Proveedor).State = EntityState.Unchanged;
                     db.Entry(ingDiarioBD.Funcionario).State = EntityState.Unchanged;
 
@@ -47,28 +49,27 @@ namespace Negocio.Repositorios
                 if (ingresoDTO.FechaInicio < ingresoDTO.FechaFin)
                 {
                     var diffFechas = ingresoDTO.FechaFin - ingresoDTO.FechaInicio;
-                    int cantidadDias = diffFechas.Value.Days;
+                    int cantidadDias = diffFechas.Value.Days + 1;
                     DateTime fechaInicio = ingresoDTO.FechaInicio.Value;
                     IngresoDiario ingDiarioBD = mapper.Map<IngresoDiarioDTO, IngresoDiario>(ingDiarioDTO);
                     
                     for (int i=0; i < cantidadDias; i++)
                     {
-                        ingDiarioBD.Proveedor = proveedor;
-                        ingDiarioBD.Fecha = fechaInicio.AddDays(i);
-
-                        db.Entry(ingDiarioBD.Proveedor).State = EntityState.Unchanged;
-                        db.Entry(ingDiarioBD.Funcionario).State = EntityState.Unchanged;
-                        await db.IngresosDiarios.AddAsync(ingDiarioBD);
+                        IngresoDiario ingresoDiarioMuchos= new IngresoDiario()
+                        {
+                            Proveedor= proveedor,
+                            Funcionario = funcionario,
+                            Fecha = fechaInicio.AddDays(i),
+                            EntradaPlanificada = ingDiarioBD.EntradaPlanificada,
+                            SalidaPlanificada = ingDiarioBD.SalidaPlanificada
+                    };
+                        db.Entry(ingresoDiarioMuchos.Proveedor).State = EntityState.Unchanged;
+                        db.Entry(ingresoDiarioMuchos.Funcionario).State = EntityState.Unchanged;
+                        await db.IngresosDiarios.AddAsync(ingresoDiarioMuchos);
                     }
                     return await db.SaveChangesAsync();
                 }
-
-
-
-
-                var addIngDiario = await db.IngresosDiarios.AddAsync(proveedor);
-                await db.SaveChangesAsync();
-                return mapper.Map<Proveedor, ProveedorDTO>(addProovedor.Entity);
+                return -1;
             }
             catch (Exception e)
             {
