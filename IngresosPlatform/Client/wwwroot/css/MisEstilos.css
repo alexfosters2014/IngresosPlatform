@@ -66,3 +66,6 @@ tr.colorFila{
     -o-background-size: cover;
     background-size: cover;
 }
+h1,h2,h3,h4{
+    color: rgb(51,65,255);
+}
