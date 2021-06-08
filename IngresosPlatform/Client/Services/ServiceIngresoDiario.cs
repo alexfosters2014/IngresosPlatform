@@ -18,7 +18,7 @@ namespace IngresosPlatform.Client.Services
         }
         public async Task<IngresoDiarioDTO> ActualizarMarcacion(IngresoDiarioDTO ingresoDiarioDTO)
         {
-            var response = await httpClient.PostAsJsonAsync($"/IngresoDiario/Actualizar",ingresoDiarioDTO);
+            var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/Actualizar",ingresoDiarioDTO);
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -31,11 +31,11 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<IngresoDiarioDTO>> ObtenerSinMarcaciones(DateTime? fecha)
+        public async Task<List<IngresoDiarioDTO>> ObtenerSinMarcaciones(VMFecha fechaActual)
         {
-            if (fecha != null)
+            if (fechaActual != null)
             {
-                var response = await httpClient.GetAsync($"/IngresoDiario/sinMarca/{fecha.Value}");
+                var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/sinMarca",fechaActual);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();

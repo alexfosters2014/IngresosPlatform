@@ -51,6 +51,8 @@
          </div>
     </div>
 
+   <button @onclick="Ir" > porteria</button>
+
     @code {
         VMLogin vmLogin = new VMLogin();
 
@@ -69,5 +71,14 @@
                 await js.MsgError("No se ha podido iniciar sesion. Verifique usuario y contraseña, o en su defecto la conexion a internet");
             }
         }
+
+
+        private void Ir()
+        {
+            nav.NavigateTo("/Porteria");
+        }
+
+
+
     }
     

@@ -19,22 +19,15 @@ namespace IngresosPlatformWebAPI.Controllers
             ingresoDiarioRepositorio = _ingresoDiarioRepositorio;
         }
 
-        [HttpGet("sinMarca/{fecha:DataTime}")]
-        public async Task<IActionResult> IngresosPendientes(DateTime? fecha)
+        [HttpPost("sinMarca")]
+        public async Task<IActionResult> IngresosPendientes([FromBody] VMFecha fechaActual)
         {
-            if (fecha != null)
-            {
-                List<IngresoDiarioDTO> ingresos = await ingresoDiarioRepositorio.ObtenerSinMarcaciones(fecha.Value);
+                List<IngresoDiarioDTO> ingresos = await ingresoDiarioRepositorio.ObtenerSinMarcaciones(fechaActual.FechaActual);
                 if (ingresos == null)
                 {
                     return BadRequest();
                 }
                 return Ok(ingresos);
-            }
-            else
-            {
-                return null;
-            }
         }
 
         [HttpPost("Actualizar")]

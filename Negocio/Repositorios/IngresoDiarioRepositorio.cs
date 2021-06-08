@@ -117,7 +117,10 @@ namespace Negocio.Repositorios
         {//tener en cuenta que la fecha recibida debe ser exacta
             try
             {
-               List<IngresoDiario> ingresosDiarios = db.IngresosDiarios.Where(c => c.Fecha == fecha && (
+               List<IngresoDiario> ingresosDiarios = db.IngresosDiarios
+                                                                       .Include(i => i.Funcionario)
+                                                                       .Include(n => n.Proveedor)
+                                                                        .Where(c => c.Fecha.Date == fecha.Date && (
                                                       c.EntradaEfectiva == null || c.SalidaEfectiva == null)).ToList();
                 List<IngresoDiarioDTO> ingsDiariosDTO = mapper.Map<List<IngresoDiario>, List<IngresoDiarioDTO>>(ingresosDiarios);
                 return ingsDiariosDTO;

@@ -75,12 +75,12 @@ else if (usuariosDTO !=null && usuariosDTO.Count == 0)
     {
         nav.NavigateTo("/Usuarios/Nuevo");
     }
-     private async Task EliminarUsuario(int usuarioId)
+    private async Task EliminarUsuario(int usuarioId)
     {
         confirmacion = await js.MsgConfirmacion("Desea dar de baja al proveedor seleccionado?");
         if (confirmacion){
             nav.NavigateTo($"/Usuarios/Eliminar/{usuarioId}");
         }
     }
-       
+
 }
