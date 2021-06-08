@@ -11,17 +11,20 @@
             <img src="/img/barrera.png" class="nuevoBoton" />
         </div>
         <div class="form-inline">
-            <input type="date" @bind="@hoy" class="form-control" />
+            <input type="date" class="form-control" @onchange="@((e) => Resetear(e.Value.ToString()))"/>
             <button type="button" class="btn btn-primary ml-3" @onclick="onClickVer">Ver</button>
 
         </div>
+
         <div>
             <a href="" @onclick="Salir" @onclick:preventDefault class="nav-link">Salir</a>
         </div>
     </div>
 </div>
-@if (ingresosXProveedor != null && ingresosXProveedor.Any())
-{
+@if (ingresosXProveedor != null && ingresosXProveedor.Any() && carga)
+{<div class="d-flex justify-content-end">
+        <img src="/img/actualizar.png" class="botonPDFVisor" @onclick="Actulizar" />
+ </div>
     <section class="row">
 
         <div class="col-3">
@@ -86,12 +89,16 @@
                     </table>
                 </div>
             </div>
+
         }
     </section>
+
 }
 else if (ingresosXProveedor != null && ingresosXProveedor.Count == 0)
 {
-    <h2>No hay ingresos para habilitar su entrada y salida</h2>
+<div class="d-flex align-content-center">
+    <h3 style="color:orangered">No hay ingresos para habilitar su entrada y salida</h3>
+</div>
 }
 else if (carga)
 {
@@ -134,8 +141,12 @@ else if (carga)
     {
         carga = true;
         ingresosXProveedor = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMFecha() { FechaActual = hoy });
-        carga = false;
     }
+    private async Task Actulizar()
+    {
+        await CargaInicial();
+    }
+
 
     private void CargarIngresodelPRoveedor(ProveedorDTO proveedor)
     {
@@ -192,6 +203,12 @@ else if (carga)
             await localStorage.ClearAsync();
             nav.NavigateTo("/");
         }
+    }
+    private void Resetear(string fecha)
+    {
+        hoy = DateTime.ParseExact(fecha, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        ingresosSeleccionados = null;
+        carga = false;
     }
 
 }
