@@ -103,26 +103,29 @@
 
         private void onClickVer()
         {
-            if (hoy != null)
-            {
-                CargaInicial();
-            }
+            CargaInicial();
         }
+
         private async Task CargaInicial()
         {
             ingresos = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMFecha() { FechaActual = hoy });
 
             if (ingresos != null)
             {
+
+                //proveedores = ingresos.GroupBy(g => g.Proveedor).Select(s => s.Key).Distinct().ToList();
                 proveedores = ingresos.Select(s => s.Proveedor).Distinct().ToList();
+                StateHasChanged();
             }
 
         }
+
 
         private void CargarIngresodelPRoveedor(ProveedorDTO proveedor)
         {
             proveedorSeleccionado = proveedor;
             ingresosSeleccionado = ingresos.Where(w => w.Proveedor.Id == proveedorSeleccionado.Id).ToList();
+            StateHasChanged();
         }
 
         private async void MarcarEntrada(IngresoDiarioDTO ingD)
