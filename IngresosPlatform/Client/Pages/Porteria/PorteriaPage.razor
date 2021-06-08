@@ -11,26 +11,24 @@
                 </div>
         </div>
     </div>
-    @if (ingresos != null && ingresos.Any())
+    @if (ingresosXProveedor != null && ingresosXProveedor.Any())
     {
         <section class="row">
-            @if (proveedores != null)
-            {
+          
                 <div class="col-3">
                     <div class="myScrollBar">
                         <ul class="list-group">
-                            @foreach (var pro in proveedores)
+                            @foreach (var pro in ingresosXProveedor)
                             {
                                 <a href="" class="list-group-item listPorteria"
-                                   @onclick="(() => CargarIngresodelPRoveedor(pro))"
-                                   @onclick:preventDefault>@pro.NombreFantasia (@pro.RazonSocial) </a>
+                                   @onclick="(() => CargarIngresodelPRoveedor(pro.IngresosDiarios.First().Proveedor))"
+                                   @onclick:preventDefault>@pro.IngresosDiarios.First().Proveedor.NombreFantasia (@pro.IngresosDiarios.First().Proveedor.RazonSocial) </a>
                             }
                         </ul>
                     </div>
                 </div>
-            }
 
-            @if (ingresosSeleccionado != null)
+            @if (ingresosSeleccionados != null)
             {
                 <div class="col-9">
                     <div class="row justify-content-between">
@@ -50,7 +48,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var ingProv in ingresosSeleccionado)
+                                @foreach (var ingProv in ingresosSeleccionados)
                                 {
                                     <tr>
                                         <td>@ingProv.Funcionario.Cedula</td>
@@ -82,7 +80,7 @@
             }
         </section>
     }
-    else if (ingresos != null && ingresos.Count == 0)
+    else if (ingresosXProveedor != null && ingresosXProveedor.Count == 0)
     {
         <h2>No hay ingresos para habilitar su entrada y salida</h2>
     }
@@ -95,10 +93,9 @@
 {
         DateTime hoy { get; set; } = DateTime.Today;
 
-        List<IngresoDiarioDTO> ingresos { get; set; } = null;
-        List<ProveedorDTO> proveedores { get; set; } = null;
+        List<IngresoDiarioxProveedor> ingresosXProveedor { get; set; } = null;
         ProveedorDTO proveedorSeleccionado { get; set; } = null;
-        List<IngresoDiarioDTO> ingresosSeleccionado { get; set; } = null;
+        List<IngresoDiarioDTO> ingresosSeleccionados { get; set; } = null;
 
 
         private void onClickVer()
@@ -108,23 +105,15 @@
 
         private async Task CargaInicial()
         {
-            ingresos = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMFecha() { FechaActual = hoy });
-
-            if (ingresos != null)
-            {
-
-                //proveedores = ingresos.GroupBy(g => g.Proveedor).Select(s => s.Key).Distinct().ToList();
-                proveedores = ingresos.Select(s => s.Proveedor).Distinct().ToList();
-                StateHasChanged();
-            }
-
+            ingresosXProveedor = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMFecha() { FechaActual = hoy });
         }
 
 
         private void CargarIngresodelPRoveedor(ProveedorDTO proveedor)
         {
             proveedorSeleccionado = proveedor;
-            ingresosSeleccionado = ingresos.Where(w => w.Proveedor.Id == proveedorSeleccionado.Id).ToList();
+            var filtro = ingresosXProveedor.Where(w => w.ProveedorId == proveedor.Id).Select(s => s.IngresosDiarios).ToList();
+            ingresosSeleccionados = filtro.First();
             StateHasChanged();
         }
 

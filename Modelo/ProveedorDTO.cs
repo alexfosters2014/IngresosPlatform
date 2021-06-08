@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Modelo
 {
-    public class ProveedorDTO : IEquatable<ProveedorDTO>
+    public class ProveedorDTO
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "El RUT no puede estar vacio")]
@@ -28,20 +28,5 @@ namespace Modelo
         [DataType(DataType.EmailAddress, ErrorMessage = "El formato de email no es válido")]
         public string Email { get; set; }
         public bool Activo { get; set; }
-
-        public bool Equals(ProveedorDTO other)
-        {
-            if (other != null)
-            {
-                if (other is ProveedorDTO)
-                {
-                    if (this.Id == other.Id)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
     }
 }

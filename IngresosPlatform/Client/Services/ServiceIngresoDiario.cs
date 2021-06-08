@@ -31,16 +31,16 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<IngresoDiarioDTO>> ObtenerSinMarcaciones(VMFecha fechaActual)
+        public async Task<List<IngresoDiarioxProveedor>> ObtenerSinMarcaciones(VMFecha fechaActual)
         {
             if (fechaActual != null)
             {
-                var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/sinMarca",fechaActual);
+                var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/sinMarca", fechaActual);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var ingresosDiariosDTO = JsonConvert.DeserializeObject<List<IngresoDiarioDTO>>(content);
-                    return ingresosDiariosDTO;
+                    var ingDiariosXPRoveedorDTO = JsonConvert.DeserializeObject<List<IngresoDiarioxProveedor>>(content);
+                    return ingDiariosXPRoveedorDTO;
                 }
                 else
                 {
