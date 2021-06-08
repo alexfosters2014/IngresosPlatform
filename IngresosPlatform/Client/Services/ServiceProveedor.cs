@@ -22,9 +22,7 @@ namespace IngresosPlatform.Client.Services
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-
                 var proveedorActualizado = JsonConvert.DeserializeObject<ProveedorDTO>(content);
-
                 return proveedorActualizado;
             }
             else
@@ -40,7 +38,6 @@ namespace IngresosPlatform.Client.Services
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-
                 var proveedorNuevo = JsonConvert.DeserializeObject<ProveedorDTO>(content);
                 return proveedorNuevo;
             }
