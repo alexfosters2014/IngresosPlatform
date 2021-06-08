@@ -51,8 +51,6 @@
          </div>
     </div>
 
-   <button @onclick="Ir" > porteria</button>
-
     @code {
         VMLogin vmLogin = new VMLogin();
 
@@ -64,20 +62,21 @@
             if (usuarioDTO != null)
             {
                 await localStorage.SetItemAsync(SD.LocalUsuario, usuarioDTO);
-                nav.NavigateTo("/index");
+                if (usuarioDTO.TipoUsuario == SD.TipoUsuario.PorteriaIngPlt.ToString())
+                {
+                    nav.NavigateTo("/Porteria");
+                }
+                else
+                {
+                    nav.NavigateTo("/index");
+                }
+
             }
             else
             {
                 await js.MsgError("No se ha podido iniciar sesion. Verifique usuario y contraseña, o en su defecto la conexion a internet");
             }
         }
-
-
-        private void Ir()
-        {
-            nav.NavigateTo("/Porteria");
-        }
-
 
 
     }

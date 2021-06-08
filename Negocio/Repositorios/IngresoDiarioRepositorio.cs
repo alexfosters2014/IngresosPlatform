@@ -129,8 +129,7 @@ namespace Negocio.Repositorios
                List<IngresoDiario> ingresosDiarios = db.IngresosDiarios
                                                                        .Include(i => i.Funcionario)
                                                                        .Include(n => n.Proveedor)
-                                                                        .Where(c => c.Fecha.Date == fecha.Date && (
-                                                      c.EntradaEfectiva == null || c.SalidaEfectiva == null)).ToList();
+                                                                        .Where(c => c.Fecha.Date == fecha.Date).ToList();
                 List<IngresoDiarioDTO> ingsDiariosDTO = mapper.Map<List<IngresoDiario>, List<IngresoDiarioDTO>>(ingresosDiarios);
                 return ingsDiariosDTO;
             }

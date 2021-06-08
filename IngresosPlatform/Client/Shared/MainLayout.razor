@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject ILocalStorageService localStorage
 @inject NavigationManager nav 
+@inject IJSRuntime js
 
 <div class="page">
     <div class="sidebar">
@@ -36,13 +37,33 @@
 
     private async void CargaMenu()
     {
-        usuario = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-        TipoUsuario = usuario.TipoUsuario;
-        StateHasChanged();
+        try
+        {
+            usuario = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+            if (usuario != null)
+            {
+                TipoUsuario = usuario.TipoUsuario;
+            }
+            else
+            {
+                nav.NavigateTo("/");
+            }
+
+            StateHasChanged();
+        }
+        catch (Exception)
+        {
+            nav.NavigateTo("/");
+        }
+
+
     }
     private async void Salir()
     {
-        await localStorage.ClearAsync();
-        nav.NavigateTo("/");
+        bool confirmacion = await js.MsgConfirmacion("Desea Salir de la sesión?");
+        if (confirmacion) {
+            await localStorage.ClearAsync();
+            nav.NavigateTo("/");
+        }
     }
 }
