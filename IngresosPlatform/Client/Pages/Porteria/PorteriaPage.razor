@@ -3,154 +3,166 @@
 @inject IServiceIngresoDiario serviceIngresoDiario
 @inject IJSRuntime js
 
-@if (ingresos != null && ingresos.Any())
-{
-    <section class="row">
-        @if (proveedores != null)
-        {
-            <div class="col-3">
-                <div class="myScrollBar">
-                    <ul class="list-group">
-                        @foreach (var pro in proveedores)
-                        {
-                            <a href="" class="list-group-item listPorteria"
-                               @onclick="(() => CargarIngresodelPRoveedor(pro))"
-                               @onclick:preventDefault>@pro.NombreFantasia (@pro.RazonSocial) </a>
-                        }
-                    </ul>
+    <div class="recuadroAutorizaciones">
+        <div class="row justify-content-center">
+                <div class="col-4">
+                    <input type="date" @bind="@hoy" class="form-control" />
+                    <button type="button" class="btn btn-primary" @onclick="onClickVer">Ver</button>
                 </div>
-            </div>
-        }
-
-        @if (ingresosSeleccionado != null)
-        {
-            <div class="col-9">
-                <div class="row justify-content-between">
-                    <h2>Proveedor tal</h2>
-                    <h2>06/06/2021</h2>
-                </div>
-                <div class="row">
-                    <table class="table table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Cedula</th>
-                                <th>Funcionario</th>
-                                <th>Entrada</th>
-                                <th>Salida</th>
-                                <th></th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var ingProv in ingresosSeleccionado)
+        </div>
+    </div>
+    @if (ingresos != null && ingresos.Any())
+    {
+        <section class="row">
+            @if (proveedores != null)
+            {
+                <div class="col-3">
+                    <div class="myScrollBar">
+                        <ul class="list-group">
+                            @foreach (var pro in proveedores)
                             {
-                                <tr>
-                                    <td>@ingProv.Funcionario.Cedula</td>
-                                    <td>@ingProv.Funcionario.Nombre</td>
-                                    <td>@ingProv.EntradaPlanificada.ToString("HH:mm")</td>
-                                    <td>@ingProv.SalidaPlanificada.ToString("HH:mm")</td>
-                                    @if (ingProv.EntradaEfectiva == null)
-                                    {
-                                        <td><a href="" @onclick="(() => MarcarEntrada(ingProv))" @onclick:preventDefault class="btn btn-success">Marcar Entrada</a></td>
-                                    }
-                                    @if (ingProv.SalidaEfectiva == null)
-                                    {
-                                        <td><a href="" @onclick="(() => MarcarSalida(ingProv))" @onclick:preventDefault class="btn btn-warning">Marcar Salida</a></td>
-                                    }
-                                </tr>
+                                <a href="" class="list-group-item listPorteria"
+                                   @onclick="(() => CargarIngresodelPRoveedor(pro))"
+                                   @onclick:preventDefault>@pro.NombreFantasia (@pro.RazonSocial) </a>
                             }
-                        </tbody>
-                    </table>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        }
-    </section>
-}
-else if (ingresos != null && ingresos.Count == 0)
-{
-    <h2>No hay ingresos para habilitar su entrada y salida</h2>
- }
+            }
+
+            @if (ingresosSeleccionado != null)
+            {
+                <div class="col-9">
+                    <div class="row justify-content-between">
+                        <h2>@proveedorSeleccionado.RazonSocial (@proveedorSeleccionado.NombreFantasia)</h2>
+                        <h2>@hoy.ToString("dd/MM/yyyy")</h2>
+                    </div>
+                    <div class="row">
+                        <table class="table table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th style="width:10%;">Cedula</th>
+                                    <th style="width:30%;">Funcionario</th>
+                                    <th style="width:10%;">Entrada</th>
+                                    <th style="width:10%;">Salida</th>
+                                    <th style="width:20%;"></th>
+                                    <th style="width:20%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ingProv in ingresosSeleccionado)
+                                {
+                                    <tr>
+                                        <td>@ingProv.Funcionario.Cedula</td>
+                                        <td>@ingProv.Funcionario.Nombre</td>
+                                        <td>@ingProv.EntradaPlanificada.ToString("HH:mm")</td>
+                                        <td>@ingProv.SalidaPlanificada.ToString("HH:mm")</td>
+                                        @if (ingProv.EntradaEfectiva == null)
+                                        {
+                                            <td class="pull-right"><a href="" @onclick="(() => MarcarEntrada(ingProv))" @onclick:preventDefault class="btn btn-success">Marcar Entrada</a></td>
+                                        }
+                                        else
+                                        {
+                                            <td>@ingProv.EntradaEfectiva.Value.ToString("HH:mm")</td>
+                                        }
+                                        @if (ingProv.SalidaEfectiva == null)
+                                        {
+                                            <td class="pull-right"><a href="" @onclick="(() => MarcarSalida(ingProv))" @onclick:preventDefault class="btn btn-warning">Marcar Salida</a></td>
+                                        }
+                                        else
+                                        {
+                                            <td>@ingProv.SalidaEfectiva.Value.ToString("HH:mm")</td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </section>
+    }
+    else if (ingresos != null && ingresos.Count == 0)
+    {
+        <h2>No hay ingresos para habilitar su entrada y salida</h2>
+    }
     else
     {
-<Loading />
+        <Loading />
     }
 
-@code
+    @code
 {
-    DateTime hoy { get; set; } = DateTime.Today;
+        DateTime hoy { get; set; } = DateTime.Today;
 
-    List<IngresoDiarioDTO> ingresos { get; set; } = null;
-    List<ProveedorDTO> proveedores { get; set; } = null;
-    ProveedorDTO proveedorSeleccionado { get; set; } = null;
-    List<IngresoDiarioDTO> ingresosSeleccionado { get; set; } = null;
+        List<IngresoDiarioDTO> ingresos { get; set; } = null;
+        List<ProveedorDTO> proveedores { get; set; } = null;
+        ProveedorDTO proveedorSeleccionado { get; set; } = null;
+        List<IngresoDiarioDTO> ingresosSeleccionado { get; set; } = null;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await CargaInicial();
-    }
 
-    private async Task CargaInicial()
-    {
-        hoy = DateTime.Today;
-
-        ProveedorDTO pdds = new ProveedorDTO()
+        private void onClickVer()
         {
-            Id = 2
-        };
-
-        ingresos = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMFecha() { FechaActual = hoy });
-
-        if (ingresos != null)
+            if (hoy != null)
+            {
+                CargaInicial();
+            }
+        }
+        private async Task CargaInicial()
         {
-            proveedores = ingresos.Select(s => s.Proveedor).Distinct().ToList();
+            ingresos = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMFecha() { FechaActual = hoy });
+
+            if (ingresos != null)
+            {
+                proveedores = ingresos.Select(s => s.Proveedor).Distinct().ToList();
+            }
+
+        }
+
+        private void CargarIngresodelPRoveedor(ProveedorDTO proveedor)
+        {
+            proveedorSeleccionado = proveedor;
+            ingresosSeleccionado = ingresos.Where(w => w.Proveedor.Id == proveedorSeleccionado.Id).ToList();
+        }
+
+        private async void MarcarEntrada(IngresoDiarioDTO ingD)
+        {
+            bool confirmacion = await js.MsgConfirmacion("Desea marcar la entrada del funcionario?");
+            if (confirmacion)
+            {
+                ingD.EntradaEfectiva = DateTime.Now;
+                var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD);
+                if (ing == null)
+                {
+                    await js.MsgError("Hubo un error. No se pudo marcar la entrada. Verifique su conexion a internet");
+                    ingD.EntradaEfectiva = null;
+                }
+                else
+                {
+                    await js.MsgExitoso("Se marcó la entrada correctamente");
+                }
+                StateHasChanged();
+            }
+        }
+
+        private async void MarcarSalida(IngresoDiarioDTO ingD)
+        {
+            bool confirmacion = await js.MsgConfirmacion("Desea marcar la salida del funcionario?");
+            if (confirmacion)
+            {
+                ingD.SalidaEfectiva = DateTime.Now;
+                var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD);
+                if (ing == null)
+                {
+                    await js.MsgError("Hubo un error. No se pudo marcar la salida. Verifique su conexion a internet");
+                    ingD.EntradaEfectiva = null;
+                }
+                else
+                {
+                    await js.MsgExitoso("Se marcó la salida correctamente");
+                }
+                StateHasChanged();
+            }
         }
 
     }
-
-    private void CargarIngresodelPRoveedor(ProveedorDTO proveedor)
-    {
-        proveedorSeleccionado = proveedor;
-        ingresosSeleccionado = ingresos.Where(w => w.Proveedor.Id == proveedorSeleccionado.Id).ToList();
-    }
-
-    private async void MarcarEntrada(IngresoDiarioDTO ingD)
-    {
-        bool confirmacion = await js.MsgConfirmacion("Desea marcar la entrada del funcionario?");
-        if (confirmacion)
-        {
-            ingD.EntradaEfectiva = DateTime.Now;
-            var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD);
-            if (ing == null)
-            {
-                await js.MsgError("Hubo un error. No se pudo marcar la entrada. Verifique su conexion a internet");
-                ingD.EntradaEfectiva = null;
-            }
-            else
-            {
-                await js.MsgExitoso("Se marcó la entrada correctamente");
-            }
-            StateHasChanged();
-        }
-    }
-
-    private async void MarcarSalida(IngresoDiarioDTO ingD)
-    {
-        bool confirmacion = await js.MsgConfirmacion("Desea marcar la salida del funcionario?");
-        if (confirmacion)
-        {
-            ingD.SalidaEfectiva = DateTime.Now;
-            var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD);
-            if (ing == null)
-            {
-                await js.MsgError("Hubo un error. No se pudo marcar la salida. Verifique su conexion a internet");
-                ingD.EntradaEfectiva = null;
-            }
-            else
-            {
-                await js.MsgExitoso("Se marcó la salida correctamente");
-            }
-            StateHasChanged();
-        }
-    }
-
-}

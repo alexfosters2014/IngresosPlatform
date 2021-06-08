@@ -2,11 +2,24 @@
 @inject NavigationManager nav
 @inject ILocalStorageService localStorage
 
-<h1>Hello, world!</h1>
+@if (usuarioDTO != null)
+            {
 
-Welcome to your new app.
+<h1>Hola, @((usuarioDTO.Proveedor != null) ? usuarioDTO.Proveedor.RazonSocial : usuarioDTO.UsuarioNombre )</h1>
+
+<p>Bienvenido a su sesión de @((usuarioDTO.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString()) ? "operador" : "proveedor" ) </p>
+  }
 
 
 @code{
-   
+    UsuarioDTO usuarioDTO { get; set; } = null;
+
+    protected override void OnInitialized()
+    {
+        CargaInicial();
+    }
+    private async Task CargaInicial()
+    {
+        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+    }
 }

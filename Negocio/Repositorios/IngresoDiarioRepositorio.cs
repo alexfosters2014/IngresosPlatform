@@ -56,14 +56,23 @@ namespace Negocio.Repositorios
                 if (ingresoDTO.FechaInicio == ingresoDTO.FechaFin)
                 {
                     IngresoDiario ingDiarioBD= mapper.Map<IngresoDiarioDTO, IngresoDiario>(ingDiarioDTO);
-                    ingDiarioBD.Proveedor = proveedor;
-                    ingDiarioBD.Funcionario = funcionario;
-                    db.Entry(ingDiarioBD.Proveedor).State = EntityState.Unchanged;
-                    db.Entry(ingDiarioBD.Funcionario).State = EntityState.Unchanged;
 
-                    await db.IngresosDiarios.AddAsync(ingDiarioBD);
+                    IngresoDiario ingresoDiarioUno = new IngresoDiario()
+                    {
+                        Proveedor = proveedor,
+                        Funcionario = funcionario,
+                        Fecha = ingresoDTO.FechaInicio.Value,
+                        EntradaPlanificada = ingDiarioBD.EntradaPlanificada,
+                        SalidaPlanificada = ingDiarioBD.SalidaPlanificada
+                    };
+                    db.Entry(ingresoDiarioUno.Proveedor).State = EntityState.Unchanged;
+                    db.Entry(ingresoDiarioUno.Funcionario).State = EntityState.Unchanged;
+
+                    await db.IngresosDiarios.AddAsync(ingresoDiarioUno);
                     return await db.SaveChangesAsync();
                 }
+
+
                 if (ingresoDTO.FechaInicio < ingresoDTO.FechaFin)
                 {
                     var diffFechas = ingresoDTO.FechaFin - ingresoDTO.FechaInicio;
