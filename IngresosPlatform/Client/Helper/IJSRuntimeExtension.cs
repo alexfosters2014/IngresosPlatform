@@ -32,6 +32,10 @@ namespace IngresosPlatform.Client.Helper
         {
             return await js.InvokeAsync<string>("OnInputText", "Comentarios!", "Ingrese un comentario el cual recibirá el proveedor:");
         }
+        public static async ValueTask<string[]> OnInputChangePass(this IJSRuntime js)
+        {
+            return await js.InvokeAsync<string[]>("OnInputTextPass");
+        }
 
     }
 }

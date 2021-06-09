@@ -46,10 +46,10 @@ namespace IngresosPlatformWebAPI.Controllers
             string mensaje;
             if (usuarioNuevo.TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
             {
-            mensaje = $"Bienvenidos a Ingresos Platform. Su usuario es su RUT: {usuarioNuevo.Proveedor.Rut} ,y la contraseña inicial es: {usuarioNuevo.PassInicial}, la cual deberá cambiar una vez autentificado al sistema";
+            mensaje = $"Bienvenidos a Ingresos Platform. Su usuario es su RUT: {usuarioNuevo.Proveedor.Rut},y la contraseña inicial es: {usuarioNuevo.PassInicial}, la cual deberá cambiar una vez autentificado al sistema";
             }else
             {
-             mensaje = $"Bienvenidos a Ingresos Platform. Su usuario es: {usuarioNuevo.UsuarioNombre} ,y la contraseña inicial es: {usuarioNuevo.PassInicial} , la cual deberá cambiar una vez autentificado al sistema";
+             mensaje = $"Bienvenidos a Ingresos Platform. Su usuario es: {usuarioNuevo.UsuarioNombre},y la contraseña inicial es: {usuarioNuevo.PassInicial}, la cual deberá cambiar una vez autentificado al sistema";
             }
             if (await mail.EnvioAutentificacionProveedor(usuarioNuevo.Email, mensaje)) {
                 return Ok(usuarioNuevo);
@@ -63,8 +63,18 @@ namespace IngresosPlatformWebAPI.Controllers
                     StatusCode = StatusCodes.Status400BadRequest
                 });
             }
+        }
 
-
+        [HttpPost("Actualizar")]
+        public async Task<IActionResult> ActualizarUsuario([FromBody] UsuarioDTO usuarioDTO)
+        {
+            UsuarioDTO usuarioActualizar = await usuarioRepositorio.Actualizar(usuarioDTO);
+            if (usuarioActualizar == null)
+            {
+                return BadRequest();
+            }
+            usuarioActualizar.PassInicial = "";
+            return Ok(usuarioActualizar);
         }
 
         [HttpDelete("{usuarioId}")]

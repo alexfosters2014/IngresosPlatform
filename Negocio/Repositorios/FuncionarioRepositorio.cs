@@ -99,7 +99,8 @@ namespace Negocio.Repositorios
             try
             {
                 List<FuncionarioDTO> funcionarios = mapper.Map<List<Funcionario>, List<FuncionarioDTO>>
-                    (db.Funcionarios.Include(i => i.Proveedor).Where(p => p.Proveedor.Id == proveedorId && p.Activo == true).ToList());
+                    (db.Funcionarios.Include(i => i.Proveedor)
+                    .Where(p => p.Proveedor.Id == proveedorId && p.Activo == true).ToList());
                 return funcionarios;
             }
             catch (Exception e)

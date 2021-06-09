@@ -62,23 +62,19 @@
             if (usuarioDTO != null)
             {
                 await localStorage.SetItemAsync(SD.LocalUsuario, usuarioDTO);
-                if (usuarioDTO.TipoUsuario == SD.TipoUsuario.PorteriaIngPlt.ToString())
+
+                if (vmLogin.Password.Length > 20)
+                {
+                    nav.NavigateTo("/CambioPass");
+                }
+                else if (usuarioDTO.TipoUsuario == SD.TipoUsuario.PorteriaIngPlt.ToString())
                 {
                     nav.NavigateTo("/Porteria");
                 }
                 else
                 {
-                    //ver si la contraseña tiene mas de 58 caracteres de contraseña inicial
-                    if (usuarioDTO.PassInicial.Length > 58)
-                    {
-                     nav.NavigateTo("/index");
-                    }
-                    else
-                    {
                     nav.NavigateTo("/index");
-                    }
                 }
-
             }
             else
             {
