@@ -26,7 +26,7 @@ namespace Negocio.Repositorios
             try
             {
 
-                string passInicial = Generador.GenerarPassword(15);
+                string passInicial = Generador.GenerarPassword(60);
                 usuarioDTO.Token = Generador.GenerarToken();
                 Usuario usuario = mapper.Map<UsuarioDTO, Usuario>(usuarioDTO);
                 usuario.Password = Encriptacion.GetSHA256(passInicial);

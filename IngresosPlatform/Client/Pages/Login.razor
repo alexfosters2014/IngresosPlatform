@@ -68,7 +68,15 @@
                 }
                 else
                 {
+                    //ver si la contraseña tiene mas de 58 caracteres de contraseña inicial
+                    if (usuarioDTO.PassInicial.Length > 58)
+                    {
+                     nav.NavigateTo("/index");
+                    }
+                    else
+                    {
                     nav.NavigateTo("/index");
+                    }
                 }
 
             }
