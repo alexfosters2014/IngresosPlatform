@@ -130,7 +130,7 @@ namespace Negocio.Repositorios
             {
                 if (usuarioDTO != null)
                 {
-                    Usuario usuarioDB = await db.Usuarios.FindAsync(usuarioDTO.Id);
+                    Usuario usuarioDB = await db.Usuarios.Include(i => i.Proveedor).SingleAsync(s => s.Id == usuarioDTO.Id);
                     usuarioDB.Password = Encriptacion.GetSHA256(usuarioDTO.PassInicial);
                     var updateUsuario = db.Usuarios.Update(usuarioDB);
                     await db.SaveChangesAsync();
