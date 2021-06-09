@@ -176,8 +176,9 @@ namespace Negocio.Repositorios
                     mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
                     .Include(i => i.Proveedor)
                     .Include(i => i.Funcionario)
-                    .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.AUTORIZADO.ToString()
-                            && ing.Proveedor.Id == proveedorId).ToList());
+                    .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.AUTORIZADO.ToString() && ing.Proveedor.Id == proveedorId)
+                    .OrderByDescending(o => o.Id)
+                    .Take(30).ToList());
                 return ingresos;
             }
             catch (Exception e)
