@@ -26,7 +26,7 @@ namespace Negocio.Repositorios
             try
             {
 
-                string passInicial = Generador.GenerarPassword(60);
+                string passInicial = Generador.GenerarPassword(25);
                 usuarioDTO.Token = Generador.GenerarToken();
                 Usuario usuario = mapper.Map<UsuarioDTO, Usuario>(usuarioDTO);
                 usuario.Password = Encriptacion.GetSHA256(passInicial);
@@ -117,6 +117,29 @@ namespace Negocio.Repositorios
                     mapper.Map<List<Usuario>, List<UsuarioDTO>>(db.Usuarios
                     .Where(us => us.TipoUsuario == operador || us.TipoUsuario == portero).ToList());
                 return usuarios;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<UsuarioDTO> Actualizar(UsuarioDTO usuarioDTO)
+        {
+            try
+            {
+                if (usuarioDTO != null)
+                {
+                    Usuario usuarioDB = await db.Usuarios.FindAsync(usuarioDTO.Id);
+                    usuarioDB.Password = Encriptacion.GetSHA256(usuarioDTO.PassInicial);
+                    var updateUsuario = db.Usuarios.Update(usuarioDB);
+                    await db.SaveChangesAsync();
+                    return mapper.Map<Usuario, UsuarioDTO>(updateUsuario.Entity);
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception e)
             {

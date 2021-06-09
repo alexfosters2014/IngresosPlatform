@@ -63,8 +63,18 @@ namespace IngresosPlatformWebAPI.Controllers
                     StatusCode = StatusCodes.Status400BadRequest
                 });
             }
+        }
 
-
+        [HttpPost("Actualizar")]
+        public async Task<IActionResult> ActualizarUsuario([FromBody] UsuarioDTO usuarioDTO)
+        {
+            UsuarioDTO usuarioActualizar = await usuarioRepositorio.Actualizar(usuarioDTO);
+            if (usuarioActualizar == null)
+            {
+                return BadRequest();
+            }
+            usuarioActualizar.PassInicial = "";
+            return Ok(usuarioActualizar);
         }
 
         [HttpDelete("{usuarioId}")]

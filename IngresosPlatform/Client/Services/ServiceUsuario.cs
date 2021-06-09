@@ -16,9 +16,20 @@ namespace IngresosPlatform.Client.Services
         {
             httpClient = _httpClient;
         }
-        public Task<UsuarioDTO> Actualizar(UsuarioDTO usuarioDTO)
+        public async Task<UsuarioDTO> Actualizar(UsuarioDTO usuarioDTO)
         {
-            throw new NotImplementedException();
+            var response = await httpClient.PostAsJsonAsync("/api/Usuario/Actualizar", usuarioDTO);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var usuarioActualizado = JsonConvert.DeserializeObject<UsuarioDTO>(content);
+                return usuarioActualizado;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<UsuarioDTO> Agregar(UsuarioDTO usuarioDTO)
