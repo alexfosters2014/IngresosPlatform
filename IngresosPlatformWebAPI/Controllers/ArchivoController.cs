@@ -21,41 +21,6 @@ namespace IngresosPlatformWebAPI.Controllers
             httpContextAccessor = _httpContextAccessor;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SubirPDF([FromForm] IFormFile filePDF)
-         {
-            if (filePDF == null || filePDF.Length == 0)
-            {
-                return BadRequest("Subir un archivo PDF");
-            }
-            string nombreCarpeta = "archivos";
-            string folder = Path.Combine(environment.WebRootPath, nombreCarpeta);
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(nombreCarpeta);
-            }
-            string fileName = filePDF.FileName;
-            string extension = Path.GetExtension(fileName);
-            string[] soloExtensiones = { ".pdf" };
-
-            if (!soloExtensiones.Contains(extension))
-            {
-                return BadRequest("Extension inválida del archivo");
-            }                                           
-
-            string newFile = $"{Guid.NewGuid()}{extension}";
-            string filePath = Path.Combine(folder, newFile);
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-            {
-                await filePDF.CopyToAsync(fileStream);
-            }
-            var urlActual = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}";
-            var rutaParaBD = $"{urlActual}/archivos/{newFile}";
-
-            return Ok(rutaParaBD);
-        }
-
         [HttpPost("Actualizar")]
         public async Task<IActionResult> ActualizarPDF([FromForm] IFormFile filePDF, [FromForm] string pathPDFAnterior)
         {
