@@ -5,22 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AccesoDatos.Data
+namespace Modelo
 {
-    public class ConfiguracionSistema
+    public class ConfigMail
     {
-        public int Id { get; set; }
-        public int AnticipacionVtos { get; set; }
-        //configuracion para el envio de mail
-        [MaxLength(70)]
         public string DominioSmtp { get; set; }
-        [MaxLength(10)]
         public int Puerto { get; set; }
         public bool Ssl { get; set; }
-        [MaxLength(100)]
         public string Correo { get; set; }
-        [MaxLength(200)]
-        public string PassMail { get; set; }
+        public string Pass { get; set; }
 
     }
 }

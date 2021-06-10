@@ -15,8 +15,7 @@ namespace Negocio.Mapper
         {
             CreateMap<ProveedorDTO, Proveedor>().ReverseMap();
             CreateMap<UsuarioDTO, Usuario>().ReverseMap();
-            CreateMap<ConfiguracionSistemaDTO, MailDTO>().ReverseMap();
-            CreateMap<ConfiguracionSistema, ConfiguracionSistemaDTO>().ReverseMap();
+            CreateMap<ConfigMail, MailDTO>().ReverseMap();
             CreateMap<IngresoDTO, Ingreso>().ReverseMap();
             CreateMap<FuncionarioDTO, Funcionario>().ReverseMap();
             CreateMap<IngresoDiarioDTO, IngresoDiario>().ReverseMap();

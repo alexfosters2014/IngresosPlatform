@@ -9,8 +9,8 @@ namespace Negocio.Repositorios
 {
     public interface IConfiguracionRepositorio
     {
-        public Task<ConfiguracionSistemaDTO> AgregarConfig(ConfiguracionSistemaDTO ConfiguracionSistemaDTO);
-        public Task<ConfiguracionSistemaDTO> ActualizarConfig(ConfiguracionSistemaDTO ConfiguracionSistemaDTO);
-        public Task<ConfiguracionSistemaDTO> ObtenerConfig();
+        public Task<ConfigMail> AgregarConfig(ConfigMail ConfiguracionSistemaDTO);
+        public Task<ConfigMail> ActualizarConfig(ConfigMail ConfiguracionSistemaDTO);
+        public Task<ConfigMail> ObtenerConfig();
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Modelo;
 using Comun;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace IngresosPlatformWebAPI.Controllers
 {
@@ -16,11 +17,13 @@ namespace IngresosPlatformWebAPI.Controllers
     {
         private readonly IUsuarioRepositorio usuarioRepositorio;
         private readonly IMailRepositorio mailRepositorio;
+        private readonly IOptions<ConfigMail> config;
 
-        public UsuarioController(IUsuarioRepositorio _usuarioRepositorio, IMailRepositorio _mailRepositorio)
+        public UsuarioController(IUsuarioRepositorio _usuarioRepositorio, IMailRepositorio _mailRepositorio, IOptions<ConfigMail> _config)
         {
             usuarioRepositorio = _usuarioRepositorio;
             mailRepositorio = _mailRepositorio;
+            config = _config;
         }
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos()
@@ -42,7 +45,7 @@ namespace IngresosPlatformWebAPI.Controllers
                     StatusCode = StatusCodes.Status400BadRequest
                 });
             }
-            MailDTO mail = await mailRepositorio.CargarConfigMail();
+            MailDTO mail = await mailRepositorio.CargarConfigMail(config.Value);
             string mensaje;
             if (usuarioNuevo.TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
             {

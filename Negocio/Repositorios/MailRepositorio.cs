@@ -19,12 +19,11 @@ namespace Negocio.Repositorios
             db = _db;
             mapper = _mapper;
         }
-        public async Task<MailDTO> CargarConfigMail()
+        public async Task<MailDTO> CargarConfigMail(ConfigMail configMail)
         {
             try
             {
-                ConfiguracionSistemaDTO configSistema = mapper.Map<ConfiguracionSistema, ConfiguracionSistemaDTO>(await db.Configuraciones.FindAsync(1));
-                MailDTO mailDTO = mapper.Map<ConfiguracionSistemaDTO, MailDTO>(configSistema);
+                MailDTO mailDTO = mapper.Map<ConfigMail, MailDTO>(configMail);
                 return mailDTO;
             }
             catch (Exception e)

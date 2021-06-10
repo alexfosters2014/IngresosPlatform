@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Modelo;
 using Negocio.Repositorios;
 using System;
 
@@ -46,6 +47,9 @@ namespace IngresosPlatformWebAPI
             services.AddScoped<IIngresoDiarioRepositorio, IngresoDiarioRepositorio>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            //para traer los datos de configuracion de mail desde el appsettings.json
+            services.Configure<ConfigMail>(Configuration.GetSection("MailConnection")); 
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

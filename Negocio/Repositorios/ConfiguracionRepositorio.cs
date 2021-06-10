@@ -21,16 +21,16 @@ namespace Negocio.Repositorios
             mapper = _mapper;
         }
 
-        public async Task<ConfiguracionSistemaDTO> ActualizarConfig(ConfiguracionSistemaDTO ConfiguracionSistemaDTO)
+        public async Task<ConfigMail> ActualizarConfig(ConfigMail ConfiguracionSistemaDTO)
         {
             try
             {
                 int configId = 1;
                 ConfiguracionSistema configDB = await db.Configuraciones.FindAsync(configId);
-                ConfiguracionSistema config = mapper.Map<ConfiguracionSistemaDTO, ConfiguracionSistema>(ConfiguracionSistemaDTO, configDB);
+                ConfiguracionSistema config = mapper.Map<ConfigMail, ConfiguracionSistema>(ConfiguracionSistemaDTO, configDB);
                 var updateConfig = db.Configuraciones.Update(config);
                     await db.SaveChangesAsync();
-                    return mapper.Map<ConfiguracionSistema, ConfiguracionSistemaDTO>(updateConfig.Entity);
+                    return mapper.Map<ConfiguracionSistema, ConfigMail>(updateConfig.Entity);
               
             }
             catch (Exception e)
@@ -39,14 +39,14 @@ namespace Negocio.Repositorios
             }
         }
 
-        public async Task<ConfiguracionSistemaDTO> AgregarConfig(ConfiguracionSistemaDTO ConfiguracionSistemaDTO)
+        public async Task<ConfigMail> AgregarConfig(ConfigMail ConfiguracionSistemaDTO)
         {
             try
             {
-                ConfiguracionSistema config = mapper.Map<ConfiguracionSistemaDTO, ConfiguracionSistema>(ConfiguracionSistemaDTO);
+                ConfiguracionSistema config = mapper.Map<ConfigMail, ConfiguracionSistema>(ConfiguracionSistemaDTO);
                 var addConfig = await db.Configuraciones.AddAsync(config);
                 await db.SaveChangesAsync();
-                return mapper.Map<ConfiguracionSistema, ConfiguracionSistemaDTO>(addConfig.Entity);
+                return mapper.Map<ConfiguracionSistema, ConfigMail>(addConfig.Entity);
             }
             catch (Exception e)
             {
@@ -54,12 +54,12 @@ namespace Negocio.Repositorios
             }
         }
 
-        public async Task<ConfiguracionSistemaDTO> ObtenerConfig()
+        public async Task<ConfigMail> ObtenerConfig()
         {
             try
             {
                 int configId = 1;
-                ConfiguracionSistemaDTO config = mapper.Map<ConfiguracionSistema, ConfiguracionSistemaDTO>(await db.Configuraciones.FindAsync(configId));
+                ConfigMail config = mapper.Map<ConfiguracionSistema, ConfigMail>(await db.Configuraciones.FindAsync(configId));
                  return config;
             }
             catch (Exception e)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Comun;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -68,5 +69,12 @@ namespace IngresosPlatformWebAPI.Controllers
             return Ok(rutaParaBD);
         }
 
-    }
+        [HttpGet("{pass}")]
+        public async Task<IActionResult> Contraseña(string pass)
+        {
+           
+            return Ok(Encriptacion.Encriptar(pass));
+        }
+
+        }
     }
