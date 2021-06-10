@@ -23,5 +23,6 @@ namespace Modelo
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         public ProveedorDTO Proveedor { get; set; }
+        public string Indicador { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace Negocio.Repositorios
 {
     public interface IMailRepositorio
     {
-        public Task<MailDTO> CargarConfigMail();
+        public Task<MailDTO> CargarConfigMail(ConfigMail configMail);
     }
 }

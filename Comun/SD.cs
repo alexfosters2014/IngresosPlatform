@@ -27,5 +27,12 @@ namespace Comun
             REVISAR,
             ERROR
         }
+        public enum IndicadorVto
+        {
+            OK,
+            AMARILLO,
+            NARANJA,
+            ROJO
+        }
     }
 }

@@ -27,9 +27,7 @@ namespace Modelo
         public DateTime? VtoCarneSalud { get; set; }
         [Required(ErrorMessage = "Debe subir un archivo en formato PDF")]
         public string PathCarneSalud { get; set; }
-        [Required(ErrorMessage = "Debe ingresar un vto de carne de manipulacion de alimentos")]
         public DateTime? VtoCMAlimentos { get; set; }
-        [Required(ErrorMessage = "Debe subir un archivo en formato PDF")]
         public string PathCMAlimentos { get; set; }
         [Required(ErrorMessage = "Debe ingresar fecha de alta BPS")]
         public DateTime? AltaBps { get; set; }

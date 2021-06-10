@@ -12,7 +12,6 @@ namespace Modelo
 {
     public class MailDTO
     {
-       
         public string DominioSmtp { get; set; }
      
         public int Puerto { get; set; }
@@ -20,14 +19,14 @@ namespace Modelo
       
         public string Correo { get; set; }
         
-        public string PassMail { get; set; }
+        public string Pass { get; set; }
 
         public async Task<bool> EnvioAutentificacionProveedor(string destinatario, string mensaje)
         {
             try
             {
             SmtpClient smtp = new SmtpClient(DominioSmtp, Puerto);
-            smtp.Credentials = new NetworkCredential(Correo,Encriptacion.DesEncriptacion(PassMail));
+            smtp.Credentials = new NetworkCredential(Correo,Encriptacion.DesEncriptacion(Pass));
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.EnableSsl = Ssl;
             smtp.UseDefaultCredentials = false;
