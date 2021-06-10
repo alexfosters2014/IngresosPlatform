@@ -24,6 +24,7 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
+                        <th scope="col"></th>
                         <th scope="col">Cedula</th>
                         <th scope="col">Funcionario</th>
                         <th scope="col">Hora entrada</th>
@@ -37,19 +38,20 @@
                 <tbody>
                     @foreach (var ing in ingresosDTO)
                     {
-                            <tr>
-                                <td>@ing.Funcionario.Cedula</td>
-                                <td>@ing.Funcionario.Nombre</td>
-                                <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
-                                <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
-                                <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
-                                <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
-                                <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
-                                <td>
-                                    <a href="" @onclick="(() => IngresoAutorizado(ing, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
-                                    <a href="" @onclick="(() => IngresoNOAutorizado(ing,SD.TipoAutIng.NOAUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
-                                </td>
-                            </tr>
+                    <tr>
+                        <td><img src="/img/indicadores/@ing.Indicador"  alt="foto" class="indicadores"/></td>
+                        <td>@ing.Funcionario.Cedula</td>
+                        <td>@ing.Funcionario.Nombre</td>
+                        <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                        <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                        <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                        <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+                        <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
+                        <td>
+                            <a href="" @onclick="(() => IngresoAutorizado(ing, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
+                            <a href="" @onclick="(() => IngresoNOAutorizado(ing,SD.TipoAutIng.NOAUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
+                        </td>
+                    </tr>
                     }
                     @*<tr>
                             <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="AutorizarTodos" />Autorizar Todos</td>
