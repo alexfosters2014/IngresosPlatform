@@ -35,7 +35,33 @@ namespace IngresosPlatformWebAPI.Controllers
                                       .Select(s => new IngresoXProveedorDTO()
                                       {
                                           ProveedorId = s.Key,
-                                          Ingresos = s.ToList()
+                                          Ingresos = s.Select(n => new IngresoDTO() { 
+                                                    Id = n.Id,
+                                                    Fecha = n.Fecha,
+                                                    Funcionario = n.Funcionario,
+                                                    EntradaPlanificada = n.EntradaPlanificada,
+                                                    SalidaPlanificada = n.SalidaPlanificada,
+                                                    EstadoAutorizacion = n.EstadoAutorizacion,
+                                                    Comentarios = n.Comentarios,
+                                                    FechaInicio = n.FechaInicio,
+                                                    FechaFin = n.FechaFin,
+                                                    Proveedor = n.Proveedor,
+                                                    Indicador = ((n.Funcionario.VtoCedula <= n.FechaFin.Value || 
+                                                                  n.Funcionario.VtoLibreta <= n.FechaFin.Value ||
+                                                                  n.Funcionario.VtoCarneSalud <= n.FechaFin.Value ||
+                                                                  n.Funcionario.VtoCMAlimentos <= n.FechaFin.Value) ? SD.IndicadorVto.ROJO.ToString() :
+
+                                                                  (n.Funcionario.VtoCedula <= n.FechaFin.Value.AddDays(15) ||
+                                                                  n.Funcionario.VtoLibreta <= n.FechaFin.Value.AddDays(15) ||
+                                                                  n.Funcionario.VtoCarneSalud <= n.FechaFin.Value.AddDays(15) ||
+                                                                  n.Funcionario.VtoCMAlimentos <= n.FechaFin.Value.AddDays(15)) ? SD.IndicadorVto.NARANJA.ToString() :
+
+                                                                   (n.Funcionario.VtoCedula <= n.FechaFin.Value.AddDays(30) ||
+                                                                  n.Funcionario.VtoLibreta <= n.FechaFin.Value.AddDays(30) ||
+                                                                  n.Funcionario.VtoCarneSalud <= n.FechaFin.Value.AddDays(30) ||
+                                                                  n.Funcionario.VtoCMAlimentos <= n.FechaFin.Value.AddDays(30)) ? SD.IndicadorVto.AMARILLO.ToString() : SD.IndicadorVto.OK.ToString()
+                                                                  )
+                                          }).ToList()
                                       }).ToList();
 
                 return Ok(ingXProveedor);

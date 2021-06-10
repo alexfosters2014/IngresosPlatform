@@ -88,6 +88,9 @@ namespace IngresosPlatformWebAPI.Controllers
             var urlActual = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}";
             var rutaParaBD = $"{urlActual}/archivos/{newFile}";
             //elimino path anterior
+
+            if (!string.IsNullOrEmpty(pathPDFAnterior))
+            {
             int position = pathPDFAnterior.LastIndexOf("/") + 1;
             int fin = pathPDFAnterior.Length - position;
             string archivoNombre = pathPDFAnterior.Substring(position,fin);
@@ -95,6 +98,7 @@ namespace IngresosPlatformWebAPI.Controllers
             if (System.IO.File.Exists(filePathAnterior))
             { 
                 System.IO.File.Delete(filePathAnterior);
+            }
             }
             return Ok(rutaParaBD);
         }

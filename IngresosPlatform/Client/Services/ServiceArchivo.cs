@@ -20,7 +20,7 @@ namespace IngresosPlatform.Client.Services
             var contentUpload = new MultipartFormDataContent();
             contentUpload.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
             contentUpload.Add(new StreamContent(fileStream, (int)fileStream.Length), "filePDF", fileName);
-            contentUpload.Add(new StringContent(pathAnterior), "pathPDFAnterior");
+            contentUpload.Add(new StringContent(pathAnterior ?? ""), "pathPDFAnterior");
 
             var response = await httpClient.PostAsync($"/api/Archivo/Actualizar", contentUpload);
 

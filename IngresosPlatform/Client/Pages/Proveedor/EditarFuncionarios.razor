@@ -10,7 +10,7 @@
 
 <div class="container">
     <div class="d-flex justify-content-center">
-        <h3>Nuevo Proveedor</h3>
+        <h3>Nuevo Funcionario</h3>
     </div>
     <div class="d-flex justify-content-center">
         <section class="row">
@@ -167,7 +167,7 @@
                     @if (!carga)
                     {
                         <div class="col text-center">
-                            <button type="submit" class="btn btn-primary">Agregar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
                             <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
                         </div>
                     }
@@ -202,6 +202,7 @@
             protected override async Task OnInitializedAsync()
             {
                 await CargarFunconarios();
+                StateHasChanged();
             }
             protected override async void OnParametersSet()
             {
@@ -264,7 +265,7 @@
                     }
                     else
                     {
-                        await js.MsgError("No se pudo subir el archivo");
+                        await js.MsgError("No se pudo subir el archivo. Intente nuevamente");
                     }
                 }
             }
@@ -272,64 +273,76 @@
             private async void SubirPDF_PathLibreta()
             {
                 var file = (await fileReader.CreateReference(refLibreta).EnumerateFilesAsync()).FirstOrDefault();
-                string nuevaPath = await FileStream(file, funcionarioDTO.PathLibreta);
-                if (nuevaPath != null || nuevaPath != "")
+                if (file != null)
                 {
-                    funcionarioDTO.PathLibreta = nuevaPath;
-                    StateHasChanged();
-                    await js.MsgExitoso("Archivo subido exitosamente");
+                    string nuevaPath = await FileStream(file, funcionarioDTO.PathLibreta);
+                    if (nuevaPath != null || nuevaPath != "")
+                    {
+                        funcionarioDTO.PathLibreta = nuevaPath;
+                        StateHasChanged();
+                        await js.MsgExitoso("Archivo subido exitosamente");
+                    }
                 }
                 else
                 {
-                    await js.MsgError("No se pudo subir el archivo");
+                    await js.MsgError("No se pudo subir el archivo. Intente nuevamente");
                 }
             }
 
             private async void SubirPDF_PathCarneSalud()
             {
                 var file = (await fileReader.CreateReference(refCarneSalud).EnumerateFilesAsync()).FirstOrDefault();
-                string nuevaPath = await FileStream(file, funcionarioDTO.PathCarneSalud);
-                if (nuevaPath != null || nuevaPath != "")
+                if (file != null)
                 {
-                    funcionarioDTO.PathCarneSalud = nuevaPath;
-                    StateHasChanged();
-                    await js.MsgExitoso("Archivo subido exitosamente");
+                    string nuevaPath = await FileStream(file, funcionarioDTO.PathCarneSalud);
+                    if (nuevaPath != null || nuevaPath != "")
+                    {
+                        funcionarioDTO.PathCarneSalud = nuevaPath;
+                        StateHasChanged();
+                        await js.MsgExitoso("Archivo subido exitosamente");
+                    }
                 }
                 else
                 {
-                    await js.MsgError("No se pudo subir el archivo");
+                    await js.MsgError("No se pudo subir el archivo. Intente nuevamente");
                 }
             }
 
             private async void SubirPDF_PathMA()
             {
                 var file = (await fileReader.CreateReference(refCarneMA).EnumerateFilesAsync()).FirstOrDefault();
-                string nuevaPath = await FileStream(file, funcionarioDTO.PathCMAlimentos);
-                if (nuevaPath != null || nuevaPath != "")
+                if (file != null)
                 {
-                    funcionarioDTO.PathCMAlimentos = nuevaPath;
-                    StateHasChanged();
-                    await js.MsgExitoso("Archivo subido exitosamente");
+                    string nuevaPath = await FileStream(file, funcionarioDTO.PathCMAlimentos);
+                    if (nuevaPath != null || nuevaPath != "")
+                    {
+                        funcionarioDTO.PathCMAlimentos = nuevaPath;
+                        StateHasChanged();
+                        await js.MsgExitoso("Archivo subido exitosamente");
+                    }
                 }
                 else
                 {
-                    await js.MsgError("No se pudo subir el archivo");
+                    await js.MsgError("No se pudo subir el archivo. Intente nuevamente");
                 }
             }
 
             private async void SubirPDF_PathAltaBPS()
             {
                 var file = (await fileReader.CreateReference(refAltaBPS).EnumerateFilesAsync()).FirstOrDefault();
-                string nuevaPath = await FileStream(file, funcionarioDTO.PathAltaBps);
-                if (nuevaPath != null || nuevaPath != "")
+                if (file != null)
                 {
-                    funcionarioDTO.PathAltaBps = nuevaPath;
-                    StateHasChanged();
-                    await js.MsgExitoso("Archivo subido exitosamente");
+                    string nuevaPath = await FileStream(file, funcionarioDTO.PathAltaBps);
+                    if (nuevaPath != null || nuevaPath != "")
+                    {
+                        funcionarioDTO.PathAltaBps = nuevaPath;
+                        StateHasChanged();
+                        await js.MsgExitoso("Archivo subido exitosamente");
+                    }
                 }
                 else
                 {
-                    await js.MsgError("No se pudo subir el archivo");
+                    await js.MsgError("No se pudo subir el archivo. Intente nuevamente");
                 }
             }
             private async Task<string> FileStream(IFileReference file, string patAnterior)
