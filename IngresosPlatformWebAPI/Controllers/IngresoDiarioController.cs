@@ -22,20 +22,28 @@ namespace IngresosPlatformWebAPI.Controllers
         [HttpPost("sinMarca")]
         public async Task<IActionResult> IngresosDiariosSinMarcaciones([FromBody] VMFecha fechaActual)
         {
+            if (fechaActual.FechaActual <= DateTime.Today.Date)
+            {
                 List<IngresoDiarioDTO> ingresos = await ingresoDiarioRepositorio.ObtenerSinMarcaciones(fechaActual.FechaActual);
                 if (ingresos == null)
                 {
                     return BadRequest();
                 }
-            List<IngresoDiarioxProveedor> ingXProveedor = ingresos
-                                 .GroupBy(g => g.Proveedor.Id)
-                                 .Select(s => new IngresoDiarioxProveedor()
-                                 {
-                                     ProveedorId = s.Key,
-                                     IngresosDiarios = s.ToList()
-                                 }).ToList();
+                List<IngresoDiarioxProveedor> ingXProveedor = ingresos
+                                     .GroupBy(g => g.Proveedor.Id)
+                                     .Select(s => new IngresoDiarioxProveedor()
+                                     {
+                                         ProveedorId = s.Key,
+                                         IngresosDiarios = s.ToList()
+                                     }).ToList();
 
-            return Ok(ingXProveedor);
+                return Ok(ingXProveedor);
+            }
+            else
+            {
+                List<IngresoDiarioDTO> ingresos = new List<IngresoDiarioDTO>();
+                return Ok(ingresos);
+            }
         }
 
         [HttpPost("Actualizar")]
