@@ -1,4 +1,4 @@
-﻿@page "/terciarizaciones"
+﻿@page "/Terciarizaciones"
 @inject IServiceTerciarizacion serviceTerciariza
 @inject NavigationManager nav
 @inject IJSRuntime js
@@ -111,7 +111,7 @@ else
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         if (usuarioDTO != null)
         {
-            terciarizaciones = await serviceTerciariza.Obtener()
+            terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedor(usuarioDTO.Proveedor.Id);
         }
         else
         {
@@ -121,21 +121,12 @@ else
     }
     private void NuevaTerciariza()
     {
-        nav.NavigateTo("/terciarizaciones/Nuevo");
-    }
-
-    private async Task BajaFuncionario(int funcionarioId)
-    {
-        confirmacion = await js.MsgConfirmacion("Desea dar de baja al funcionario seleccionado?");
-        if (confirmacion)
-        {
-            nav.NavigateTo($"/terciarizaciones/Baja/{funcionarioId}");
-        }
+        nav.NavigateTo($"/Terciarizacion/CargaTerciarizacion/{0}");
     }
 
     private async Task EdicionTerciariza(int teciarizaId)
     {
-        nav.NavigateTo($"/terciarizaciones/Editar/{funcionarioId}");
+        nav.NavigateTo($"/Terciarizacion/CargaTerciarizacion/{teciarizaId}");
     }
 
 }
