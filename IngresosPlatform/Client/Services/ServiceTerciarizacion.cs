@@ -81,7 +81,7 @@ namespace IngresosPlatform.Client.Services
 
         public async Task<List<TerciarizacionDTO>> ObtenerTodosXProveedor(int proveedorId)
         {
-            var response = await httpClient.GetAsync($"/api/Terciarizacion/Obtener/{proveedorId}");
+            var response = await httpClient.GetAsync($"/api/Terciarizacion/ObtenerTodos/{proveedorId}");
 
             if (response.IsSuccessStatusCode)
             {

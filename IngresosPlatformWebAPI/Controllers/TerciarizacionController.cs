@@ -62,7 +62,7 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-        [HttpGet("/ObtenerTodos/{proveedorId}")]
+        [HttpGet("ObtenerTodos/{proveedorId}")]
         public async Task<IActionResult> ObtenerTodosXProveedor(int proveedorId)
         {
             if (proveedorId > 0)
@@ -81,7 +81,7 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-        [HttpPost("/ObtenerTodos")]
+        [HttpPost("ObtenerTodos")]
         public async Task<IActionResult> ObtenerTodos(VMFecha vmFecha)
         {
             if (vmFecha != null)
