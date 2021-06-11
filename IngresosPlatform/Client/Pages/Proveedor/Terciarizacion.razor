@@ -1,0 +1,23 @@
+﻿@page "/Terciarizacion"
+@inject NavigationManager nav
+
+<h3>Terciarizacion</h3>
+
+<div class="d-flex justify-content-center align-items-center" style="height:100%">
+    <button @onclick="NuevaTerciarizacoin" class="botonEspecial"><span class="textoClaro">Nueva carga de terciarización</span></button>
+    <button @onclick="NuevaTerciarizacion" class="botonEspecial"><span class="textoClaro">Editar carga de terciarización</span></button>
+</div>
+
+@code {
+
+    private void NuevaTerciarizacoin()
+    {
+        nav.NavigateTo("/Terciarizacion/NuevaCarga");
+    }
+
+    private void NuevaTerciarizacion()
+    {
+        nav.NavigateTo("/Terciarizacion/Editar");
+    }
+
+}

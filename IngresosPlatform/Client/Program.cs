@@ -29,6 +29,7 @@ namespace IngresosPlatform.Client
             builder.Services.AddScoped<IServiceFuncionario, ServiceFuncionario>();
             builder.Services.AddScoped<IServiceArchivo, ServiceArchivo>();
             builder.Services.AddScoped<IServiceIngresoDiario, ServiceIngresoDiario>();
+            builder.Services.AddScoped<IServiceTerciarizacion, ServiceTerciarizacion>();
 
             builder.Services.AddMudServices();
             builder.Services.AddBlazoredLocalStorage();

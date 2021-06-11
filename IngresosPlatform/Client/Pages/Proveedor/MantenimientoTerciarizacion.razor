@@ -1,0 +1,143 @@
+﻿@page "/terciarizaciones"
+@inject IServiceTerciarizacion serviceTerciariza
+@inject NavigationManager nav
+@inject IJSRuntime js
+@inject ILocalStorageService localStorage
+@inject IServiceProveedor serviceProveedor
+
+
+<h3>Terciarización</h3>
+
+
+@if (terciarizaciones != null && terciarizaciones.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Nomina</th>
+                <th scope="col">MTSS unificada</th>
+                <th scope="col">Cert. DGI</th>
+                <th scope="col">Cert. BSE</th>
+                <th scope="col">Cert. BPS</th>
+                <th scope="col">Póliza Seguro</th>
+                <th scope="col">Póliza Terciariza.</th>
+                <th scope="col">Póliza Resp. Social</th>
+                <th scope="col">Pago BPS</th>
+                <th scope="col">Pago BSE</th>
+                <th scope="col">Pago DGI</th>
+                <th scope="col">Recibos de sueldo</th>
+                <th scope="col">Ráfagas</th>
+                <th scope="col">Otros</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (TerciarizacionDTO ter in terciarizaciones)
+            {
+            <tr>
+                <td>@ter.Fecha.ToString("MM/yyyy")</td>
+                <td><Indicador IndicadorIndividual="@ter.PathNomina" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathMtssUnificada" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathCertDgi" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathCertBse" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathCertBps" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathPolizaSeguro" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathPolizaTerciarizacion" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathRespSocial" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathPagoBps" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathPagoBse" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathPagoDgi" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathRecibosSueldo" /></td>
+                <td><Indicador IndicadorIndividual="@ter.PathRafagas" /></td>
+                <td>@if (string.IsNullOrEmpty(ter.Comentarios)){ <Indicador IndicadorIndividual="@ter.PathRafagas" />}</td>
+
+                <td><a href="" @onclick="(() => EdicionTerciariza(ter.Id))" @onclick:preventDefault>Editar</a></td>
+            </tr>
+            }
+            <tr>
+                <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevaTerciariza" /></td>
+            </tr>
+        </tbody>
+    </table>
+}
+else if (terciarizaciones != null && terciarizaciones.Count == 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Nomina</th>
+                <th scope="col">MTSS unificada</th>
+                <th scope="col">Cert. DGI</th>
+                <th scope="col">Cert. BSE</th>
+                <th scope="col">Cert. BPS</th>
+                <th scope="col">Póliza Seguro</th>
+                <th scope="col">Póliza Terciariza.</th>
+                <th scope="col">Póliza Resp. Social</th>
+                <th scope="col">Pago BPS</th>
+                <th scope="col">Pago BSE</th>
+                <th scope="col">Pago DGI</th>
+                <th scope="col">Recibos de sueldo</th>
+                <th scope="col">Ráfagas</th>
+                <th scope="col">Otros</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevaTerciariza" /></td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <Loading />
+}
+
+@code {
+
+    List<TerciarizacionDTO> terciarizaciones { get; set; } = null;
+    private bool confirmacion { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProveedores();
+        //por mientras lo inicializo
+
+    }
+
+    private async Task CargarProveedores()
+    {
+        UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        if (usuarioDTO != null)
+        {
+            terciarizaciones = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
+        }
+        else
+        {
+            //mensaje de error
+
+        }
+    }
+    private void NuevaTerciariza()
+    {
+        nav.NavigateTo("/terciarizaciones/Nuevo");
+    }
+
+    private async Task BajaFuncionario(int funcionarioId)
+    {
+        confirmacion = await js.MsgConfirmacion("Desea dar de baja al funcionario seleccionado?");
+        if (confirmacion)
+        {
+            nav.NavigateTo($"/terciarizaciones/Baja/{funcionarioId}");
+        }
+    }
+
+    private async Task EdicionTerciariza(int teciarizaId)
+    {
+        nav.NavigateTo($"/terciarizaciones/Editar/{funcionarioId}");
+    }
+
+}

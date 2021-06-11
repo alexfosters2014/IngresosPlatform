@@ -25,6 +25,6 @@ namespace AccesoDatos.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Ingreso> Ingresos { get; set; }
         public DbSet<IngresoDiario> IngresosDiarios { get; set; }
-        //agregar terciarizacion
+        public DbSet<Terciarizacion> Terciarizaciones { get; set; }
     }
 }

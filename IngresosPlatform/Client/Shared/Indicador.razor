@@ -1,0 +1,13 @@
+﻿@if (!string.IsNullOrEmpty(IndicadorIndividual))
+{
+    <img src="/img/SubidoOK.png" alt="OK" class="botonChico" />
+}
+else
+{
+    <img src="/img/NoSubido.png" alt="NO_OK" class="botonChico" />
+}
+
+@code {
+    [Parameter]
+    public string IndicadorIndividual { get; set; }
+}

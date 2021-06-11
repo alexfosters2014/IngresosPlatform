@@ -27,5 +27,7 @@ namespace AccesoDatos.Data
         public string PathRafagas { get; set; }
         public string PathOtrosDocumentos { get; set; }
         public string Comentarios { get; set; }
+        public int ProveedorId { get; set; }
+        public Proveedor Proveedor { get; set; }
     }
 }

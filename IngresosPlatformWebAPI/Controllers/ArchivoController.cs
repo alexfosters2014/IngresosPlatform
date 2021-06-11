@@ -72,8 +72,8 @@ namespace IngresosPlatformWebAPI.Controllers
         [HttpGet("{pass}")]
         public async Task<IActionResult> Contraseña(string pass)
         {
-           
-            return Ok(Encriptacion.Encriptar(pass));
+            //return Ok(Encriptacion.Encriptar(pass));
+            return Ok(Encriptacion.GetSHA256(pass));
         }
 
         }

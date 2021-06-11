@@ -1,0 +1,596 @@
+﻿@page "/Terciarizacion/NuevaCarga{tercId:int}"
+@using System.IO
+@using Tewr.Blazor.FileReader;
+@inject NavigationManager nav
+@inject ILocalStorageService localStorage
+@inject IFileReaderService fileReader
+@inject IJSRuntime js
+@inject IServiceArchivo serviceArchivo
+@inject IServiceTerciarizacion serviceTerciarizacion
+
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <h3>Nueva carga de terciarizacion</h3>
+    </div>
+    <div class="d-flex justify-content-center">
+        <section class="row">
+            <div class="col-8">
+                <EditForm Model="terciarizaDTO" OnValidSubmit="CargarNuevaTerciarizacion">
+                    <div class="row recuadro">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="fechaTerc">Nombre de funcionario*</label>
+                                <input type="month" @bind="terciarizaDTO.Fecha" id="fechaTerc" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+                    @*Nomina*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de Nómina</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refNomina" @onchange="SubirPDF_PathNomina" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathNomina))
+                            {
+                                <a href="@terciarizaDTO.PathNomina" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+                    @*Mtts*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de planilla MTSS unificada</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refMtss" @onchange="SubirPDF_PathMtss" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathMtssUnificada))
+                            {
+                                <a href="@terciarizaDTO.PathMtssUnificada" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+                    @*Certificado DGI*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de certificado DGI</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refCertDgi" @onchange="SubirPDF_PathCertDgi" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathCertDgi))
+                            {
+                                <a href="@terciarizaDTO.PathCertDgi" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+
+                    @*Certificado BSE*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de certificado BSE</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refCertBse" @onchange="SubirPDF_PathCertBse" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathCertBse))
+                            {
+                                <a href="@terciarizaDTO.PathCertBse" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+
+                    @*Certificado BPS*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de certificado BPS</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refCertBps" @onchange="SubirPDF_PathCertBps" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathCertBps))
+                            {
+                                <a href="@terciarizaDTO.PathCertBps" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+
+                    @*Poliza de Seguro*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de póliza de seguro</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refPolizaSeguro" @onchange="SubirPDF_PathPolizaSeguro" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathPolizaSeguro))
+                            {
+                                <a href="@terciarizaDTO.PathPolizaSeguro" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+                    @*Poliza de TErciarizacion*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de póliza de terciarización</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refPolizaTerciariza" @onchange="SubirPDF_PathPolizaTerciariza" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathPolizaTerciarizacion))
+                            {
+                                <a href="@terciarizaDTO.PathPolizaTerciarizacion" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+
+                    @*Poliza de Responsabilidad Social*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de póliza de responsabilidad social</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refPolizaRespSocial" @onchange="SubirPDF_PathPolizaRespSocial" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathRespSocial))
+                            {
+                                <a href="@terciarizaDTO.PathRespSocial" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*Pago BPS*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de pago BPS</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refPagoBps" @onchange="SubirPDF_PathPagoBps" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathPagoBps))
+                            {
+                                <a href="@terciarizaDTO.PathPagoBps" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+                    @*Pago BSE*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de pago BSE</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refPagoBse" @onchange="SubirPDF_PathPagoBse" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathPagoBse))
+                            {
+                                <a href="@terciarizaDTO.PathPagoBse" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+
+
+                    @*Pago DGI*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de pago DGI</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refPagoDgi" @onchange="SubirPDF_PathPagoDgi" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathPagoDgi))
+                            {
+                                <a href="@terciarizaDTO.PathPagoDgi" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+                    @*REcibos de sueldos*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de recibos de sueldos</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refRecibosSueldos" @onchange="SubirPDF_PathRecibos" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathRecibosSueldo))
+                            {
+                                <a href="@terciarizaDTO.PathRecibosSueldo" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*REcibos de rafagas*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de ráfagas</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refRafagas" @onchange="SubirPDF_PathRafagas" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathRafagas))
+                            {
+                                <a href="@terciarizaDTO.PathRafagas" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+
+                    @*carga de otros documentos*@
+                    <div class="row recuadro">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Carga de otros dcoumentos</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="file" accept=".pdf" @ref="refOtros" @onchange="SubirPDF_PathOtros" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(terciarizaDTO.PathOtrosDocumentos))
+                            {
+                                <a href="@terciarizaDTO.PathOtrosDocumentos" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                            }
+                        </div>
+                        <div class="col-12">
+                            <InputText @bind-Value="terciarizaDTO.Comentarios"  class="form-control" placeholder="Ingrese comentarios de la carga extra de documentos" />
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @if (!carga)
+                    {
+                        <div class="col text-center">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+                        </div>
+                    }
+                </EditForm>
+                <div class="divider"></div>
+            </div>
+        </section>
+
+        <section class="row">
+            @if (carga)
+            {
+                <Loading></Loading>
+            }
+        </section>
+
+    </div>
+</div>
+
+
+@code {
+
+    TerciarizacionDTO terciarizaDTO { get; set; } = new TerciarizacionDTO() { Fecha = DateTime.Today };
+    bool carga = false;
+    UsuarioDTO usuarioDTO = null;
+
+    [Parameter]
+    public int tercId { get; set; }
+
+    ElementReference refNomina;
+    ElementReference refMtss;
+    ElementReference refCertDgi;
+    ElementReference refCertBse;
+    ElementReference refCertBps;
+    ElementReference refPolizaSeguro;
+    ElementReference refPolizaTerciariza;
+    ElementReference refPolizaRespSocial;
+    ElementReference refPagoBps;
+    ElementReference refPagoDgi;
+    ElementReference refPagoBse;
+    ElementReference refRecibosSueldos;
+    ElementReference refRafagas;
+    ElementReference refOtros;
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+            if (tercId > 0)
+            {
+                terciarizaDTO = await serviceTerciarizacion.Obtener(tercId);
+            }
+        }
+        catch (Exception e)
+        {
+            await js.MsgError(e.Message);
+        }
+    }
+
+    private async Task CargarNuevaTerciarizacion()
+    {
+        carga = true;
+        TerciarizacionDTO resultado;
+
+        if (terciarizaDTO.Id == 0)
+        {
+            terciarizaDTO.Proveedor = usuarioDTO.Proveedor;
+            resultado = await serviceTerciarizacion.Agregar(terciarizaDTO);
+        }
+        else
+        {
+            resultado = await serviceTerciarizacion.Actualizar(terciarizaDTO);
+        }
+
+        if (resultado != null)
+        {
+            await js.MsgExitoso("Se guardó exitosamente");
+            nav.NavigateTo("/Terciarizacion");
+        }
+        else
+        {
+            await js.MsgError("No se pudo guardar en el sistema. Intente nuevamente");
+            carga = false;
+        }
+
+
+    }
+    private async Task SubirPDF_PathNomina()
+    {
+        var file = (await fileReader.CreateReference(refNomina).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 1);
+        //validar size menor segun
+        //string nuevaPath = await FileStream(file, terciarizaDTO.PathNomina);
+        //    if (nuevaPath != null || nuevaPath != "")
+        //    {
+        //        terciarizaDTO.PathNomina = nuevaPath;
+        //        StateHasChanged();
+        //        await js.MsgExitoso("Archivo subido exitosamente");
+        //    }
+        //}
+        //else
+        //{
+        //    await js.MsgError("No se pudo subir el archivo");
+        //}
+    }
+    private async Task SubirPDF_PathMtss()
+    {
+        var file = (await fileReader.CreateReference(refMtss).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 2);
+    }
+    private async Task SubirPDF_PathCertDgi()
+    {
+        var file = (await fileReader.CreateReference(refCertDgi).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 3);
+    }
+    private async Task SubirPDF_PathCertBse()
+    {
+        var file = (await fileReader.CreateReference(refCertBse).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 4);
+    }
+    private async Task SubirPDF_PathCertBps()
+    {
+        var file = (await fileReader.CreateReference(refCertBps).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 5);
+    }
+    private async Task SubirPDF_PathPolizaSeguro()
+    {
+        var file = (await fileReader.CreateReference(refPolizaSeguro).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 6);
+    }
+    private async Task SubirPDF_PathPolizaTerciariza()
+    {
+        var file = (await fileReader.CreateReference(refPolizaTerciariza).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 7);
+    }
+    private async Task SubirPDF_PathPolizaRespSocial()
+    {
+        var file = (await fileReader.CreateReference(refPolizaRespSocial).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 8);
+    }
+    private async Task SubirPDF_PathPagoBps()
+    {
+        var file = (await fileReader.CreateReference(refPagoBps).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 9);
+    }
+    private async Task SubirPDF_PathPagoBse()
+    {
+        var file = (await fileReader.CreateReference(refPagoBse).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 10);
+    }
+    private async Task SubirPDF_PathPagoDgi()
+    {
+        var file = (await fileReader.CreateReference(refPagoDgi).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 11);
+    }
+    private async Task SubirPDF_PathRecibos()
+    {
+        var file = (await fileReader.CreateReference(refRecibosSueldos).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 12);
+    }
+    private async Task SubirPDF_PathRafagas()
+    {
+        var file = (await fileReader.CreateReference(refRafagas).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 13);
+    }
+    private async Task SubirPDF_PathOtros()
+    {
+        var file = (await fileReader.CreateReference(refOtros).EnumerateFilesAsync()).FirstOrDefault();
+        await SubirPDF_General(file, 14);
+    }
+
+    private async Task SubirPDF_General(IFileReference file, int eleccion)
+    {
+        if (file != null)
+        {
+            string nuevaPath = "";
+            switch (eleccion)
+            {
+                case 1: nuevaPath = await FileStream(file, terciarizaDTO.PathNomina); break;
+                case 2: nuevaPath = await FileStream(file, terciarizaDTO.PathMtssUnificada); break;
+                case 3: nuevaPath = await FileStream(file, terciarizaDTO.PathCertDgi); break;
+                case 4: nuevaPath = await FileStream(file, terciarizaDTO.PathCertBse); break;
+                case 5: nuevaPath = await FileStream(file, terciarizaDTO.PathCertBps); break;
+                case 6: nuevaPath = await FileStream(file, terciarizaDTO.PathPolizaSeguro); break;
+                case 7: nuevaPath = await FileStream(file, terciarizaDTO.PathPolizaTerciarizacion); break;
+                case 8: nuevaPath = await FileStream(file, terciarizaDTO.PathRespSocial); break;
+                case 9: nuevaPath = await FileStream(file, terciarizaDTO.PathPagoBps); break;
+                case 10: nuevaPath = await FileStream(file, terciarizaDTO.PathPagoBse); break;
+                case 11: nuevaPath = await FileStream(file, terciarizaDTO.PathPagoDgi); break;
+                case 12: nuevaPath = await FileStream(file, terciarizaDTO.PathRecibosSueldo); break;
+                case 13: nuevaPath = await FileStream(file, terciarizaDTO.PathRafagas); break;
+                case 14: nuevaPath = await FileStream(file, terciarizaDTO.PathOtrosDocumentos); break;
+            }
+            if (nuevaPath != null || nuevaPath != "")
+            {
+                terciarizaDTO.PathNomina = nuevaPath;
+
+                switch (eleccion)
+                {
+                    case 1: terciarizaDTO.PathNomina = nuevaPath; break;
+                    case 2: terciarizaDTO.PathMtssUnificada = nuevaPath; break;
+                    case 3: terciarizaDTO.PathCertDgi = nuevaPath; break;
+                    case 4: terciarizaDTO.PathCertBse = nuevaPath; break;
+                    case 5: terciarizaDTO.PathCertBps = nuevaPath; break;
+                    case 6: terciarizaDTO.PathPolizaSeguro = nuevaPath; break;
+                    case 7: terciarizaDTO.PathPolizaTerciarizacion = nuevaPath; break;
+                    case 8: terciarizaDTO.PathRespSocial = nuevaPath; break;
+                    case 9: terciarizaDTO.PathPagoBps = nuevaPath; break;
+                    case 10:terciarizaDTO.PathPagoBse = nuevaPath; break;
+                    case 11:terciarizaDTO.PathPagoDgi = nuevaPath; break;
+                    case 12:terciarizaDTO.PathRecibosSueldo = nuevaPath; break;
+                    case 13:terciarizaDTO.PathRafagas = nuevaPath; break;
+                    case 14:terciarizaDTO.PathOtrosDocumentos = nuevaPath; break;
+                }
+                StateHasChanged();
+                await js.MsgExitoso("Archivo subido exitosamente");
+            }
+        }
+        else
+        {
+            await js.MsgError("No se pudo subir el archivo");
+        }
+    }
+
+
+    private async Task<string> FileStream(IFileReference file, string pathAnterior)
+    {
+
+        if (file == null) return "";
+
+        var fileInfo = await file.ReadFileInfoAsync();
+        Stream fileStream = null;
+
+        using (var ms = await file.CreateMemoryStreamAsync((int)fileInfo.Size))
+        {
+            fileStream = new MemoryStream(ms.ToArray());
+        }
+        string nuevaPath = await serviceArchivo.ActualizarArchivo(fileStream, fileInfo.Name, pathAnterior);
+        fileStream.Dispose();
+        return nuevaPath;
+    }
+
+    private void Cancelar()
+    {
+        nav.NavigateTo("/Terciarizacion");
+    }
+
+}

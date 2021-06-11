@@ -9,5 +9,6 @@ namespace Modelo
     public class VMFecha
     {
         public DateTime FechaActual { get; set; }
+        public int ProveedorId { get; set; }
     }
 }
