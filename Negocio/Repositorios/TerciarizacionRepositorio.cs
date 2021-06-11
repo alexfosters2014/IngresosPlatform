@@ -80,9 +80,21 @@ namespace Negocio.Repositorios
             }
         }
 
-        public Task<List<TerciarizacionDTO>> ObtenerTodos(int proveedorId)
+        public async Task<List<TerciarizacionDTO>> ObtenerTodos(VMFecha vmFecha)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<TerciarizacionDTO> terciariza = mapper.Map<List<Terciarizacion>, List<TerciarizacionDTO>>
+                    (db.Terciarizaciones.Include(i => i.Proveedor)
+                    .Where(w => w.Fecha.Date == vmFecha.FechaActual.Date)
+                    .OrderBy(o => o.Proveedor.RazonSocial)
+                    .ToList() );
+                return terciariza;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<List<TerciarizacionDTO>> ObtenerTodosXProveedor(int proveedorId)
@@ -90,7 +102,11 @@ namespace Negocio.Repositorios
             try
             {
                 List<TerciarizacionDTO> terc = mapper.Map<List<Terciarizacion>, List<TerciarizacionDTO >>
-                    (db.Terciarizaciones.Include(i => i.Proveedor).Where(p => p.Proveedor.Id == proveedorId).ToList());
+                    (db.Terciarizaciones.Include(i => i.Proveedor)
+                    .Where(p => p.Proveedor.Id == proveedorId)
+                    .OrderByDescending(o => o.Fecha)
+                    .Take(24)
+                    .ToList());
                 return terc;
             }
             catch (Exception e)

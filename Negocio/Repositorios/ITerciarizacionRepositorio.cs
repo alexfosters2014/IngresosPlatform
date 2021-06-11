@@ -12,7 +12,8 @@ namespace Negocio.Repositorios
         public Task<TerciarizacionDTO> Agregar(TerciarizacionDTO terciarizacionDTO);
         public Task<TerciarizacionDTO> Actualizar(TerciarizacionDTO terciarizacionDTO);
         public Task<TerciarizacionDTO> Obtener(int tercId);
-        public Task<List<TerciarizacionDTO>> ObtenerTodos(int proveedorId);
+        public Task<List<TerciarizacionDTO>> ObtenerTodos(VMFecha vmFecha);
+        public Task<List<TerciarizacionDTO>> ObtenerTodosXProveedor(int proveedorId);
 
     }
 }

@@ -3,7 +3,6 @@
 @inject NavigationManager nav
 @inject IJSRuntime js
 @inject ILocalStorageService localStorage
-@inject IServiceProveedor serviceProveedor
 
 
 <h3>Terciarización</h3>
@@ -99,21 +98,20 @@ else
 @code {
 
     List<TerciarizacionDTO> terciarizaciones { get; set; } = null;
+    UsuarioDTO usuarioDTO { get; set; } = null;
     private bool confirmacion { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarProveedores();
-        //por mientras lo inicializo
-
+        await CargarTerciarizacion();
     }
 
-    private async Task CargarProveedores()
+    private async Task CargarTerciarizacion()
     {
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         if (usuarioDTO != null)
         {
-            terciarizaciones = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
+            terciarizaciones = await serviceTerciariza.Obtener()
         }
         else
         {

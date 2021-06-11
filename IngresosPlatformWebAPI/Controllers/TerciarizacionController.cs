@@ -43,33 +43,13 @@ namespace IngresosPlatformWebAPI.Controllers
                 return Ok(resultado);
             }
         }
-
         [HttpGet("{tercId}")]
-        public async Task<IActionResult> Obtener(int tercId)
+        public async Task<IActionResult> ObtenerIndividual(int tercId)
         {
-            if (tercId > 0 )
+            if (tercId > 0)
             {
                 //nuevo funcionario
                 var resultado = await terciarizacionRepositorio.Obtener(tercId);
-                if (resultado == null)
-                {
-                    return BadRequest();
-                }
-                return Ok(resultado);
-            }
-            else
-            {
-                    return BadRequest();
-            }
-        }
-
-        [HttpGet("/obtener/{proveedorId}")]
-        public async Task<IActionResult> ObtenerTodosXProveedor(int proveedorId)
-        {
-            if (proveedorId > 0)
-            {
-                //nuevo funcionario
-                var resultado = await terciarizacionRepositorio.Obtener(proveedorId);
                 if (resultado == null)
                 {
                     return BadRequest();
@@ -82,13 +62,32 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-        [HttpGet("/todos")]
-        public async Task<IActionResult> ObtenerTodos(int proveedorId)
+        [HttpGet("/ObtenerTodos/{proveedorId}")]
+        public async Task<IActionResult> ObtenerTodosXProveedor(int proveedorId)
         {
             if (proveedorId > 0)
             {
                 //nuevo funcionario
-                var resultado = await terciarizacionRepositorio.ObtenerTodos(proveedorId);
+                var resultado = await terciarizacionRepositorio.ObtenerTodosXProveedor(proveedorId);
+                if (resultado == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(resultado);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("/ObtenerTodos")]
+        public async Task<IActionResult> ObtenerTodos(VMFecha vmFecha)
+        {
+            if (vmFecha != null)
+            {
+                //nuevo funcionario
+                var resultado = await terciarizacionRepositorio.ObtenerTodos(vmFecha);
                 if (resultado == null)
                 {
                     return BadRequest();
