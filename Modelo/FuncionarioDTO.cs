@@ -35,5 +35,6 @@ namespace Modelo
         public string PathAltaBps { get; set; }
         public ProveedorDTO Proveedor { get; set; }
         public bool Activo { get; set; } = true;
+        public string Indicador { get; set; }
     }
 }

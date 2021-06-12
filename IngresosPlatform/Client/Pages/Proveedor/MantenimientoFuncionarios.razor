@@ -14,6 +14,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th scope="col"></th>
                 <th scope="col">Cedula</th>
                 <th scope="col">Funcionario</th>
                 <th scope="col">Vto Cedula</th>
@@ -29,6 +30,7 @@
             @foreach (FuncionarioDTO fun in funcionarios)
             {
             <tr>
+                <td><img src="/img/indicadores/@fun.Indicador" alt="foto" class="indicadores"/></td>
                 <td>@fun.Cedula</td>
                 <td>@fun.Nombre</td>
                 <td>@fun.VtoCedula.ToString("dd/MM/yyyy")</td>
@@ -44,7 +46,7 @@
             </tr>
             }
             <tr>
-                <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoFuncionario" /></td>
+                <td colspan="15" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoFuncionario" /></td>
             </tr>
         </tbody>
     </table>
@@ -54,6 +56,7 @@ else if (funcionarios != null && funcionarios.Count == 0)
 <table class="table table-striped">
     <thead>
         <tr>
+            <th scope="col"></th>
             <th scope="col">Cedula</th>
             <th scope="col">Funcionario</th>
             <th scope="col">Vto Cedula</th>

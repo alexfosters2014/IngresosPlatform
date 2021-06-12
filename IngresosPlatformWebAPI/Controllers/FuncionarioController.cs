@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Comun;
+using Microsoft.AspNetCore.Mvc;
 using Modelo;
 using Negocio.Repositorios;
 using System;
@@ -30,8 +31,43 @@ namespace IngresosPlatformWebAPI.Controllers
             if (proveedorId != null)
             { 
                 var funcionariosActPRov = await funcionarioRepositorio.ObtenerTodosSegunProveedor(proveedorId.Value);
-                if (funcionariosActPRov != null) { 
-                     return Ok(funcionariosActPRov);
+                if (funcionariosActPRov != null) 
+                {
+                    DateTime hoy = DateTime.Today.Date;
+                   foreach(FuncionarioDTO fun in funcionariosActPRov)
+                    {
+                        DateTime? vtoLibreta = fun.VtoLibreta != null ? fun.VtoLibreta.Value : DateTime.MaxValue.Date;
+                        DateTime? vtoCarneSalud = fun.VtoCarneSalud != null ? fun.VtoCarneSalud.Value : DateTime.MaxValue.Date;
+                        DateTime? vtoCMAlimentos = fun.VtoCMAlimentos != null ? fun.VtoCMAlimentos.Value : DateTime.MaxValue.Date;
+
+                        if (hoy >= fun.VtoCedula ||
+                           hoy >= vtoLibreta.Value ||
+                           hoy >= vtoCarneSalud ||
+                           hoy >= vtoCMAlimentos)
+                        {
+                            fun.Indicador = $"{SD.IndicadorVto.ROJO.ToString()}.png";
+                        }
+                        else if (hoy >= fun.VtoCedula.AddDays(-15) ||
+                                  hoy >= vtoLibreta.Value.AddDays(-15) ||
+                                  hoy >= vtoCarneSalud.Value.AddDays(-15) ||
+                                  hoy >= vtoCMAlimentos.Value.AddDays(-15) )
+                        {
+                            fun.Indicador = $"{SD.IndicadorVto.NARANJA.ToString()}.png";
+                        }
+                        else if (hoy >= fun.VtoCedula.AddDays(-30) ||
+                                  hoy >= vtoLibreta.Value.AddDays(-30) ||
+                                  hoy >= vtoCarneSalud.Value.AddDays(-30) ||
+                                  hoy >= vtoCMAlimentos.Value.AddDays(-30))
+                        {
+                            fun.Indicador = $"{SD.IndicadorVto.AMARILLO.ToString()}.png";
+                        }
+                        else
+                        {
+                            fun.Indicador = $"{SD.IndicadorVto.OK.ToString()}.png";
+                        }
+                    }
+
+                    return Ok(funcionariosActPRov);
                 }
                 else
                 {

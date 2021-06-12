@@ -62,13 +62,31 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-        [HttpGet("/ObtenerTodos/{proveedorId}")]
-        public async Task<IActionResult> ObtenerTodosXProveedor(int proveedorId)
+        [HttpPost("ObtenerTodosXProveedor")]
+        public async Task<IActionResult> ObtenerTodosXProveedor([FromBody] VMGeneral vmGeneral)
         {
-            if (proveedorId > 0)
+            if (vmGeneral != null)
             {
                 //nuevo funcionario
-                var resultado = await terciarizacionRepositorio.ObtenerTodosXProveedor(proveedorId);
+                var resultado = await terciarizacionRepositorio.ObtenerTodosXProveedor(vmGeneral);
+                if (resultado == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(resultado);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPost("ObtenerTodosXProveedorOperador")]
+        public async Task<IActionResult> ObtenerTodosXProveedorOperador([FromBody] VMGeneral vmGeneral)
+        {
+            if (vmGeneral != null)
+            {
+                //nuevo funcionario
+                var resultado = await terciarizacionRepositorio.ObtenerTodosXProveedorOperador(vmGeneral);
                 if (resultado == null)
                 {
                     return BadRequest();
@@ -81,8 +99,8 @@ namespace IngresosPlatformWebAPI.Controllers
             }
         }
 
-        [HttpPost("/ObtenerTodos")]
-        public async Task<IActionResult> ObtenerTodos(VMFecha vmFecha)
+        [HttpPost("ObtenerTodos")]
+        public async Task<IActionResult> ObtenerTodos([FromBody] VMGeneral vmFecha)
         {
             if (vmFecha != null)
             {

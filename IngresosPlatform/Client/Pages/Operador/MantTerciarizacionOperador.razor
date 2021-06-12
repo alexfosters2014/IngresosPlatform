@@ -1,0 +1,232 @@
+﻿@page "/TerciarizacionesOperador"
+@inject IServiceTerciarizacion serviceTerciariza
+@inject IServiceProveedor serviceProveedor
+@inject NavigationManager nav
+@inject IJSRuntime js
+@inject ILocalStorageService localStorage
+
+<div class="d-flex justify-content-center">
+    <h3>Terciarización</h3>
+</div>
+
+<div class="d-flex justify-content-center" style="pointer-events: @mousePointer; opacity: @valorOpacidad;">
+    <section class="recuadroPorteria">
+        <div class="row">
+            <div class="col">
+                <label>Desde</label>
+                <input type="month" @bind="desde" class="form-control" />
+            </div>
+            @if (proveedorSeleccionado != null)
+            { 
+            <div class="col">
+                <label>Hasta</label>
+                <input type="month" @bind="hasta" class="form-control" style="transition: background-color 500ms ease-out 1s;"/>
+            </div>
+            }
+            <div class="col">
+                <label>Proveedor</label>
+                <select @onchange="OnChangeProveedor" class="form-control">
+                    <option value="0">Todos los Proveedores</option>
+                    @if (proveedoresDTO != null && proveedoresDTO.Count > 0) {
+                    @foreach (var pro in proveedoresDTO)
+                    {
+                        <option value="@pro.Id">@pro.RazonSocial (@pro.NombreFantasia) </option>
+                    }
+                    }
+                </select>
+            </div>
+
+            <div class="col align-self-end">
+                <button class="btn btn-primary" @onclick="FiltrarTerciarizaciones">Filtrar</button>
+            </div>
+        </div>
+    </section>
+</div>
+@if (terciarizaciones != null && terciarizaciones.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">@((proveedorSeleccionado == null) ? "Proveedor" : "Fecha")</th>
+                <th scope="col">Nomina</th>
+                <th scope="col">MTSS unificada</th>
+                <th scope="col">Cert. DGI</th>
+                <th scope="col">Cert. BSE</th>
+                <th scope="col">Cert. BPS</th>
+                <th scope="col">Póliza Seguro</th>
+                <th scope="col">Póliza Terciariza.</th>
+                <th scope="col">Póliza Resp. Social</th>
+                <th scope="col">Pago BPS</th>
+                <th scope="col">Pago BSE</th>
+                <th scope="col">Pago DGI</th>
+                <th scope="col">Recibos de sueldo</th>
+                <th scope="col">Ráfagas</th>
+                <th scope="col">Otros</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (TerciarizacionDTO ter in terciarizaciones)
+            {
+                <tr>
+                    <td>@ter.Proveedor.RazonSocial</td>
+                    <td><Indicador IndicadorIndividual="@ter.PathNomina" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathMtssUnificada" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathCertDgi" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathCertBse" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathCertBps" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathPolizaSeguro" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathPolizaTerciarizacion" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathRespSocial" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathPagoBps" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathPagoBse" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathPagoDgi" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathRecibosSueldo" /></td>
+                    <td><Indicador IndicadorIndividual="@ter.PathRafagas" /></td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(ter.Comentarios))
+                        {<Indicador IndicadorIndividual="@ter.PathOtrosDocumentos" />}
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-primary" @onclick="OnCerrar">Cerrar</button>
+    </div>
+}
+else if (terciarizaciones != null && terciarizaciones.Count == 0)
+{
+   <p style="color:orangered;">No hay registros</p>
+}
+@if (cargar)
+{
+    <Loading />
+}
+
+@code {
+
+            List<TerciarizacionDTO> terciarizaciones { get; set; } = null;
+            UsuarioDTO usuarioDTO { get; set; } = null;
+            List<ProveedorDTO> proveedoresDTO = null;
+            private bool confirmacion { get; set; } = false;
+            private bool cargar = false;
+
+            private DateTime desde = DateTime.Today.Date;
+            private DateTime hasta = DateTime.Today.Date;
+            private ProveedorDTO proveedorSeleccionado = null;
+
+            private string mousePointer = "auto";
+            private string valorOpacidad = "1";
+
+            protected override async Task OnInitializedAsync()
+            {
+                await CargarTerciarizacion();
+            }
+
+            private async Task CargarTerciarizacion()
+            {
+                UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+                if (usuarioDTO != null)
+                {
+                    proveedoresDTO = await serviceProveedor.ObtenerProveedores();
+                }
+                else
+                {
+                    await js.MsgError("Hubo un error");
+                }
+            }
+            private async Task FiltrarTerciarizaciones()
+            {
+                cargar = true;
+                mousePointer = "none";
+                valorOpacidad = "0.5";
+        if (proveedorSeleccionado == null)
+        {
+            hasta = desde;
+            await CargarTerciarizacionProveedores();
+        }
+        else
+        {
+            await CargarTerciarizacionDeUnProveedor();
+    }
+
+    }
+    private async Task CargarTerciarizacionProveedores()
+    {
+        try
+        {
+            terciarizaciones = await serviceTerciariza.ObtenerTodos(new VMGeneral() {FechaActual=desde});
+            cargar = false;
+            StateHasChanged();
+        }
+        catch(Exception ex)
+        {
+            await js.MsgError("Hubo un error");
+        }
+    }
+
+    private async Task CargarTerciarizacionDeUnProveedor()
+    {
+        try
+        {
+            if (desde > hasta)
+            {
+                await js.MsgError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'");
+                return;
+            }
+            terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedorOperador(new VMGeneral()
+            { FechaActual = desde,
+                FechaFin = hasta,
+                ProveedorId=proveedorSeleccionado.Id});
+
+            cargar = false;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await js.MsgError("Hubo un error");
+        }
+    }
+
+    private async void OnChangeProveedor(ChangeEventArgs e)
+    {
+        try
+        {
+            int proId;
+            Int32.TryParse(e.Value.ToString(), out proId);
+            if (proId > 0)
+            {
+                var buscarProveedor = proveedoresDTO.Where(pro => pro.Id == proId).Single();
+                if (buscarProveedor != null)
+                {
+                    proveedorSeleccionado = buscarProveedor;
+                }
+                else
+                {
+                    await js.MsgError("Hubo un error");
+                }
+            }
+            else
+            {
+                proveedorSeleccionado = null;
+                hasta = desde;
+            }
+        }
+        catch(Exception ex)
+        {
+            await js.MsgError("Hubo un error");
+        }
+
+    }
+
+    private async Task OnCerrar()
+    {
+        terciarizaciones = null;
+        valorOpacidad = "1";
+        mousePointer = "auto";
+
+        StateHasChanged();
+    }
+
+}

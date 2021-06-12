@@ -140,7 +140,7 @@ else if (carga)
     private async Task CargaInicial()
     {
         carga = true;
-        ingresosXProveedor = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMFecha() { FechaActual = hoy });
+        ingresosXProveedor = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMGeneral() { FechaActual = hoy });
     }
     private async Task Actulizar()
     {

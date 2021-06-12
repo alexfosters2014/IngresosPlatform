@@ -1,4 +1,4 @@
-﻿@page "/Terciarizacion/NuevaCarga{tercId:int}"
+﻿@page "/Terciarizacion/CargaTerciarizacion/{tercId:int}"
 @using System.IO
 @using Tewr.Blazor.FileReader;
 @inject NavigationManager nav
@@ -11,7 +11,14 @@
 
 <div class="container">
     <div class="d-flex justify-content-center">
-        <h3>Nueva carga de terciarizacion</h3>
+        @if (tercId > 0)
+        {
+            <h3>Carga de documentación de terciarizacion</h3>
+        }
+        else
+        {
+             <h3>Nueva carga de documentación de terciarizacion</h3>
+        }
     </div>
     <div class="d-flex justify-content-center">
         <section class="row">
@@ -396,7 +403,7 @@
             usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
             if (tercId > 0)
             {
-                terciarizaDTO = await serviceTerciarizacion.Obtener(tercId);
+                terciarizaDTO = await serviceTerciarizacion.ObtenerIndividual(tercId);
             }
         }
         catch (Exception e)
@@ -423,7 +430,7 @@
         if (resultado != null)
         {
             await js.MsgExitoso("Se guardó exitosamente");
-            nav.NavigateTo("/Terciarizacion");
+            nav.NavigateTo("/Terciarizaciones");
         }
         else
         {
@@ -437,19 +444,6 @@
     {
         var file = (await fileReader.CreateReference(refNomina).EnumerateFilesAsync()).FirstOrDefault();
         await SubirPDF_General(file, 1);
-        //validar size menor segun
-        //string nuevaPath = await FileStream(file, terciarizaDTO.PathNomina);
-        //    if (nuevaPath != null || nuevaPath != "")
-        //    {
-        //        terciarizaDTO.PathNomina = nuevaPath;
-        //        StateHasChanged();
-        //        await js.MsgExitoso("Archivo subido exitosamente");
-        //    }
-        //}
-        //else
-        //{
-        //    await js.MsgError("No se pudo subir el archivo");
-        //}
     }
     private async Task SubirPDF_PathMtss()
     {
@@ -590,7 +584,7 @@
 
     private void Cancelar()
     {
-        nav.NavigateTo("/Terciarizacion");
+        nav.NavigateTo("/Terciarizaciones");
     }
 
 }

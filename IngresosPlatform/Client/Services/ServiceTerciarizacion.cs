@@ -63,7 +63,7 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<TerciarizacionDTO>> ObtenerTodos(VMFecha vmFecha)
+        public async Task<List<TerciarizacionDTO>> ObtenerTodos(VMGeneral vmFecha)
         {
             var response = await httpClient.PostAsJsonAsync("/api/Terciarizacion/ObtenerTodos",vmFecha);
 
@@ -79,9 +79,25 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<TerciarizacionDTO>> ObtenerTodosXProveedor(int proveedorId)
+        public async Task<List<TerciarizacionDTO>> ObtenerTodosXProveedor(VMGeneral vmGeneral)
         {
-            var response = await httpClient.GetAsync($"/api/Terciarizacion/Obtener/{proveedorId}");
+            var response = await httpClient.PostAsJsonAsync("/api/Terciarizacion/ObtenerTodosXProveedor", vmGeneral);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var todos = JsonConvert.DeserializeObject<List<TerciarizacionDTO>>(content);
+                return todos;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<TerciarizacionDTO>> ObtenerTodosXProveedorOperador(VMGeneral vmGeneral)
+        {
+            var response = await httpClient.PostAsJsonAsync("/api/Terciarizacion/ObtenerTodosXProveedorOperador", vmGeneral);
 
             if (response.IsSuccessStatusCode)
             {

@@ -1,6 +1,7 @@
-﻿img.nuevoBoton{
-    height:50px;
-    width:50px;
+﻿img.nuevoBoton {
+    height: 50px;
+    width: 50px;
+    transition: 0.5s;
 }
 img.nuevoBoton:hover{
     height: 60px;
@@ -18,7 +19,7 @@ img.botonChico {
     -webkit-box-shadow: 5px 5px 21px 2px rgba(0,0,0,0.79);
     box-shadow: 5px 5px 21px 2px rgba(0,0,0,0.79);
     border: 1px solid;
-    border-color: grey;
+    border-color: rgb(220,227,200);
     padding: 30px;
     border-radius: 20px;
     background-image: url(../img/login.png);
@@ -30,7 +31,7 @@ img.botonChico {
     -webkit-box-shadow: 5px 5px 21px 2px rgba(0,0,0,0.79);
     box-shadow: 5px 5px 21px 2px rgba(0,0,0,0.79);
     border: 1px solid;
-    border-color: grey;
+    border-color: rgb(220,227,200);
     padding: 30px;
     border-radius: 20px;
     background-image: url(../img/candado.png);
@@ -44,7 +45,7 @@ tr.colorFila{
 }
 .recuadro {
     border: 1px solid;
-    border-color: rgb(240, 240, 240);
+    border-color: rgb(220,227,200);
     border-radius: 15px;
     box-shadow: 5px 7px 10px 0px rgba(15,15,15,0.17);
     -webkit-box-shadow: 5px 7px 10px 0px rgba(15,15,15,0.17);
@@ -53,7 +54,7 @@ tr.colorFila{
 }
 .recuadroAutorizaciones {
     border: 1px solid;
-    border-color: rgb(250, 250, 250);
+    border-color: rgb(220,227,200);
     border-radius: 15px;
     box-shadow: 5px 7px 10px 0px rgba(15,15,15,0.17);
     -webkit-box-shadow: 5px 7px 10px 0px rgba(15,15,15,0.17);
@@ -63,7 +64,7 @@ tr.colorFila{
 }
 .recuadroPorteria {
     border: 1px solid;
-    border-color: rgb(250, 250, 250);
+    border-color: rgb(220,227,200);
     border-radius: 15px;
     box-shadow: 5px 7px 10px 0px rgba(15,15,15,0.17);
     -webkit-box-shadow: 5px 7px 10px 0px rgba(15,15,15,0.17);
@@ -75,14 +76,14 @@ tr.colorFila{
     -webkit-box-shadow: 2px 2px 15px 2px rgba(0,0,0,0.79);
     box-shadow: 2px 2px 15px 2px rgba(0,0,0,0.79);
     border: 1px solid;
-    border-color: grey;
+    border-color: rgb(220,227,200);
     padding: 30px;
     border-radius: 20px;
     background-image: url(../img/fondoBoton.jpg);
     background-repeat: no-repeat;
     background-size: cover;
-    width:150px;
-    margin-right:30px;
+    width: 150px;
+    margin-right: 30px;
 }
 .textoClaro{
     color:white;
@@ -98,6 +99,7 @@ tr.colorFila{
 .botonPDFVisor {
     height: 50px;
     width: 50px;
+    transition: 0.5s;
 }
 
 .botonPDFVisor:hover {

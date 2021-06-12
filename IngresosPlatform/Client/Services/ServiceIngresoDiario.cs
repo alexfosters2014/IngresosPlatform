@@ -31,7 +31,7 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<IngresoDiarioxProveedor>> ObtenerSinMarcaciones(VMFecha fechaActual)
+        public async Task<List<IngresoDiarioxProveedor>> ObtenerSinMarcaciones(VMGeneral fechaActual)
         {
             if (fechaActual != null)
             {

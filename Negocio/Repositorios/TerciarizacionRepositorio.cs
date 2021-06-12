@@ -80,13 +80,13 @@ namespace Negocio.Repositorios
             }
         }
 
-        public async Task<List<TerciarizacionDTO>> ObtenerTodos(VMFecha vmFecha)
+        public async Task<List<TerciarizacionDTO>> ObtenerTodos(VMGeneral vmFecha)
         {
             try
             {
                 List<TerciarizacionDTO> terciariza = mapper.Map<List<Terciarizacion>, List<TerciarizacionDTO>>
                     (db.Terciarizaciones.Include(i => i.Proveedor)
-                    .Where(w => w.Fecha.Date == vmFecha.FechaActual.Date)
+                    .Where(w => w.Fecha.Month == vmFecha.FechaActual.Month && w.Fecha.Year == vmFecha.FechaActual.Year)
                     .OrderBy(o => o.Proveedor.RazonSocial)
                     .ToList() );
                 return terciariza;
@@ -97,13 +97,31 @@ namespace Negocio.Repositorios
             }
         }
 
-        public async Task<List<TerciarizacionDTO>> ObtenerTodosXProveedor(int proveedorId)
-        {
+        public async Task<List<TerciarizacionDTO>> ObtenerTodosXProveedorOperador(VMGeneral vmGeneral)
+        { //proveedorId,fecha inicio y fecha fin
             try
             {
                 List<TerciarizacionDTO> terc = mapper.Map<List<Terciarizacion>, List<TerciarizacionDTO >>
                     (db.Terciarizaciones.Include(i => i.Proveedor)
-                    .Where(p => p.Proveedor.Id == proveedorId)
+                    .Where(p => p.Proveedor.Id == vmGeneral.ProveedorId && 
+                                p.Fecha.Date >= vmGeneral.FechaActual.Date && 
+                                p.Fecha.Date <= vmGeneral.FechaFin.Date)
+                    .OrderByDescending(o => o.Fecha)
+                    .ToList());
+                return terc;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+        public async Task<List<TerciarizacionDTO>> ObtenerTodosXProveedor(VMGeneral vmGeneral)
+        { //proveedorId,fecha inicio y fecha fin
+            try
+            {
+                List<TerciarizacionDTO> terc = mapper.Map<List<Terciarizacion>, List<TerciarizacionDTO>>
+                    (db.Terciarizaciones.Include(i => i.Proveedor)
+                    .Where(p => p.Proveedor.Id == vmGeneral.ProveedorId)
                     .OrderByDescending(o => o.Fecha)
                     .Take(24)
                     .ToList());

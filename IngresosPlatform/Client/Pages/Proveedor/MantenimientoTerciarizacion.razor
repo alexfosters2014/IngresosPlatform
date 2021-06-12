@@ -1,4 +1,4 @@
-﻿@page "/terciarizaciones"
+﻿@page "/Terciarizaciones"
 @inject IServiceTerciarizacion serviceTerciariza
 @inject NavigationManager nav
 @inject IJSRuntime js
@@ -35,7 +35,7 @@
             @foreach (TerciarizacionDTO ter in terciarizaciones)
             {
             <tr>
-                <td>@ter.Fecha.ToString("MM/yyyy")</td>
+                <td>@ter.Fecha.ToString("MMMM yyyy")</td>
                 <td><Indicador IndicadorIndividual="@ter.PathNomina" /></td>
                 <td><Indicador IndicadorIndividual="@ter.PathMtssUnificada" /></td>
                 <td><Indicador IndicadorIndividual="@ter.PathCertDgi" /></td>
@@ -49,13 +49,13 @@
                 <td><Indicador IndicadorIndividual="@ter.PathPagoDgi" /></td>
                 <td><Indicador IndicadorIndividual="@ter.PathRecibosSueldo" /></td>
                 <td><Indicador IndicadorIndividual="@ter.PathRafagas" /></td>
-                <td>@if (string.IsNullOrEmpty(ter.Comentarios)){ <Indicador IndicadorIndividual="@ter.PathRafagas" />}</td>
+                <td>@if (!string.IsNullOrEmpty(ter.Comentarios)){ <Indicador IndicadorIndividual="@ter.PathOtrosDocumentos" />}</td>
 
                 <td><a href="" @onclick="(() => EdicionTerciariza(ter.Id))" @onclick:preventDefault>Editar</a></td>
             </tr>
             }
             <tr>
-                <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevaTerciariza" /></td>
+                <td colspan="15" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevaTerciariza" /></td>
             </tr>
         </tbody>
     </table>
@@ -111,7 +111,8 @@ else
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         if (usuarioDTO != null)
         {
-            terciarizaciones = await serviceTerciariza.Obtener()
+            terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedor(new VMGeneral() {ProveedorId=usuarioDTO.Proveedor.Id});
+            StateHasChanged();
         }
         else
         {
@@ -121,21 +122,12 @@ else
     }
     private void NuevaTerciariza()
     {
-        nav.NavigateTo("/terciarizaciones/Nuevo");
-    }
-
-    private async Task BajaFuncionario(int funcionarioId)
-    {
-        confirmacion = await js.MsgConfirmacion("Desea dar de baja al funcionario seleccionado?");
-        if (confirmacion)
-        {
-            nav.NavigateTo($"/terciarizaciones/Baja/{funcionarioId}");
-        }
+        nav.NavigateTo($"/Terciarizacion/CargaTerciarizacion/{0}");
     }
 
     private async Task EdicionTerciariza(int teciarizaId)
     {
-        nav.NavigateTo($"/terciarizaciones/Editar/{funcionarioId}");
+        nav.NavigateTo($"/Terciarizacion/CargaTerciarizacion/{teciarizaId}");
     }
 
 }

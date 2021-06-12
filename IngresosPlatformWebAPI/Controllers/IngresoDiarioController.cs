@@ -20,7 +20,7 @@ namespace IngresosPlatformWebAPI.Controllers
         }
 
         [HttpPost("sinMarca")]
-        public async Task<IActionResult> IngresosDiariosSinMarcaciones([FromBody] VMFecha fechaActual)
+        public async Task<IActionResult> IngresosDiariosSinMarcaciones([FromBody] VMGeneral fechaActual)
         {
             if (fechaActual.FechaActual <= DateTime.Today.Date)
             {

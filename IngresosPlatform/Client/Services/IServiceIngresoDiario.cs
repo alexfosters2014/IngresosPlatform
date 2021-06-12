@@ -9,6 +9,6 @@ namespace IngresosPlatform.Client.Services
     public interface IServiceIngresoDiario
     {
         public Task<IngresoDiarioDTO> ActualizarMarcacion(IngresoDiarioDTO ingresoDiarioDTO);
-        public Task<List<IngresoDiarioxProveedor>> ObtenerSinMarcaciones(VMFecha fechaActual);
+        public Task<List<IngresoDiarioxProveedor>> ObtenerSinMarcaciones(VMGeneral fechaActual);
     }
 }
