@@ -30,7 +30,6 @@ namespace IngresosPlatformWebAPI
             {
                 options.AddPolicy(_MyCors, builder =>
                 {
-                    //.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
                     builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                 });
             });
@@ -68,10 +67,11 @@ namespace IngresosPlatformWebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IngresosPlatformWebAPI v1"));
             }
+            //Creacion de la base de datos
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<AplicacionDBContext>();
-                context.Database.EnsureCreated();
+                context.Database.EnsureCreated(); //para crear una base de datos pero no se pueden usar migraciones
             }
             app.UseStaticFiles();
             app.UseRouting();

@@ -34,5 +34,10 @@ namespace Comun
             NARANJA,
             ROJO
         }
+        public enum TipoFecha
+        {
+            PLANIFICADA,
+            EFECTIVA
+        }
     }
 }

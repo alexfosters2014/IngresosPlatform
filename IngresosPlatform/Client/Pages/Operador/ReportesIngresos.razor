@@ -1,0 +1,197 @@
+﻿@page "/ReportesOperador"
+@inject IServiceIngresoDiario serviceIngresoDiario
+@inject IServiceProveedor serviceProveedor
+@inject NavigationManager nav
+@inject IJSRuntime js
+@inject ILocalStorageService localStorage
+
+<div class="d-flex justify-content-center">
+    <h3>Reportes</h3>
+</div>
+
+<div class="d-flex justify-content-center" style="pointer-events: @mousePointer; opacity: @valorOpacidad;">
+    <section class="recuadroPorteria">
+        <div class="row ml-5">
+            @if (proveedorSeleccionado != null)
+            {
+                <div class="col">
+                    <label>Desde</label>
+                    <input type="month" @bind="desde" class="form-control" />
+                </div>
+            }
+            <div class="col">
+                <label>Hasta</label>
+                <input type="month" @bind="hasta" class="form-control" style="transition: background-color 500ms ease-out 1s;" max="@maxFecha" />
+            </div>
+
+            <div class="col">
+                <label>Proveedor</label>
+                <select @onchange="OnChangeProveedor" class="form-control">
+                    <option value="0">Todos los Proveedores</option>
+                    @if (proveedoresDTO != null && proveedoresDTO.Count > 0)
+                    {
+                        @foreach (var pro in proveedoresDTO)
+                        {
+                            <option value="@pro.Id">@pro.RazonSocial (@pro.NombreFantasia) </option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col align-self-end">
+                <button class="btn btn-primary" @onclick="FiltrarIngresos">Filtrar</button>
+            </div>
+        </div>
+        <div class="row ml-5">
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="efe" name="ingresos" value="@SD.TipoFecha.EFECTIVA.ToString()" @onchange="OnChangeRadio" checked>
+                    <label class="form-check-label labelRadio" for="efe">
+                        Ingresos marcados en porteria
+                    </label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="plan" name="ingresos" value="@SD.TipoFecha.PLANIFICADA.ToString()" @onchange="OnChangeRadio">
+                    <label class="form-check-label labelRadio" for="plan">
+                        Ingresos planificados posterior
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+</div>
+
+@if (ingresosDiarios != null && ingresosDiarios.Any())
+{
+    <div class="d-flex justify-content-end">
+        <img src="/img/export.png" @onclick="Exportar" class="botonPDFVisor" />
+    </div>
+
+    <ContIngresoDiarioXProv ingresosXProveedor="@ingresosDiarios" TipoFecha="@tipoFecha" />
+
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-primary" @onclick="OnCerrar">Cerrar</button>
+    </div>
+}
+else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
+{
+    <p style="color:orangered;">No hay registros segun el filtro seleccionado</p>
+}
+@if (cargar)
+{
+    <Loading />
+}
+
+@code {
+
+    List<IngresoDiarioxProveedor> ingresosDiarios { get; set; } = null;
+    UsuarioDTO usuarioDTO { get; set; } = null;
+    List<ProveedorDTO> proveedoresDTO = null;
+
+    private DateTime maxFecha = DateTime.Today.AddYears(5);
+    private string tipoFecha = SD.TipoFecha.EFECTIVA.ToString();
+
+    private bool confirmacion { get; set; } = false;
+    private bool cargar = false;
+    private bool radioPlanificados = true;
+    private bool radioEfectivos = false;
+
+    private DateTime desde = DateTime.Today.Date;
+    private DateTime hasta = DateTime.Today.Date;
+    private ProveedorDTO proveedorSeleccionado = null;
+
+    private string mousePointer = "auto";
+    private string valorOpacidad = "1";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarTerciarizacion();
+    }
+
+    private async Task CargarTerciarizacion()
+    {
+        UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        if (usuarioDTO != null)
+        {
+            proveedoresDTO = await serviceProveedor.ObtenerProveedores();
+        }
+        else
+        {
+            await js.MsgError("Hubo un error");
+        }
+    }
+
+    private async Task Exportar()
+    {
+
+    }
+    private async Task FiltrarIngresos()
+    {
+        cargar = true;
+        mousePointer = "none";
+        valorOpacidad = "0.5";
+
+
+    }
+
+    private async void OnChangeProveedor(ChangeEventArgs e)
+    {
+        try
+        {
+            int proId;
+            Int32.TryParse(e.Value.ToString(), out proId);
+            if (proId > 0)
+            {
+                var buscarProveedor = proveedoresDTO.Where(pro => pro.Id == proId).Single();
+                if (buscarProveedor != null)
+                {
+                    proveedorSeleccionado = buscarProveedor;
+                }
+                else
+                {
+                    await js.MsgError("Hubo un error");
+                }
+            }
+            else
+            {
+                proveedorSeleccionado = null;
+                hasta = desde;
+            }
+        }
+        catch (Exception ex)
+        {
+            await js.MsgError("Hubo un error");
+        }
+
+    }
+
+
+    private async void OnChangeRadio(ChangeEventArgs e)
+    {
+        try
+        {
+            string valor = e.Value.ToString();
+            if (string.IsNullOrEmpty(valor))
+            {
+                tipoFecha = valor;
+            }
+        }
+        catch (Exception ex)
+        {
+            await js.MsgError("Hubo un error");
+        }
+
+    }
+
+    private async Task OnCerrar()
+    {
+        ingresosDiarios = null;
+        valorOpacidad = "1";
+        mousePointer = "auto";
+        StateHasChanged();
+    }
+
+}
