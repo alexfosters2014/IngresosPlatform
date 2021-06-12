@@ -86,7 +86,7 @@ namespace Negocio.Repositorios
             {
                 List<TerciarizacionDTO> terciariza = mapper.Map<List<Terciarizacion>, List<TerciarizacionDTO>>
                     (db.Terciarizaciones.Include(i => i.Proveedor)
-                    .Where(w => w.Fecha.Date == vmFecha.FechaActual.Date)
+                    .Where(w => w.Fecha.Month == vmFecha.FechaActual.Month && w.Fecha.Year == vmFecha.FechaActual.Year)
                     .OrderBy(o => o.Proveedor.RazonSocial)
                     .ToList() );
                 return terciariza;
@@ -107,7 +107,6 @@ namespace Negocio.Repositorios
                                 p.Fecha.Date >= vmGeneral.FechaActual.Date && 
                                 p.Fecha.Date <= vmGeneral.FechaFin.Date)
                     .OrderByDescending(o => o.Fecha)
-                    .Take(24)
                     .ToList());
                 return terc;
             }

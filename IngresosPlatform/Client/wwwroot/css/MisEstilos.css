@@ -1,6 +1,7 @@
-﻿img.nuevoBoton{
-    height:50px;
-    width:50px;
+﻿img.nuevoBoton {
+    height: 50px;
+    width: 50px;
+    transition: 0.5s;
 }
 img.nuevoBoton:hover{
     height: 60px;
@@ -98,6 +99,7 @@ tr.colorFila{
 .botonPDFVisor {
     height: 50px;
     width: 50px;
+    transition: 0.5s;
 }
 
 .botonPDFVisor:hover {

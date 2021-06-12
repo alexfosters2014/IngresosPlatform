@@ -112,6 +112,7 @@ else
         if (usuarioDTO != null)
         {
             terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedor(new VMGeneral() {ProveedorId=usuarioDTO.Proveedor.Id});
+            StateHasChanged();
         }
         else
         {
