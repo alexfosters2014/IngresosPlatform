@@ -1,0 +1,74 @@
+﻿@inject IJSRuntime js
+@using Comun
+@inject IServiceIngreso serviceIngreso
+
+@if (ingresosXProveedor.Count > 0)
+{
+    foreach (var ingProv in ingresosXProveedor)
+    { 
+    <div class="recuadroAutorizaciones">
+        <div class="row">
+            <div class="col">
+                <h5>@ingProv.IngresosDiarios.First().Proveedor.Rut</h5>
+            </div>
+            <div class="col">
+                <h5>@ingProv.IngresosDiarios.First().Proveedor.RazonSocial</h5>
+            </div>
+            <div class="col">
+                <h5>@ingProv.IngresosDiarios.First().Proveedor.NombreFantasia</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Cedula</th>
+                        <th scope="col">Funcionario</th>
+                        <th scope="col">@(TipoFecha == SD.TipoFecha.EFECTIVA.ToString() ? "Hora Entrada efectiva" : "Hora Entrada Planificada")</th>
+                        <th scope="col">@(TipoFecha == SD.TipoFecha.EFECTIVA.ToString() ? "Hora Salida efectiva" : "Hora Salida Planificada")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ing in ingProv.IngresosDiarios)
+                    {
+                    <tr>
+                        <td>@ing.Fecha.ToString("dd/MM/yyyy")</td>
+                        <td>@ing.Funcionario.Cedula</td>
+                        <td>@ing.Funcionario.Nombre</td>
+                        @if (TipoFecha == SD.TipoFecha.PLANIFICADA.ToString())
+                        {
+                            <td>@ing.EntradaPlanificada.ToString("HH:mm")</td>
+                            <td>@ing.SalidaPlanificada.ToString("HH:mm")</td>
+                        }
+                        @if (TipoFecha == SD.TipoFecha.EFECTIVA.ToString())
+                        {
+                            <td>@((ing.EntradaEfectiva != null) ? ing.EntradaEfectiva.Value.ToString("HH:mm") : "")</td>
+                            <td>@((ing.SalidaEfectiva != null) ? ing.SalidaEfectiva.Value.ToString("HH:mm") : "")</td>
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+        <div class="divider"></div>
+    }
+}
+
+
+@code {
+    [Parameter]
+    public List<IngresoDiarioxProveedor> ingresosXProveedor { get; set; }
+    [Parameter]
+    public string TipoFecha { get; set; }
+
+    private bool visible = true;
+
+    private void noVisible()
+    {
+        visible = false;
+    }
+
+}

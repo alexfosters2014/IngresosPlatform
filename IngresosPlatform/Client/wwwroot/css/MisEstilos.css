@@ -1,4 +1,14 @@
-﻿img.nuevoBoton {
+﻿input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-top:15px;
+    margin-bottom:10px;
+}
+.labelRadio {
+    margin-top: 14px;
+    margin-left:7px;
+}
+img.nuevoBoton {
     height: 50px;
     width: 50px;
     transition: 0.5s;
@@ -101,6 +111,11 @@ tr.colorFila{
     width: 50px;
     transition: 0.5s;
 }
+.botonExport {
+    height: 60px;
+    width: auto;
+    transition: 0.3s;
+}
 
 .botonPDFVisor:hover {
         -webkit-filter: invert(100%);
@@ -114,8 +129,8 @@ tr.colorFila{
     -o-background-size: cover;
     background-size: cover;
 }
-h1,h2,h3,h4{
-    color: rgb(51,65,255);
+h1, h2, h3, h4, h5, h6 {
+    color: rgb(255, 36, 36);
 }
 
 .myScrollBar {

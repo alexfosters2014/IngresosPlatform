@@ -31,6 +31,63 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
+        public async Task<VMGeneral> ObtenerFechaAPI()
+        {
+            var response = await httpClient.GetAsync("/api/IngresoDiario/FechaActual");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var fch = JsonConvert.DeserializeObject<VMGeneral>(content);
+                return fch;
+            }
+            else {
+                return new VMGeneral() { FechaActual = DateTime.Today.AddYears(5).Date };
+            }
+        }
+
+        public async Task<List<IngresoDiarioxProveedor>> ObtenerReporteHorariosEfectivos(VMGeneral vmGeneral)
+        {
+            if (vmGeneral != null)
+            {
+                var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/ReporteHorariosEfectivos", vmGeneral);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var ingDiariosXPRoveedorDTO = JsonConvert.DeserializeObject<List<IngresoDiarioxProveedor>>(content);
+                    return ingDiariosXPRoveedorDTO;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public async Task<List<IngresoDiarioxProveedor>> ObtenerReporteHorariosPlanificados(VMGeneral vmGeneral)
+            {
+                if (vmGeneral != null)
+                {
+                    var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/ReporteHorariosPlanificados", vmGeneral);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var ingDiariosXPRoveedorDTO = JsonConvert.DeserializeObject<List<IngresoDiarioxProveedor>>(content);
+                        return ingDiariosXPRoveedorDTO;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            else
+            {
+                return null;
+            }
+        }
+
         public async Task<List<IngresoDiarioxProveedor>> ObtenerSinMarcaciones(VMGeneral fechaActual)
         {
             if (fechaActual != null)

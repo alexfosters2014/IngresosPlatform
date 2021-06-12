@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Modelo;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace IngresosPlatform.Client.Services
@@ -14,8 +16,21 @@ namespace IngresosPlatform.Client.Services
         {
             httpClient = _httpClient;
         }
-
-        public async Task<string> ActualizarArchivo(Stream fileStream, string fileName, string pathAnterior)
+        public async Task<byte[]> DescargarExcel(ReporteIngreso reporteIngreso)
+        {
+            if (reporteIngreso != null)
+            {
+                var response = await httpClient.PostAsJsonAsync("/api/Archivo/Planilla",reporteIngreso);
+                response.EnsureSuccessStatusCode();
+                var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                return fileBytes;
+            }
+            else
+            {
+                return null;
+            }
+        }
+            public async Task<string> ActualizarArchivo(Stream fileStream, string fileName, string pathAnterior)
         {
             var contentUpload = new MultipartFormDataContent();
             contentUpload.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");

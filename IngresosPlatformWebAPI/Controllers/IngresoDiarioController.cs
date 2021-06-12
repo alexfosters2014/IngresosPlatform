@@ -19,7 +19,12 @@ namespace IngresosPlatformWebAPI.Controllers
             ingresoDiarioRepositorio = _ingresoDiarioRepositorio;
         }
 
-        [HttpPost("sinMarca")]
+        [HttpGet("FechaActual")]
+        public async Task<IActionResult> FechaActual()
+        {
+            return Ok(new VMGeneral(){ FechaActual = DateTime.Today.Date , FechaFin = DateTime.Today.Date,ProveedorId=0});
+        }
+            [HttpPost("sinMarca")]
         public async Task<IActionResult> IngresosDiariosSinMarcaciones([FromBody] VMGeneral fechaActual)
         {
             if (fechaActual.FechaActual <= DateTime.Today.Date)
@@ -63,5 +68,60 @@ namespace IngresosPlatformWebAPI.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost("ReporteHorariosEfectivos")]
+        public async Task<IActionResult> ObtenerTodosHorariosEfectivos([FromBody] VMGeneral vMGeneral)
+        {
+            if (vMGeneral != null && vMGeneral.FechaActual <= DateTime.Today.Date && vMGeneral.FechaFin >= DateTime.Today.Date)
+            {
+                List<IngresoDiarioDTO> ingresos = await ingresoDiarioRepositorio.ObtenerTodosHorariosEfectivos(vMGeneral);
+                if (ingresos == null)
+                {
+                    return BadRequest();
+                }
+                List<IngresoDiarioxProveedor> ingXProveedor = ingresos
+                                     .GroupBy(g => g.Proveedor.Id)
+                                     .Select(s => new IngresoDiarioxProveedor()
+                                     {
+                                         ProveedorId = s.Key,
+                                         IngresosDiarios = s.OrderBy(o => o.Fecha).ToList()
+                                     }).ToList();
+
+                return Ok(ingXProveedor);
+            }
+            else
+            {
+                List<IngresoDiarioDTO> ingresos = new List<IngresoDiarioDTO>();
+                return Ok(ingresos);
+            }
+        }
+        [HttpPost("ReporteHorariosPlanificados")]
+        public async Task<IActionResult> ObtenerTodosHorariosPlanificados([FromBody] VMGeneral vMGeneral)
+        {
+            if (vMGeneral != null && vMGeneral.FechaActual <= DateTime.Today.Date && vMGeneral.FechaFin >= DateTime.Today.Date)
+            {
+                vMGeneral.FechaActual = DateTime.Today.Date;
+                List<IngresoDiarioDTO> ingresos = await ingresoDiarioRepositorio.ObtenerTodosHorariosPlanificados(vMGeneral);
+                if (ingresos == null)
+                {
+                    return BadRequest();
+                }
+                List<IngresoDiarioxProveedor> ingXProveedor = ingresos
+                                     .GroupBy(g => g.Proveedor.Id)
+                                     .Select(s => new IngresoDiarioxProveedor()
+                                     {
+                                         ProveedorId = s.Key,
+                                         IngresosDiarios = s.OrderBy(o => o.Fecha).ToList()
+                                     }).ToList();
+
+                return Ok(ingXProveedor);
+            }
+            else
+            {
+                List<IngresoDiarioDTO> ingresos = new List<IngresoDiarioDTO>();
+                return Ok(ingresos);
+            }
+        }
+
     }
 }

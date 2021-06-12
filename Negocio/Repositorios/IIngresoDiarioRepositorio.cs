@@ -12,7 +12,8 @@ namespace Negocio.Repositorios
         public Task<int> Agregar(IngresoDTO ingresoDTO);
         public Task<int> Borrar(int ingresoId);
         public Task<IngresoDiarioDTO> Actualizar(IngresoDiarioDTO funcionarioDTO);
-        public Task<List<IngresoDiarioDTO>> ObtenerTodos();
+        public Task<List<IngresoDiarioDTO>> ObtenerTodosHorariosEfectivos(VMGeneral vMGeneral);
+        public Task<List<IngresoDiarioDTO>> ObtenerTodosHorariosPlanificados(VMGeneral vMGeneral);
         public Task<List<IngresoDiarioDTO>> ObtenerSinMarcaciones(DateTime fecha);
         public Task<int> CantidadIngresosDia(DateTime fecha);
     }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Modelo;
 using System;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace IngresosPlatformWebAPI.Controllers
     {
         private readonly IWebHostEnvironment environment;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private const string XlsxContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
         public ArchivoController(IWebHostEnvironment _environment, IHttpContextAccessor _httpContextAccessor)
         {
@@ -76,5 +78,23 @@ namespace IngresosPlatformWebAPI.Controllers
             return Ok(Encriptacion.GetSHA256(pass));
         }
 
+        [HttpPost("Planilla")]
+        public IActionResult DescargarExcel([FromBody] ReporteIngreso reporteIngreso)
+        {
+            byte[] reportBytes;
+            using (var package = Utils.createExcel(reporteIngreso))
+            {
+                reportBytes = package.GetAsByteArray();
+            }
+            return File(reportBytes, XlsxContentType, "Reporte-de-ingresos.xlsx");
+
+
+
+
         }
+
+
+
+
     }
+}
