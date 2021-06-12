@@ -111,7 +111,7 @@ else
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         if (usuarioDTO != null)
         {
-            terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedor(usuarioDTO.Proveedor.Id);
+            terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedor(new VMGeneral() {ProveedorId=usuarioDTO.Proveedor.Id});
         }
         else
         {
