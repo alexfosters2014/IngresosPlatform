@@ -143,13 +143,27 @@ namespace Negocio.Repositorios
         {
             try
             {
-                List<IngresoDiario> ingresosDiarios = db.IngresosDiarios
-                                                                        .Include(i => i.Funcionario)
-                                                                        .Include(n => n.Proveedor)
-                                                                         .Where(c => c.Fecha.Date >= vMGeneral.FechaActual.Date &&
-                                                                                     c.Fecha.Date <= vMGeneral.FechaFin.Date &&
-                                                                                     (c.EntradaEfectiva != null || 
-                                                                                      c.SalidaEfectiva != null)).ToList();
+                List<IngresoDiario> ingresosDiarios;
+                if (vMGeneral.ProveedorId > 0) {
+                ingresosDiarios = db.IngresosDiarios
+                                                    .Include(i => i.Funcionario)
+                                                    .Include(n => n.Proveedor)
+                                                        .Where(c => c.Fecha.Date >= vMGeneral.FechaActual.Date &&
+                                                                    c.Fecha.Date <= vMGeneral.FechaFin.Date &&
+                                                                    c.Proveedor.Id == vMGeneral.ProveedorId &&
+                                                                    (c.EntradaEfectiva != null || 
+                                                                    c.SalidaEfectiva != null)).ToList();
+                }
+                else
+                {
+                    ingresosDiarios = db.IngresosDiarios
+                                                        .Include(i => i.Funcionario)
+                                                        .Include(n => n.Proveedor)
+                                                            .Where(c => c.Fecha.Date >= vMGeneral.FechaActual.Date &&
+                                                                        c.Fecha.Date <= vMGeneral.FechaFin.Date &&
+                                                                        (c.EntradaEfectiva != null ||
+                                                                        c.SalidaEfectiva != null)).ToList();
+                }
                 List<IngresoDiarioDTO> ingsDiariosDTO = mapper.Map<List<IngresoDiario>, List<IngresoDiarioDTO>>(ingresosDiarios);
                 return ingsDiariosDTO;
             }
@@ -163,11 +177,22 @@ namespace Negocio.Repositorios
         {
             try
             {
-                List<IngresoDiario> ingresosDiarios = db.IngresosDiarios
-                                                                        .Include(i => i.Funcionario)
-                                                                        .Include(n => n.Proveedor)
-                                                                         .Where(c => c.Fecha.Date >= vMGeneral.FechaActual.Date &&
-                                                                                     c.Fecha.Date <= vMGeneral.FechaFin.Date).ToList();
+                List<IngresoDiario> ingresosDiarios;
+                if (vMGeneral.ProveedorId > 0) {
+                    ingresosDiarios = db.IngresosDiarios
+                                                        .Include(i => i.Funcionario)
+                                                        .Include(n => n.Proveedor)
+                                                            .Where(c => c.Fecha.Date >= vMGeneral.FechaActual.Date &&
+                                                                        c.Proveedor.Id == vMGeneral.ProveedorId &&
+                                                                        c.Fecha.Date <= vMGeneral.FechaFin.Date).ToList();
+                }else
+                {
+                    ingresosDiarios = db.IngresosDiarios
+                                                        .Include(i => i.Funcionario)
+                                                        .Include(n => n.Proveedor)
+                                                        .Where(c => c.Fecha.Date >= vMGeneral.FechaActual.Date &&
+                                                                    c.Fecha.Date <= vMGeneral.FechaFin.Date).ToList();
+                }
                 List<IngresoDiarioDTO> ingsDiariosDTO = mapper.Map<List<IngresoDiario>, List<IngresoDiarioDTO>>(ingresosDiarios);
                 return ingsDiariosDTO;
             }
@@ -176,5 +201,6 @@ namespace Negocio.Repositorios
                 return null;
             }
         }
+
     }
 }

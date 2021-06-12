@@ -11,7 +11,8 @@
             <img src="/img/barrera.png" class="nuevoBoton" />
         </div>
         <div class="form-inline">
-            <input type="date" class="form-control" @onchange="@((e) => Resetear(e.Value.ToString()))"/>
+            <input type="date" value="@maxFecha.ToString("yyyy-MM-dd")" max="@maxFecha.ToString("yyyy-MM-dd")" class="form-control" 
+                   @onchange="@((e) => Resetear(e.Value.ToString()))"/>
             <button type="button" class="btn btn-primary ml-3" @onclick="onClickVer">Ver</button>
 
         </div>
@@ -114,12 +115,14 @@ else if (carga)
     List<IngresoDiarioDTO> ingresosSeleccionados { get; set; } = null;
     UsuarioDTO usuario { get; set; } = null;
     bool carga = false;
+    private DateTime maxFecha =DateTime.Today.Date;
 
     protected async override Task OnInitializedAsync()
     {
         try
         {
             usuario = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+           
             if (usuario == null && usuario.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString())
             {
                 nav.NavigateTo("/");
@@ -141,6 +144,7 @@ else if (carga)
     {
         carga = true;
         ingresosXProveedor = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMGeneral() { FechaActual = hoy });
+        StateHasChanged();
     }
     private async Task Actulizar()
     {
@@ -178,21 +182,27 @@ else if (carga)
 
     private async void MarcarSalida(IngresoDiarioDTO ingD)
     {
-        bool confirmacion = await js.MsgConfirmacion("Desea marcar la salida del funcionario?");
-        if (confirmacion)
+        if (ingD.EntradaEfectiva != null) {
+            bool confirmacion = await js.MsgConfirmacion("Desea marcar la salida del funcionario?");
+            if (confirmacion)
+            {
+                ingD.SalidaEfectiva = DateTime.Now;
+                var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD);
+                if (ing == null)
+                {
+                    await js.MsgError("Hubo un error. No se pudo marcar la salida. Verifique su conexion a internet");
+                    ingD.EntradaEfectiva = null;
+                }
+                else
+                {
+                    await js.MsgAdvertencia("Se marcó la salida correctamente");
+                }
+                StateHasChanged();
+            }
+        }
+        else
         {
-            ingD.SalidaEfectiva = DateTime.Now;
-            var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD);
-            if (ing == null)
-            {
-                await js.MsgError("Hubo un error. No se pudo marcar la salida. Verifique su conexion a internet");
-                ingD.EntradaEfectiva = null;
-            }
-            else
-            {
-                await js.MsgExitoso("Se marcó la salida correctamente");
-            }
-            StateHasChanged();
+            await js.MsgError("Primero debe marcar una hora de entrada");
         }
     }
     private async void Salir()

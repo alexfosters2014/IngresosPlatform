@@ -31,6 +31,20 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
+        public async Task<VMGeneral> ObtenerFechaAPI()
+        {
+            var response = await httpClient.GetAsync("/api/IngresoDiario/FechaActual");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var fch = JsonConvert.DeserializeObject<VMGeneral>(content);
+                return fch;
+            }
+            else {
+                return new VMGeneral() { FechaActual = DateTime.Today.AddYears(5).Date };
+            }
+        }
+
         public async Task<List<IngresoDiarioxProveedor>> ObtenerReporteHorariosEfectivos(VMGeneral vmGeneral)
         {
             if (vmGeneral != null)

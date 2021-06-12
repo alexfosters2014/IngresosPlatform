@@ -27,16 +27,16 @@
                         <th scope="col">Cedula</th>
                         <th scope="col">Funcionario</th>
                         <th scope="col">@(TipoFecha == SD.TipoFecha.EFECTIVA.ToString() ? "Hora Entrada efectiva" : "Hora Entrada Planificada")</th>
-                        <th scope="col">>@(TipoFecha == SD.TipoFecha.EFECTIVA.ToString() ? "Hora Salida efectiva" : "Hora Salida Planificada")</th>
+                        <th scope="col">@(TipoFecha == SD.TipoFecha.EFECTIVA.ToString() ? "Hora Salida efectiva" : "Hora Salida Planificada")</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var ing in ingProv.IngresosDiarios)
                     {
                     <tr>
-                        <td>@ing.Fecha</td>
+                        <td>@ing.Fecha.ToString("dd/MM/yyyy")</td>
                         <td>@ing.Funcionario.Cedula</td>
-
+                        <td>@ing.Funcionario.Nombre</td>
                         @if (TipoFecha == SD.TipoFecha.PLANIFICADA.ToString())
                         {
                             <td>@ing.EntradaPlanificada.ToString("HH:mm")</td>
@@ -53,6 +53,7 @@
             </table>
         </div>
     </div>
+        <div class="divider"></div>
     }
 }
 

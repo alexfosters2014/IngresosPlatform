@@ -1,6 +1,7 @@
 ﻿@page "/ReportesOperador"
 @inject IServiceIngresoDiario serviceIngresoDiario
 @inject IServiceProveedor serviceProveedor
+@inject IServiceArchivo serviceArchivo
 @inject NavigationManager nav
 @inject IJSRuntime js
 @inject ILocalStorageService localStorage
@@ -12,16 +13,16 @@
 <div class="d-flex justify-content-center" style="pointer-events: @mousePointer; opacity: @valorOpacidad;">
     <section class="recuadroPorteria">
         <div class="row ml-5">
-            @if (proveedorSeleccionado != null)
+            @if (tipoFecha != SD.TipoFecha.PLANIFICADA.ToString())
             {
                 <div class="col">
                     <label>Desde</label>
-                    <input type="month" @bind="desde" class="form-control" />
+                    <input type="date" @bind="desde" class="form-control" />
                 </div>
             }
             <div class="col">
                 <label>Hasta</label>
-                <input type="month" @bind="hasta" class="form-control" style="transition: background-color 500ms ease-out 1s;" max="@maxFecha" />
+                <input type="date" @bind="hasta" class="form-control" style="transition: background-color 500ms ease-out 1s;" max="@maxFecha.ToString("yyyy-MM-dd")" />
             </div>
 
             <div class="col">
@@ -66,8 +67,8 @@
 
 @if (ingresosDiarios != null && ingresosDiarios.Any())
 {
-    <div class="d-flex justify-content-end">
-        <img src="/img/export.png" @onclick="Exportar" class="botonPDFVisor" />
+    <div class="d-flex justify-content-center">
+        <a href="" @onclick="(Exportar)" @onclick:preventDefault><img src="/img/export.png" @onclick="Exportar" class="botonPDFVisor" /></a>
     </div>
 
     <ContIngresoDiarioXProv ingresosXProveedor="@ingresosDiarios" TipoFecha="@tipoFecha" />
@@ -91,7 +92,7 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
     UsuarioDTO usuarioDTO { get; set; } = null;
     List<ProveedorDTO> proveedoresDTO = null;
 
-    private DateTime maxFecha = DateTime.Today.AddYears(5);
+    private DateTime maxFecha = DateTime.Today.Date;
     private string tipoFecha = SD.TipoFecha.EFECTIVA.ToString();
 
     private bool confirmacion { get; set; } = false;
@@ -126,7 +127,18 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
 
     private async Task Exportar()
     {
-
+        if (ingresosDiarios != null)
+        {
+            cargar = true;
+            ReporteIngreso reporte = new ReporteIngreso()
+            {
+                TipoFecha = tipoFecha,
+                IngresosXProveedores = ingresosDiarios
+            };
+            var descargaExcel = await serviceArchivo.DescargarExcel(reporte);
+            await js.DescargarExcel("Reporte_Ingresos.xlsx", descargaExcel);
+            cargar = false;
+        }
     }
     private async Task FiltrarIngresos()
     {
@@ -134,7 +146,53 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
         mousePointer = "none";
         valorOpacidad = "0.5";
 
+        if (tipoFecha == SD.TipoFecha.PLANIFICADA.ToString())
+        {
+            await ObtenerHorariosPlanificados();
+        }
+        else
+        {
+            await ObtenerHorariosEfectivos();
+        }
 
+    }
+    private async Task ObtenerHorariosPlanificados()
+    {
+        var resultado = await serviceIngresoDiario.ObtenerReporteHorariosPlanificados(new VMGeneral()
+        {
+            FechaActual=DateTime.Today,
+            FechaFin = hasta.Date,
+            ProveedorId = ((proveedorSeleccionado != null) ? proveedorSeleccionado.Id : 0)
+        });
+        cargar = false;
+        if (resultado != null)
+        {
+            ingresosDiarios = resultado;
+            StateHasChanged();
+        }
+        else
+        {
+            await js.MsgError("Hubo un error");
+        }
+    }
+    private async Task ObtenerHorariosEfectivos()
+    {
+        var resultado = await serviceIngresoDiario.ObtenerReporteHorariosEfectivos(new VMGeneral()
+        {
+            FechaActual = desde.Date,
+            FechaFin = hasta.Date,
+            ProveedorId = ((proveedorSeleccionado != null) ? proveedorSeleccionado.Id : 0)
+        });
+        cargar = false;
+        if (resultado != null)
+        {
+            ingresosDiarios = resultado;
+            StateHasChanged();
+        }
+        else
+        {
+            await js.MsgError("Hubo un error");
+        }
     }
 
     private async void OnChangeProveedor(ChangeEventArgs e)
@@ -158,7 +216,6 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
             else
             {
                 proveedorSeleccionado = null;
-                hasta = desde;
             }
         }
         catch (Exception ex)
@@ -174,9 +231,18 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
         try
         {
             string valor = e.Value.ToString();
-            if (string.IsNullOrEmpty(valor))
+            if (!string.IsNullOrEmpty(valor))
             {
                 tipoFecha = valor;
+                if (tipoFecha == SD.TipoFecha.EFECTIVA.ToString())
+                {
+                    maxFecha = DateTime.Today.Date;
+                }
+                else
+                {
+                    maxFecha = DateTime.Today.AddYears(5);
+                }
+                StateHasChanged();
             }
         }
         catch (Exception ex)

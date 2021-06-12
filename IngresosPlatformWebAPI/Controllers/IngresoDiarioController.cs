@@ -19,7 +19,12 @@ namespace IngresosPlatformWebAPI.Controllers
             ingresoDiarioRepositorio = _ingresoDiarioRepositorio;
         }
 
-        [HttpPost("sinMarca")]
+        [HttpGet("FechaActual")]
+        public async Task<IActionResult> FechaActual()
+        {
+            return Ok(new VMGeneral(){ FechaActual = DateTime.Today.Date , FechaFin = DateTime.Today.Date,ProveedorId=0});
+        }
+            [HttpPost("sinMarca")]
         public async Task<IActionResult> IngresosDiariosSinMarcaciones([FromBody] VMGeneral fechaActual)
         {
             if (fechaActual.FechaActual <= DateTime.Today.Date)
