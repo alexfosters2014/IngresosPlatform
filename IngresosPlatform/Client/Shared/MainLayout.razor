@@ -3,6 +3,7 @@
 @inject NavigationManager nav
 @inject IJSRuntime js
 @inject HubConnection hubConnection
+@inject IToastService toastService
 
 <div class="page">
     <div class="sidebar">
@@ -17,11 +18,15 @@
     </div>
 
     <div class="main">
-        <div class="top-row px-4">
-            <div class="">
-                <p>@miMensaje</p>
+        <div class="top-row px-4 justify-content-between">
+            <div style="width:1%;">
             </div>
-            <a href="" @onclick="Salir" @onclick:preventDefault>Cerrar Sesión</a>
+            <div>
+                <a href="" @onclick="VerMensajes" @onclick:preventDefault><img src="/img/@PathMensaje" class="botonPDFVisor" /></a>
+            </div>
+            <div>
+                <a href="" @onclick="Salir" @onclick:preventDefault>Cerrar Sesión</a>
+            </div>
         </div>
 
         <div class="content px-4">
@@ -29,39 +34,55 @@
         </div>
     </div>
 </div>
+<BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.TopCenter" 
+                           IconType="IconType.FontAwesome" 
+                           InfoIcon="fa fa-info"/>
 
 @code{
-    UsuarioDTO usuario = null;
+    UsuarioDTO usuarioDTO = null;
     string TipoUsuario = "";
-    string miMensaje;
+    List<string> mensajes = new List<string>();
+    string PathMensaje = "message.png";
 
     protected override async Task OnInitializedAsync()
     {
+        await CargaMenu();
         hubConnection.On<string, string>("RecibirNotificacion", (usuario, mensaje) =>
         {
-            miMensaje = mensaje;
-            StateHasChanged();
+            if (usuario == SD.TipoUsuario.OperadorIngPlt.ToString() && TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString())
+            {
+                mensajes.Reverse();
+                mensajes.Add(mensaje);
+                mensajes.Reverse();
+                PathMensaje = "messageNotification.png";
+                StateHasChanged();
+            }
+            else if (usuario == usuarioDTO.Proveedor.Rut)
+            {
+                mensajes.Reverse();
+                mensajes.Add(mensaje);
+                mensajes.Reverse();
+                PathMensaje = "messageNotification.png";
+                StateHasChanged();
+            }
         });
-
         await hubConnection.StartAsync();
 
-        CargaMenu();
     }
 
-    private async void CargaMenu()
+    private async Task CargaMenu()
     {
         try
         {
-            usuario = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-            if (usuario != null)
+            usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+            if (usuarioDTO != null)
             {
-                TipoUsuario = usuario.TipoUsuario;
+                TipoUsuario = usuarioDTO.TipoUsuario;
             }
             else
             {
                 nav.NavigateTo("/");
             }
-
             StateHasChanged();
         }
         catch (Exception)
@@ -71,13 +92,22 @@
 
 
     }
-    private async void Salir()
+    private async Task Salir()
     {
         bool confirmacion = await js.MsgConfirmacion("Desea Salir de la sesión?");
         if (confirmacion)
         {
+            await hubConnection.DisposeAsync();
             await localStorage.ClearAsync();
             nav.NavigateTo("/");
+        }
+    }
+
+    private async Task VerMensajes()
+    {
+        foreach (string str in mensajes.Take(5))
+        {
+            toastService.ShowInfo(str,"Notificaciones");
         }
     }
 }

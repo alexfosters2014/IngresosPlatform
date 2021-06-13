@@ -14,6 +14,7 @@ using Radzen;
 using MudBlazor.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.Components;
+using Blazored.Toast;
 
 namespace IngresosPlatform.Client
 {
@@ -41,6 +42,7 @@ namespace IngresosPlatform.Client
             builder.Services.AddScoped<IServiceIngresoDiario, ServiceIngresoDiario>();
             builder.Services.AddScoped<IServiceTerciarizacion, ServiceTerciarizacion>();
 
+            builder.Services.AddBlazoredToast();
             builder.Services.AddMudServices();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);

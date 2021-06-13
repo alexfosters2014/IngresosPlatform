@@ -4,200 +4,205 @@
 @inject ILocalStorageService localStorage
 @inject IJSRuntime js
 @inject NavigationManager nav
+@inject HubConnection hubConnection
 
-    <div class="d-flex justify-content-center">
-        <h3>Nuevos Ingresos</h3>
-    </div>
-        @if (funcionarios != null && funcionarios.Any())
-        {
-            <section class="recuadroPorteria">
-                <EditForm Model="ingresoIndividual" OnValidSubmit="CargarNuevoIngreso">
-                    <DataAnnotationsValidator />
-                    <div class="row">
-                        <div class="col">
-                            <label>Cedula*</label>
-                            <InputText @bind-Value="ingresoIndividual.Funcionario.Cedula" class="form-control" readonly />
-                            <ValidationMessage For="@( () => ingresoIndividual.Funcionario.Cedula)" />
-                        </div>
+<div class="d-flex justify-content-center">
+    <h3>Nuevos Ingresos</h3>
+</div>
+@if (funcionarios != null && funcionarios.Any())
+{
+    <section class="recuadroPorteria">
+        <EditForm Model="ingresoIndividual" OnValidSubmit="CargarNuevoIngreso">
+            <DataAnnotationsValidator />
+            <div class="row">
+                <div class="col">
+                    <label>Cedula*</label>
+                    <InputText @bind-Value="ingresoIndividual.Funcionario.Cedula" class="form-control" readonly />
+                    <ValidationMessage For="@( () => ingresoIndividual.Funcionario.Cedula)" />
+                </div>
 
-                        <div class="col">
-                            <label>Funcionario*</label>
-                            <select @onchange="OnChangeFuncionario" class="form-control" @ref="selectFocus">
-                                <option value="0">Seleccionar...</option>
-                                @foreach (var fun in funcionarios)
-                                {
-                                    <option value="@fun.Id">@fun.Nombre </option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col">
-                            <label>Entrada*</label>
-                            <input type="time" @bind="ingresoIndividual.EntradaPlanificada" class="form-control" />
-                            <ValidationMessage For="@( () => ingresoIndividual.EntradaPlanificada)" />
-                        </div>
-                        <div class="col">
-                            <label>Salida*</label>
-                            <input type="time" @bind="ingresoIndividual.SalidaPlanificada" class="form-control" />
-                            <ValidationMessage For="@( () => ingresoIndividual.SalidaPlanificada)" />
-                        </div>
-                        <div class="col">
-                            <label>Desde*</label>
-                            <InputDate @bind-Value="ingresoIndividual.FechaInicio" class="form-control" />
-                            <ValidationMessage For="@( () => ingresoIndividual.FechaInicio)" />
-                        </div>
-                        <div class="col">
-                            <label>Hasta*</label>
-                            <InputDate @bind-Value="ingresoIndividual.FechaFin" class="form-control" />
-                            <ValidationMessage For="@( () => ingresoIndividual.FechaFin)" />
-                        </div>
+                <div class="col">
+                    <label>Funcionario*</label>
+                    <select @onchange="OnChangeFuncionario" class="form-control" @ref="selectFocus">
+                        <option value="0">Seleccionar...</option>
+                        @foreach (var fun in funcionarios)
+                        {
+                            <option value="@fun.Id">@fun.Nombre </option>
+                        }
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Entrada*</label>
+                    <input type="time" @bind="ingresoIndividual.EntradaPlanificada" class="form-control" />
+                    <ValidationMessage For="@( () => ingresoIndividual.EntradaPlanificada)" />
+                </div>
+                <div class="col">
+                    <label>Salida*</label>
+                    <input type="time" @bind="ingresoIndividual.SalidaPlanificada" class="form-control" />
+                    <ValidationMessage For="@( () => ingresoIndividual.SalidaPlanificada)" />
+                </div>
+                <div class="col">
+                    <label>Desde*</label>
+                    <InputDate @bind-Value="ingresoIndividual.FechaInicio" class="form-control" />
+                    <ValidationMessage For="@( () => ingresoIndividual.FechaInicio)" />
+                </div>
+                <div class="col">
+                    <label>Hasta*</label>
+                    <InputDate @bind-Value="ingresoIndividual.FechaFin" class="form-control" />
+                    <ValidationMessage For="@( () => ingresoIndividual.FechaFin)" />
+                </div>
 
-                        <div class="col align-self-end">
-                            <button type="submit" class="btn btn-primary">Agregar a la lista</button>
-                        </div>
-                    </div>
-                </EditForm>
-            </section>
-        }
-        <div style="height:10px;"></div>
-
-
-        @if (ingresosDTO != null && ingresosDTO.Any())
-        {
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Cedula</th>
-                        <th scope="col">Funcionario</th>
-                        <th scope="col">Hora entrada</th>
-                        <th scope="col">Hora salida</th>
-                        <th scope="col">Desde</th>
-                        <th scope="col">Hasta</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (IngresoDTO ing in ingresosDTO)
-                    {
-                        <tr>
-                            <td>@ing.Funcionario.Cedula</td>
-                            <td>@ing.Funcionario.Nombre</td>
-                            <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
-                            <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
-                            <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
-                            <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
-                            <td><a href="" @onclick="(() => BorrarIngresoList(ing))" @onclick:preventDefault>Borrar</a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-primary" @onclick="AgregarIngresos">Enviar Ingresos</button>
+                <div class="col align-self-end">
+                    <button type="submit" class="btn btn-primary">Agregar a la lista</button>
+                </div>
             </div>
-        }
+        </EditForm>
+    </section>
+}
+<div style="height:10px;"></div>
 
 
-        @code {
-
-            private IngresoDTO ingresoIndividual { get; set; } = new IngresoDTO()
+@if (ingresosDTO != null && ingresosDTO.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Cedula</th>
+                <th scope="col">Funcionario</th>
+                <th scope="col">Hora entrada</th>
+                <th scope="col">Hora salida</th>
+                <th scope="col">Desde</th>
+                <th scope="col">Hasta</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (IngresoDTO ing in ingresosDTO)
             {
-                Funcionario = new FuncionarioDTO()
-            };
-            private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
-            List<FuncionarioDTO> funcionarios { get; set; } = null;
-            private UsuarioDTO usuarioDTO { get; set; } = null;//cargar en el inicio , trae el localstorag
-            ElementReference selectFocus;
-
-            protected override async Task OnInitializedAsync()
-            {
-                await CargarFuncionarios();
-
+                <tr>
+                    <td>@ing.Funcionario.Cedula</td>
+                    <td>@ing.Funcionario.Nombre</td>
+                    <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                    <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                    <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                    <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+                    <td><a href="" @onclick="(() => BorrarIngresoList(ing))" @onclick:preventDefault>Borrar</a></td>
+                </tr>
             }
-            private async Task CargarFuncionarios()
-            {
-                usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-                funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
-            }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-primary" @onclick="AgregarIngresos">Enviar Ingresos</button>
+    </div>
+}
 
-            private void BorrarIngresoList(IngresoDTO ingreso)
-            {
-                ingresosDTO.Remove(ingreso);
-                StateHasChanged();
-            }
 
-            private async Task CargarNuevoIngreso()
-            {
-                try
-                {
-                    if (string.IsNullOrEmpty(ingresoIndividual.Funcionario.Cedula))
-                    {
-                        await js.MsgError("Debe cargar un funcionario");
-                        return;
-                    }
-                    if (ingresoIndividual.FechaFin < ingresoIndividual.FechaInicio)
-                    {
-                        await js.MsgError("La fecha de fin debe ser mayor o igual a la fecha de inicio");
-                        return;
-                    }
-                    bool existe = ingresosDTO.Any(a => a.Funcionario.Id == ingresoIndividual.Funcionario.Id);
-                    if (existe)
-                    {
-                        await js.MsgError("Ya existe el funcionario en la lista");
-                        return;
-                    }
-                    ingresoIndividual.Proveedor = usuarioDTO.Proveedor;
-                    ingresoIndividual.Fecha = DateTime.Now;
-                    //bool hayDuplicados = ingresosDTO.GroupBy(g => g.Funcionario.Id).Any(c => c.Count() > 1);
-                    ingresosDTO.Add(ingresoIndividual);
-                    ReiniciarIngreso();
+@code {
 
-                }
-                catch (Exception e)
-                {
-                    js.MsgError(e.Message);
-                }
-            }
+    private IngresoDTO ingresoIndividual { get; set; } = new IngresoDTO()
+    {
+        Funcionario = new FuncionarioDTO()
+    };
+    private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
+    List<FuncionarioDTO> funcionarios { get; set; } = null;
+    private UsuarioDTO usuarioDTO { get; set; } = null;//cargar en el inicio , trae el localstorag
+    ElementReference selectFocus;
 
-            private void ReiniciarIngreso()
-            {
-                DateTime fechaIn = ingresoIndividual.FechaInicio.Value;
-                DateTime fechaFn = ingresoIndividual.FechaFin.Value;
-                ingresoIndividual = null;
-                ingresoIndividual = new IngresoDTO()
-                {
-                    FechaInicio = fechaIn,
-                    FechaFin = fechaFn,
-                    Funcionario = new FuncionarioDTO()
-                };
-            }
-            void OnChangeFuncionario(ChangeEventArgs e)
-            {
-                int funId;
-                Int32.TryParse(e.Value.ToString(), out funId);
-                var buscarFun = funcionarios.Where(fun => fun.Id == funId).Single();
-                if (buscarFun != null)
-                {
-                    ingresoIndividual.Funcionario = buscarFun;
-                }
-            }
-            private async Task AgregarIngresos()
-            {
-                string resultado = await serviceIngreso.AgregarIngresos(ingresosDTO);
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarFuncionarios();
 
-                if (resultado == SD.IngresosReturn.OK.ToString())
-                {
-                    ingresosDTO.Clear();
-                    bool und = await js.MsgExitoso("Se han enviado las solicitudes de ingreso");
-                }
-                else if (resultado == SD.IngresosReturn.REVISAR.ToString())
-                {
-                    await js.MsgAdvertencia("Algunas solicitudes han sido rechazadas porque algun dia del rango enviado ya está registrado. Revise");
-                    nav.NavigateTo("/Revisiones", true);
-                }
-                else if (resultado == SD.IngresosReturn.ERROR.ToString())
-                {
-                    await js.MsgError("Se ha producido un error");
-                }
+    }
+    private async Task CargarFuncionarios()
+    {
+        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
+    }
+
+    private void BorrarIngresoList(IngresoDTO ingreso)
+    {
+        ingresosDTO.Remove(ingreso);
+        StateHasChanged();
+    }
+
+    private async Task CargarNuevoIngreso()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(ingresoIndividual.Funcionario.Cedula))
+            {
+                await js.MsgError("Debe cargar un funcionario");
+                return;
             }
+            if (ingresoIndividual.FechaFin < ingresoIndividual.FechaInicio)
+            {
+                await js.MsgError("La fecha de fin debe ser mayor o igual a la fecha de inicio");
+                return;
+            }
+            bool existe = ingresosDTO.Any(a => a.Funcionario.Id == ingresoIndividual.Funcionario.Id);
+            if (existe)
+            {
+                await js.MsgError("Ya existe el funcionario en la lista");
+                return;
+            }
+            ingresoIndividual.Proveedor = usuarioDTO.Proveedor;
+            ingresoIndividual.Fecha = DateTime.Now;
+            //bool hayDuplicados = ingresosDTO.GroupBy(g => g.Funcionario.Id).Any(c => c.Count() > 1);
+            ingresosDTO.Add(ingresoIndividual);
+            ReiniciarIngreso();
 
         }
+        catch (Exception e)
+        {
+            js.MsgError(e.Message);
+        }
+    }
+
+    private void ReiniciarIngreso()
+    {
+        DateTime fechaIn = ingresoIndividual.FechaInicio.Value;
+        DateTime fechaFn = ingresoIndividual.FechaFin.Value;
+        ingresoIndividual = null;
+        ingresoIndividual = new IngresoDTO()
+        {
+            FechaInicio = fechaIn,
+            FechaFin = fechaFn,
+            Funcionario = new FuncionarioDTO()
+        };
+    }
+    void OnChangeFuncionario(ChangeEventArgs e)
+    {
+        int funId;
+        Int32.TryParse(e.Value.ToString(), out funId);
+        var buscarFun = funcionarios.Where(fun => fun.Id == funId).Single();
+        if (buscarFun != null)
+        {
+            ingresoIndividual.Funcionario = buscarFun;
+        }
+    }
+    private async Task AgregarIngresos()
+    {
+        string resultado = await serviceIngreso.AgregarIngresos(ingresosDTO);
+
+        if (resultado == SD.IngresosReturn.OK.ToString())
+        {
+            bool und = await js.MsgExitoso("Se han enviado las solicitudes de ingreso");
+            await Enviar(ingresosDTO.Count.ToString());
+            ingresosDTO.Clear();
+        }
+        else if (resultado == SD.IngresosReturn.REVISAR.ToString())
+        {
+            await js.MsgAdvertencia("Algunas solicitudes han sido rechazadas porque algun dia del rango enviado ya está registrado. Revise");
+            await Enviar("");
+            nav.NavigateTo("/Revisiones", true);
+        }
+        else if (resultado == SD.IngresosReturn.ERROR.ToString())
+        {
+            await js.MsgError("Se ha producido un error");
+        }
+    }
+
+    private async Task Enviar(string cantidad) => await hubConnection.SendAsync("EnviarNotificacion", SD.TipoUsuario.OperadorIngPlt.ToString(), $"Ha recibido {cantidad} nuevos ingresos a autorizar");
+
+}
 

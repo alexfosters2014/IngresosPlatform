@@ -12,6 +12,10 @@ namespace IngresosPlatformWebAPI.Hubs
         {
             await Clients.All.SendAsync("RecibirNotificacion", usuario, notificacion);
         }
-        
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            return base.OnDisconnectedAsync(exception);
+        }
     }
 }
