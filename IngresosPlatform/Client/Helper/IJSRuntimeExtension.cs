@@ -36,9 +36,9 @@ namespace IngresosPlatform.Client.Helper
         {
             return await js.InvokeAsync<string[]>("OnInputTextPass");
         }
-        public static async ValueTask<object> DescargarExcel(this IJSRuntime js,string fileName, byte[] fileByte)
+        public static async ValueTask DescargarExcel(this IJSRuntime js,string fileName, byte[] fileByte)
         {
-            return await js.InvokeAsync<object>("saveAsFile", fileName, Convert.ToBase64String(fileByte));
+            await js.InvokeAsync<object>("saveAsFile", fileName, Convert.ToBase64String(fileByte));
         }
 
     }

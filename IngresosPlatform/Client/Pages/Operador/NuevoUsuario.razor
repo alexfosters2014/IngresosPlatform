@@ -4,58 +4,61 @@
 @inject NavigationManager nav
 
 <div class="container">
-    <h3>Nuevo Usuario</h3>
-    <section class="row">
-    <EditForm Model="usuarioDTO" OnValidSubmit="CargarNuevoUsuario" class="col-4">
-        <DataAnnotationsValidator />
-        <div class="form-group">
-            <label for="nombre">Nombre de usuario*</label>
-            <InputText @bind-Value="usuarioDTO.UsuarioNombre" id="nombre" class="form-control" />
-            <ValidationMessage For="@( () => usuarioDTO.UsuarioNombre)" />
-        </div>
-        <div class="form-group">
-            <label for="tipo">Tipo*</label>
-            <select @bind="@tipoSeleccionado" id="tipo" class="form-control">
-            <option value="operador" selected>Operador</option>
-            <option value="portero">Portero</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="email">Email*</label>
-            <InputText @bind-Value="usuarioDTO.Email" id="email" class="form-control" />
-            <ValidationMessage For="@( () => usuarioDTO.Email)" />
-        </div>
-         @if (!carga){
-        <div class="col text-center">
-            <button type="submit" class="btn btn-primary">Agregar</button>
-            <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
-        </div>
-         }
-    </EditForm>
-    </section>
+    <div class="d-flex justify-content-center">
+        <h3>Nuevo Usuario</h3>
+     </div>
+        <section class="row">
+            <EditForm Model="usuarioDTO" OnValidSubmit="CargarNuevoUsuario" class="col-4">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label for="nombre">Nombre de usuario*</label>
+                    <InputText @bind-Value="usuarioDTO.UsuarioNombre" id="nombre" class="form-control" />
+                    <ValidationMessage For="@( () => usuarioDTO.UsuarioNombre)" />
+                </div>
+                <div class="form-group">
+                    <label for="tipo">Tipo*</label>
+                    <select @bind="@tipoSeleccionado" id="tipo" class="form-control">
+                        <option value="operador" selected>Operador</option>
+                        <option value="portero">Portero</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email*</label>
+                    <InputText @bind-Value="usuarioDTO.Email" id="email" class="form-control" />
+                    <ValidationMessage For="@( () => usuarioDTO.Email)" />
+                </div>
+                @if (!carga)
+                {
+                    <div class="col text-center">
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                        <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+                    </div>
+                }
+            </EditForm>
+        </section>
 
-    <section class="row">
-        @if (carga)
+        <section class="row">
+            @if (carga)
+            {
+                <Loading></Loading>
+            }
+        </section>
+    </div>
+
+    @code {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        private bool carga = false;
+        private string tipoSeleccionado = "operador";
+
+        public async void CargarNuevoUsuario()
         {
-            <Loading></Loading>
-        }
-    </section>
-</div>
+            carga = true;
+            string tipo = (tipoSeleccionado == "operador") ?
+            SD.TipoUsuario.OperadorIngPlt.ToString() : SD.TipoUsuario.PorteriaIngPlt.ToString();
 
-@code {
-    UsuarioDTO usuarioDTO = new UsuarioDTO();
-    private bool carga = false;
-    private string tipoSeleccionado = "operador";
+            usuarioDTO.TipoUsuario = tipo;
 
-    public async void CargarNuevoUsuario()
-    {
-        carga = true;
-        string tipo = (tipoSeleccionado == "operador") ? 
-        SD.TipoUsuario.OperadorIngPlt.ToString() : SD.TipoUsuario.PorteriaIngPlt.ToString();
-
-        usuarioDTO.TipoUsuario = tipo;
-
-           UsuarioDTO usuarioNuevoDTO = await serviceUsuario.Agregar(usuarioDTO);
+            UsuarioDTO usuarioNuevoDTO = await serviceUsuario.Agregar(usuarioDTO);
 
             if (usuarioNuevoDTO != null)
             {
@@ -65,10 +68,10 @@
             {
                 Console.WriteLine("Hubo un error");
             }
-    }
+        }
 
-    public void Cancelar()
-    {
-        nav.NavigateTo("/Usuarios");
+        public void Cancelar()
+        {
+            nav.NavigateTo("/Usuarios");
+        }
     }
-}

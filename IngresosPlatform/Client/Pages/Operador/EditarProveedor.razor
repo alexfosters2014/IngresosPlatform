@@ -4,111 +4,114 @@
 @inject IJSRuntime js
 
 <div class="container">
-    <h3>Edición de Proveedor</h3>
-      <section class="row">
-    <EditForm Model="proveedorDTO" OnValidSubmit="EditarProveedorX" class="col-4">
-        <DataAnnotationsValidator />
-        <div class="form-group">
-            <label for="rut">RUT*</label>
-            <InputText @bind-Value="proveedorDTO.Rut" id="rut" class="form-control" />
-            <ValidationMessage For="@( () => proveedorDTO.Rut)" />
-        </div>
-        <div class="form-group">
-            <label for="razonsocial">Razon Social*</label>
-            <InputText @bind-Value="proveedorDTO.RazonSocial" id="razonsocial" class="form-control" />
-            <ValidationMessage For="@( () => proveedorDTO.RazonSocial)" />
-        </div>
-        <div class="form-group">
-            <label for="nombrefantasia">Nombre Fantasia*</label>
-            <InputText @bind-Value="proveedorDTO.NombreFantasia" id="nombrefantasia" class="form-control" />
-            <ValidationMessage For="@( () => proveedorDTO.NombreFantasia)" />
-        </div>
-        <div class="form-group">
-            <label for="direccion">Dirección</label>
-            <InputText @bind-Value="proveedorDTO.Direccion" id="direccion" class="form-control" />
-            <ValidationMessage For="@( () => proveedorDTO.Direccion)" />
-        </div>
-        <div class="form-group">
-            <label for="rubro">Rubro*</label>
-            <InputText @bind-Value="proveedorDTO.Rubro" id="rubro" class="form-control" />
-            <ValidationMessage For="@( () => proveedorDTO.Rubro)" />
-        </div>
-        <div class="form-group">
-            <label for="email">Email*</label>
-            <InputText @bind-Value="proveedorDTO.Email" id="email" class="form-control" />
-            <ValidationMessage For="@( () => proveedorDTO.Email)" />
-        </div>
-          @if (!carga)
+    <div class="d-flex justify-content-center">
+        <h3>Edición de Proveedor</h3>
+    </div>
+        <section class="row">
+            <EditForm Model="proveedorDTO" OnValidSubmit="EditarProveedorX" class="col-4">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label for="rut">RUT*</label>
+                    <InputText @bind-Value="proveedorDTO.Rut" id="rut" class="form-control" />
+                    <ValidationMessage For="@( () => proveedorDTO.Rut)" />
+                </div>
+                <div class="form-group">
+                    <label for="razonsocial">Razon Social*</label>
+                    <InputText @bind-Value="proveedorDTO.RazonSocial" id="razonsocial" class="form-control" />
+                    <ValidationMessage For="@( () => proveedorDTO.RazonSocial)" />
+                </div>
+                <div class="form-group">
+                    <label for="nombrefantasia">Nombre Fantasia*</label>
+                    <InputText @bind-Value="proveedorDTO.NombreFantasia" id="nombrefantasia" class="form-control" />
+                    <ValidationMessage For="@( () => proveedorDTO.NombreFantasia)" />
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <InputText @bind-Value="proveedorDTO.Direccion" id="direccion" class="form-control" />
+                    <ValidationMessage For="@( () => proveedorDTO.Direccion)" />
+                </div>
+                <div class="form-group">
+                    <label for="rubro">Rubro*</label>
+                    <InputText @bind-Value="proveedorDTO.Rubro" id="rubro" class="form-control" />
+                    <ValidationMessage For="@( () => proveedorDTO.Rubro)" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email*</label>
+                    <InputText @bind-Value="proveedorDTO.Email" id="email" class="form-control" />
+                    <ValidationMessage For="@( () => proveedorDTO.Email)" />
+                </div>
+                @if (!carga)
+                {
+                    <div class="col text-center">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+                    </div>
+                }
+            </EditForm>
+        </section>
+        <section class="row">
+            @if (carga)
             {
-        <div class="col text-center">
-            <button type="submit" class="btn btn-primary">Actualizar</button>
-            <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
-        </div>
-        }
-    </EditForm>
-    </section>
-    <section class="row">
-        @if (carga)
+                <Loading></Loading>
+            }
+        </section>
+    </div>
+    @code {
+        [Parameter]
+        public int? proveedorId { get; set; }
+
+        private bool carga = false;
+
+        ProveedorDTO proveedorDTO = new ProveedorDTO();
+
+        protected override async Task OnInitializedAsync()
         {
-            <Loading></Loading>
-        }
-    </section>
-</div>
-@code {
-    [Parameter]
-    public int? proveedorId { get; set; }
-
-    private bool carga = false;
-
-    ProveedorDTO proveedorDTO = new ProveedorDTO();
-
-    protected override async Task OnInitializedAsync()
-    {
             await CargarProveedor();
-    }
-     protected override async void OnParametersSet()
-    {
-       await CargarProveedor();
-    }
-
-    public async Task CargarProveedor()
-    {
-          if (proveedorId != null)
-        {
-        var resultado = await serviceProveedor.ObtenerProveedor(proveedorId.Value);
-
-        if (resultado == null)
-        {
-            Console.WriteLine("Hubo un error");
         }
-        else
+        protected override async void OnParametersSet()
         {
-            proveedorDTO = resultado;
+            await CargarProveedor();
         }
-           }else
+
+        public async Task CargarProveedor()
         {
-            Console.WriteLine("El id de proveedor es nulo");
+            if (proveedorId != null)
+            {
+                var resultado = await serviceProveedor.ObtenerProveedor(proveedorId.Value);
+
+                if (resultado == null)
+                {
+                    Console.WriteLine("Hubo un error");
+                }
+                else
+                {
+                    proveedorDTO = resultado;
+                }
+            }
+            else
+            {
+                Console.WriteLine("El id de proveedor es nulo");
+            }
+        }
+
+        public void Cancelar()
+        {
+            nav.NavigateTo("/Proveedores");
+        }
+
+        public async Task EditarProveedorX()
+        {
+            carga = true;
+            var resultado = await serviceProveedor.ActualizarProveedor(proveedorDTO);
+
+            if (resultado == null)
+            {
+                Console.WriteLine("Hubo un error");
+                await js.MsgError("Hubo un error");
+            }
+            else
+            {
+                nav.NavigateTo("/Proveedores", true);
+            }
         }
     }
-
-    public void Cancelar()
-    {
-        nav.NavigateTo("/Proveedores");
-    }
-
-    public async Task EditarProveedorX()
-    {
-        carga = true;
-        var resultado = await serviceProveedor.ActualizarProveedor(proveedorDTO);
-
-        if (resultado == null)
-        {
-             Console.WriteLine("Hubo un error");
-             await js.MsgError("Hubo un error");
-        }
-        else
-        {
-            nav.NavigateTo("/Proveedores", true);
-        }
-    }
-}

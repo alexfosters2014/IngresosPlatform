@@ -3,84 +3,85 @@
 @inject IServiceUsuario serviceUSuario
 @inject NavigationManager nav
 @inject IJSRuntime js
+    <div class="d-flex justify-content-center">
+        <h3>Mantenimiento de usuarios internos</h3>
+    </div>
 
-<h3>Mantenimiento de usuarios internos</h3>
-
-
-@if (usuariosDTO != null && usuariosDTO.Any())
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Nombre usuario</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Email</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (UsuarioDTO usu in usuariosDTO)
-            {
-                <tr>
-                    <td>@usu.UsuarioNombre</td>
-                    <td>@((usu.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString()) ? "Operador" : "Portero")</td>
-                    <td>@usu.Email</td>
-                    <td><a href="" @onclick="(() => EliminarUsuario(usu.Id))" @onclick:preventDefault>Eliminar</a></td>
-                </tr>
-            }
-            <tr>
-                <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoUsuario" /></td>
-            </tr>
-        </tbody>
-    </table>
-}
-else if (usuariosDTO !=null && usuariosDTO.Count == 0)
-{
-<table class="table table-striped">
-    <thead>
-        <tr>
-           <th scope="col">Nombre usuario</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Email</th>
-                <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoUsuario" /></td>
-        </tr>
-    </tbody>
-</table>
- }
-    else
-    {
-        <Loading />
-    }
- 
-@code {
-
-    List<UsuarioDTO> usuariosDTO { get; set; } = null;
-    private bool confirmacion { get; set; } = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await CargarUsuarios();
-    }
-
-    private async Task CargarUsuarios()
-    {
-        usuariosDTO = await serviceUSuario.ObtenerTodos();
-    }
-    private void NuevoUsuario()
-    {
-        nav.NavigateTo("/Usuarios/Nuevo");
-    }
-    private async Task EliminarUsuario(int usuarioId)
-    {
-        confirmacion = await js.MsgConfirmacion("Desea dar de baja al proveedor seleccionado?");
-        if (confirmacion){
-            nav.NavigateTo($"/Usuarios/Eliminar/{usuarioId}");
+        @if (usuariosDTO != null && usuariosDTO.Any())
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre usuario</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Email</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (UsuarioDTO usu in usuariosDTO)
+                    {
+                        <tr>
+                            <td>@usu.UsuarioNombre</td>
+                            <td>@((usu.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString()) ? "Operador" : "Portero")</td>
+                            <td>@usu.Email</td>
+                            <td><a href="" @onclick="(() => EliminarUsuario(usu.Id))" @onclick:preventDefault>Eliminar</a></td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoUsuario" /></td>
+                    </tr>
+                </tbody>
+            </table>
         }
-    }
+        else if (usuariosDTO != null && usuariosDTO.Count == 0)
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre usuario</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Email</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoUsuario" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <Loading />
+        }
 
-}
+        @code {
+
+            List<UsuarioDTO> usuariosDTO { get; set; } = null;
+            private bool confirmacion { get; set; } = false;
+
+            protected override async Task OnInitializedAsync()
+            {
+                await CargarUsuarios();
+            }
+
+            private async Task CargarUsuarios()
+            {
+                usuariosDTO = await serviceUSuario.ObtenerTodos();
+            }
+            private void NuevoUsuario()
+            {
+                nav.NavigateTo("/Usuarios/Nuevo");
+            }
+            private async Task EliminarUsuario(int usuarioId)
+            {
+                confirmacion = await js.MsgConfirmacion("Desea dar de baja al proveedor seleccionado?");
+                if (confirmacion)
+                {
+                    nav.NavigateTo($"/Usuarios/Eliminar/{usuarioId}");
+                }
+            }
+
+        }

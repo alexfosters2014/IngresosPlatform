@@ -1,8 +1,11 @@
-﻿input[type="radio"] {
+﻿thead {
+    background-color: rgba(109, 171, 211, 0.3);
+}
+input[type="radio"] {
     width: 20px;
     height: 20px;
-    margin-top:15px;
-    margin-bottom:10px;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 .labelRadio {
     margin-top: 14px;
@@ -111,16 +114,19 @@ tr.colorFila{
     width: 50px;
     transition: 0.5s;
 }
+.botonPDFVisor:hover {
+    -webkit-filter: invert(30%);
+    filter: invert(30%);
+}
 .botonExport {
-    height: 60px;
+    height: 70px;
     width: auto;
     transition: 0.3s;
 }
-
-.botonPDFVisor:hover {
-        -webkit-filter: invert(100%);
-        filter: invert(100%);
-    }
+.botonExport:hover {
+    -webkit-filter: invert(30%);
+    filter: invert(30%);
+}
 
 .fondo {
     background: url("../img/fondo.jpg") no-repeat center center fixed;

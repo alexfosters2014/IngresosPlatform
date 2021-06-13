@@ -6,6 +6,7 @@
 @inject IJSRuntime js
 @inject ILocalStorageService localStorage
 
+
 <div class="d-flex justify-content-center">
     <h3>Reportes</h3>
 </div>
@@ -67,9 +68,9 @@
 
 @if (ingresosDiarios != null && ingresosDiarios.Any())
 {
-    <div class="d-flex justify-content-center">
-        <a href="" @onclick="(Exportar)" @onclick:preventDefault><img src="/img/export.png" @onclick="Exportar" class="botonPDFVisor" /></a>
-    </div>
+<div class="d-flex justify-content-center">
+    <a href="" @onclick="(Exportar)" @onclick:preventDefault><img src="/img/export.png" class="botonExport" /></a>
+</div>
 
     <ContIngresoDiarioXProv ingresosXProveedor="@ingresosDiarios" TipoFecha="@tipoFecha" />
 
@@ -160,7 +161,7 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
     {
         var resultado = await serviceIngresoDiario.ObtenerReporteHorariosPlanificados(new VMGeneral()
         {
-            FechaActual=DateTime.Today,
+            FechaActual = DateTime.Today,
             FechaFin = hasta.Date,
             ProveedorId = ((proveedorSeleccionado != null) ? proveedorSeleccionado.Id : 0)
         });
