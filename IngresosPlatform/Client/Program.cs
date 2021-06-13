@@ -28,7 +28,7 @@ namespace IngresosPlatform.Client
             builder.Services.AddSingleton<HubConnection>(sp => {
                 var navigationManager = sp.GetRequiredService<NavigationManager>();
                 return new HubConnectionBuilder()
-                  .WithUrl(navigationManager.ToAbsoluteUri("http://localhost:17832/notificacioneshub"))
+                  .WithUrl(navigationManager.ToAbsoluteUri($"{builder.Configuration.GetValue<string>("BaseAPIUrl")}/notificacioneshub"))
                   .WithAutomaticReconnect()
                   .Build();
             });
