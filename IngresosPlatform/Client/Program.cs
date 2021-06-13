@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Tewr.Blazor.FileReader;
 using Radzen;
 using MudBlazor.Services;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.Components;
 
 namespace IngresosPlatform.Client
 {
@@ -21,6 +23,14 @@ namespace IngresosPlatform.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+
+            builder.Services.AddSingleton<HubConnection>(sp => {
+                var navigationManager = sp.GetRequiredService<NavigationManager>();
+                return new HubConnectionBuilder()
+                  .WithUrl(navigationManager.ToAbsoluteUri("http://localhost:17832/notificacioneshub"))
+                  .WithAutomaticReconnect()
+                  .Build();
+            });
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPIUrl")) });
             builder.Services.AddScoped<IServiceProveedor, ServiceProveedor>();

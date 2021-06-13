@@ -1,7 +1,9 @@
 using AccesoDatos.Data;
+using IngresosPlatformWebAPI.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Modelo;
 using Negocio.Repositorios;
 using System;
+using System.Linq;
 
 namespace IngresosPlatformWebAPI
 {
@@ -32,6 +35,13 @@ namespace IngresosPlatformWebAPI
                 {
                     builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                 });
+            });
+            services.AddSignalR();
+
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
             });
 
             services.AddDbContext<AplicacionDBContext>(options =>
@@ -61,6 +71,7 @@ namespace IngresosPlatformWebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseResponseCompression();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -80,6 +91,7 @@ namespace IngresosPlatformWebAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificacionesHub>("/notificacioneshub");
             });
         }
     }

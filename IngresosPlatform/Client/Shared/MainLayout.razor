@@ -1,22 +1,26 @@
 ﻿@inherits LayoutComponentBase
 @inject ILocalStorageService localStorage
-@inject NavigationManager nav 
+@inject NavigationManager nav
 @inject IJSRuntime js
+@inject HubConnection hubConnection
 
 <div class="page">
     <div class="sidebar">
         @if (TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString())
-            {
-                <NavMenuOperador />
-            }
+        {
+            <NavMenuOperador />
+        }
         @if (TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
-            {
-                 <NavMenuProveedor />
-            }
+        {
+            <NavMenuProveedor />
+        }
     </div>
 
     <div class="main">
         <div class="top-row px-4">
+            <div class="">
+                <p>@miMensaje</p>
+            </div>
             <a href="" @onclick="Salir" @onclick:preventDefault>Cerrar Sesión</a>
         </div>
 
@@ -26,12 +30,21 @@
     </div>
 </div>
 
-@code{      
+@code{
     UsuarioDTO usuario = null;
     string TipoUsuario = "";
-    protected override void OnInitialized()
+    string miMensaje;
+
+    protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("inicializado");
+        hubConnection.On<string, string>("RecibirNotificacion", (usuario, mensaje) =>
+        {
+            miMensaje = mensaje;
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+
         CargaMenu();
     }
 
@@ -61,7 +74,8 @@
     private async void Salir()
     {
         bool confirmacion = await js.MsgConfirmacion("Desea Salir de la sesión?");
-        if (confirmacion) {
+        if (confirmacion)
+        {
             await localStorage.ClearAsync();
             nav.NavigateTo("/");
         }

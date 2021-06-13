@@ -1,5 +1,6 @@
 ﻿@page "/index"
 @inject NavigationManager nav
+@inject HubConnection hubConnection 
 @inject ILocalStorageService localStorage
 
 @if (usuarioDTO != null)
@@ -8,17 +9,24 @@
 <h5 style="color:blueviolet">Bienvenido/a su sesión de @((usuarioDTO.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString()) ? "Operador" : "Proveedor" ) </h5>
 }
 
+<button @onclick="Enviar">Enviar</button>
+
+
 @code{
     UsuarioDTO usuarioDTO { get; set; } = null;
 
-    protected async override Task OnInitializedAsync()
-    {
-        await CargaInicial();
-    }
-
-    private async Task CargaInicial()
+    protected override async Task OnInitializedAsync()
     {
         usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-        StateHasChanged();
     }
+
+    private async Task Enviar() => await hubConnection.SendAsync("EnviarNotificacion", "usuario", "Esta es la primera vez con SignalR");
+
+    public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        await hubConnection.DisposeAsync();
+    }
+
 }
