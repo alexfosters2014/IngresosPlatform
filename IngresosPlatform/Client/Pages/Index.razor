@@ -5,7 +5,7 @@
 @if (usuarioDTO != null)
 {
 <h1>Hola, @((usuarioDTO.Proveedor != null) ? usuarioDTO.Proveedor.RazonSocial : usuarioDTO.UsuarioNombre )</h1>
-<h5 style="color:blueviolet">Bienvenido/a su sesión de @((usuarioDTO.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString()) ? "Operador" : "Proveedor" ) </h5>
+<h5 style="color:blueviolet">Bienvenido/a su sesión de @((usuarioDTO.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString()) ? "Operador" : "Proveedor" ) </h5>
 }
 
 @code{

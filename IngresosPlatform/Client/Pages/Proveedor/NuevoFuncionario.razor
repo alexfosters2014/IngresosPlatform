@@ -229,7 +229,7 @@
             if (file != null)
             {
                 string nuevaPath = await FileStream(file,funcionarioDTO.PathCedula);
-                if (nuevaPath != null || nuevaPath != "")
+                if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathCedula = nuevaPath;
                     StateHasChanged();
@@ -248,7 +248,7 @@
             if (file != null)
             {
                 string nuevaPath = await FileStream(file,funcionarioDTO.PathLibreta);
-                if (nuevaPath != null || nuevaPath != "")
+                if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathLibreta = nuevaPath;
                     StateHasChanged();
@@ -267,7 +267,7 @@
             if (file != null)
             {
                 string nuevaPath = await FileStream(file,funcionarioDTO.PathCarneSalud);
-                if (nuevaPath != null || nuevaPath != "")
+                if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathCarneSalud = nuevaPath;
                     StateHasChanged();
@@ -286,7 +286,7 @@
             if (file != null)
             {
                 string nuevaPath = await FileStream(file,funcionarioDTO.PathCMAlimentos);
-                if (nuevaPath != null || nuevaPath != "")
+                if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathCMAlimentos = nuevaPath;
                     StateHasChanged();
@@ -305,7 +305,7 @@
             if (file != null)
             {
                 string nuevaPath = await FileStream(file,funcionarioDTO.PathAltaBps);
-                if (nuevaPath != null || nuevaPath != "")
+                if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathAltaBps = nuevaPath;
                     StateHasChanged();
@@ -329,6 +329,14 @@
 
             var fileInfo = await file.ReadFileInfoAsync();
             Stream fileStream = null;
+
+            double tamano = (fileInfo.Size)/1024/1024;
+
+            if (tamano > 2)
+            {
+                await js.MsgAdvertencia("Recuerde que en esta pantalla solo puede subir archivos pdf hasta 2Mb de tamaño");
+                return "";
+            }
 
             using (var ms = await file.CreateMemoryStreamAsync((int)fileInfo.Size))
             {
