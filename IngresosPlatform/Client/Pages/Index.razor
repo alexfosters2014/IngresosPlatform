@@ -3,23 +3,22 @@
 @inject ILocalStorageService localStorage
 
 @if (usuarioDTO != null)
-            {
-
+{
 <h1>Hola, @((usuarioDTO.Proveedor != null) ? usuarioDTO.Proveedor.RazonSocial : usuarioDTO.UsuarioNombre )</h1>
-
-<p>Bienvenido a su sesión de @((usuarioDTO.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString()) ? "operador" : "proveedor" ) </p>
-  }
-
+<h5 style="color:blueviolet">Bienvenido/a su sesión de @((usuarioDTO.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString()) ? "Operador" : "Proveedor" ) </h5>
+}
 
 @code{
     UsuarioDTO usuarioDTO { get; set; } = null;
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        CargaInicial();
+        await CargaInicial();
     }
+
     private async Task CargaInicial()
     {
         usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        StateHasChanged();
     }
 }

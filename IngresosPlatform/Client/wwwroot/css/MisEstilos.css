@@ -1,6 +1,9 @@
 ﻿thead {
     background-color: rgba(109, 171, 211, 0.3);
 }
+table{
+    border-radius:15px !important;
+}
 input[type="radio"] {
     width: 20px;
     height: 20px;
