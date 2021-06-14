@@ -33,7 +33,11 @@ namespace IngresosPlatformWebAPI
             {
                 options.AddPolicy(_MyCors, builder =>
                 {
-                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    builder.WithOrigins("http://192.168.1.30:31496")
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+
                 });
             });
             services.AddSignalR();
@@ -45,7 +49,7 @@ namespace IngresosPlatformWebAPI
             });
 
             services.AddDbContext<AplicacionDBContext>(options =>
-                       options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                       options.UseSqlServer(Configuration.GetConnectionString("ProduccionConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
@@ -71,7 +75,6 @@ namespace IngresosPlatformWebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseResponseCompression();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -88,6 +91,7 @@ namespace IngresosPlatformWebAPI
             app.UseRouting();
             app.UseCors(_MyCors);
             app.UseAuthorization();
+            app.UseResponseCompression();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
