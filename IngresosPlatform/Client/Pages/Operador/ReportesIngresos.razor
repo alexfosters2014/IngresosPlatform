@@ -163,7 +163,10 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
         }
         else
         {
-            await js.MsgAdvertencia("La fecha 'hasta' debe ser mayor que la fecha 'desde'");
+            await js.MsgAdvertencia("La fecha 'hasta' debe ser mayor que la fecha 'desde'. Se procede al cambio");
+            DateTime temp = hasta;
+            hasta = desde;
+            desde = temp;
         }
 
     }
