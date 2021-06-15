@@ -20,9 +20,6 @@
             <div class="col">
                 <h5>Cantidad: @ingresosDTO.Count</h5>
             </div>
-            <div class="col">
-                <button class="btn btn-primary" @onclick="EnviarMensajeOkProveedor">Aviso de OK</button>
-            </div>
         </div>
 
         <div class="row">
@@ -141,23 +138,6 @@
         }catch(Exception ex)
         {
             await js.MsgError("Algun proceso no se pudo realizar.");
-        }
-    }
-    private async Task EnviarMensajeOkProveedor()
-    {
-        bool confirmacion = await js.MsgConfirmacion("Notifica al proveedor seleccionado que todos los ingresos fueron habilitados?");
-        if (confirmacion)
-        {
-            await Enviar(proveedorDTO.Rut, "Se autorizaron todos los ingresos enviados");
-            string mensaje = await serviceUsuario.EnviarMail(new MailMensajeDTO() { EnviarA = proveedorDTO.Email, MensajeAEnviar = "Sr. proveedor: Hay ingreso/s que deberia revisar" });
-            if (string.IsNullOrEmpty(mensaje))
-            {
-                await js.MsgExitoso("Se ha enviado exitosamente");
-            }
-            else
-            {
-                await js.MsgAdvertencia("No se pudo enviar el mail");
-            }
         }
     }
     private async Task Enviar(string usuarioEnvio, string mensajeEnvio) => await hubConnection.SendAsync("EnviarNotificacion", usuarioEnvio, mensajeEnvio);
