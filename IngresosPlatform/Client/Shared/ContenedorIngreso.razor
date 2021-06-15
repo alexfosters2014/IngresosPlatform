@@ -1,6 +1,7 @@
 ﻿@inject IJSRuntime js
 @using Comun
 @inject IServiceIngreso serviceIngreso
+@inject IServiceUsuario serviceUsuario
 @inject HubConnection hubConnection
 
 @if (ingresosDTO.Count > 0)
@@ -20,7 +21,7 @@
                 <h5>Cantidad: @ingresosDTO.Count</h5>
             </div>
             <div class="col">
-                <button class="btn btn-primary" @onclick="(() => EnviarMensajeOkProveedor(proveedorDTO.Rut))">Aviso de OK</button>
+                <button class="btn btn-primary" @onclick="EnviarMensajeOkProveedor">Aviso de OK</button>
             </div>
         </div>
 
@@ -53,11 +54,11 @@
                             <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
                             <td>
                                 <a href="" @onclick="(() => IngresoAutorizado(ing, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
-                                <a href="" @onclick="(() => IngresoNOAutorizado(ing, SD.TipoAutIng.NOAUTORIZADO.ToString(), proveedorDTO.Rut))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
+                                <a href="" @onclick="(() => IngresoNOAutorizado(ing, SD.TipoAutIng.NOAUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
                             </td>
                         </tr>
                     }
-                   
+
                 </tbody>
             </table>
         </div>
@@ -104,44 +105,61 @@
         }
     }
 
-    private async Task IngresoNOAutorizado(IngresoDTO ingDTO, string autorizado,string usu)
+    private async Task IngresoNOAutorizado(IngresoDTO ingDTO, string autorizado)
     {
-        string comentarios = await js.OnInputText();
-        if (comentarios != "NOTCONFIRMED")
-        {
-            if (!string.IsNullOrEmpty(comentarios))
+        try {
+            string comentarios = await js.OnInputText();
+            if (comentarios != "NOTCONFIRMED")
             {
-                ingDTO.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
-                ingDTO.Comentarios = comentarios;
-                IngresoDTO resultado = await serviceIngreso.ActualizarIngreso(ingDTO);
-                if (resultado != null)
+                if (!string.IsNullOrEmpty(comentarios))
                 {
-                    await js.MsgExitoso("Se envió la no autorización exitosamente");
-                    await Enviar(usu, "Se autorizaron todos los ingresos enviados");
-                    ingresosDTO.Remove(ingDTO);
-                    StateHasChanged();
+                    ingDTO.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
+                    ingDTO.Comentarios = comentarios;
+                    IngresoDTO resultado = await serviceIngreso.ActualizarIngreso(ingDTO);
+                    if (resultado != null)
+                    {
+                        await js.MsgExitoso("Se envió la no autorización exitosamente");
+                        await Enviar(proveedorDTO.Rut, "Se autorizaron todos los ingresos enviados");
+                        ingresosDTO.Remove(ingDTO);
+
+                        await serviceUsuario.EnviarMail(new MailMensajeDTO() { EnviarA = proveedorDTO.Email, MensajeAEnviar = "Sr. proveedor: Hay ingreso/s que deberia revisar" });
+
+                        StateHasChanged();
+                    }
+                    else
+                    {
+                        ingDTO.EstadoAutorizacion = SD.TipoAutIng.PENDIENTE.ToString();
+                        ingDTO.Comentarios = "";
+                        await js.MsgError("No se pudo realizar la autorización");
+                    }
                 }
                 else
                 {
-                    ingDTO.EstadoAutorizacion = SD.TipoAutIng.PENDIENTE.ToString();
-                    ingDTO.Comentarios = "";
-                    await js.MsgError("No se pudo realizar la autorización");
+                    await js.MsgAdvertencia("Debe poner un comentario para que el proveedor vea porque no se autorizó");
                 }
             }
-            else
-            {
-                await js.MsgAdvertencia("Debe poner un comentario para que el proveedor vea porque no se autorizó");
-            }
+        }catch(Exception ex)
+        {
+            await js.MsgError("Algun proceso no se pudo realizar.");
         }
     }
-    private async Task EnviarMensajeOkProveedor(string usu)
+    private async Task EnviarMensajeOkProveedor()
     {
         bool confirmacion = await js.MsgConfirmacion("Notifica al proveedor seleccionado que todos los ingresos fueron habilitados?");
         if (confirmacion)
         {
-            await Enviar(usu, "Se autorizaron todos los ingresos enviados");
+            await Enviar(proveedorDTO.Rut, "Se autorizaron todos los ingresos enviados");
+            string mensaje = await serviceUsuario.EnviarMail(new MailMensajeDTO() { EnviarA = proveedorDTO.Email, MensajeAEnviar = "Sr. proveedor: Hay ingreso/s que deberia revisar" });
+            if (string.IsNullOrEmpty(mensaje))
+            {
+                await js.MsgExitoso("Se ha enviado exitosamente");
+            }
+            else
+            {
+                await js.MsgAdvertencia("No se pudo enviar el mail");
+            }
         }
     }
-    private async Task Enviar(string usuarioEnvio,string mensajeEnvio) => await hubConnection.SendAsync("EnviarNotificacion", usuarioEnvio, mensajeEnvio);
+    private async Task Enviar(string usuarioEnvio, string mensajeEnvio) => await hubConnection.SendAsync("EnviarNotificacion", usuarioEnvio, mensajeEnvio);
 
 }

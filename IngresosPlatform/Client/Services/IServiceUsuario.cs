@@ -14,5 +14,6 @@ namespace IngresosPlatform.Client.Services
         public Task<List<UsuarioDTO>> ObtenerTodos();
         public Task<int> EliminarUsuario(int usuarioId);
         public Task<UsuarioDTO> Login(VMLogin vmLogin);
+        public Task<string> EnviarMail(MailMensajeDTO mailMensaje);
     }
 }

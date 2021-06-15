@@ -31,6 +31,19 @@ namespace IngresosPlatformWebAPI.Controllers
             var todosUsuarios = await usuarioRepositorio.ObtenerTodos();
             return Ok(todosUsuarios);
         }
+        [HttpPost("EnviarMail")]
+        public async Task<IActionResult> EnviarMAil([FromBody] MailMensajeDTO mailMensaje)
+        {
+            MailDTO mail = await mailRepositorio.CargarConfigMail(config.Value);
+            if (await mail.EnvioAutentificacionProveedor(mailMensaje.EnviarA, mailMensaje.MensajeAEnviar))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> AgregarUsuario([FromBody] UsuarioDTO usuarioDTO)

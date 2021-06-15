@@ -86,10 +86,23 @@ namespace IngresosPlatform.Client.Services
 
         public async Task<List<UsuarioDTO>> ObtenerTodos()
         {
-            var response = await httpClient.GetAsync("api/Usuario/");
+            var response = await httpClient.GetAsync("/api/Usuario/");
             var content = await response.Content.ReadAsStringAsync();
             var usuarios = JsonConvert.DeserializeObject<List<UsuarioDTO>>(content);
             return usuarios;
         }
-    }
+    public async Task<string> EnviarMail(MailMensajeDTO mailMensaje)
+    {
+        var response = await httpClient.PostAsJsonAsync("/api/Usuario/EnviarMail", mailMensaje);
+
+        if (response.IsSuccessStatusCode)
+        {
+                return "";
+            }
+        else
+        {
+                return "No se pudo enviar el mail al proveedor seleccionado"; 
+        }
+     }
+  }
 }
