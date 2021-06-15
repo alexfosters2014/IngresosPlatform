@@ -33,7 +33,7 @@ namespace IngresosPlatformWebAPI
             {
                 options.AddPolicy(_MyCors, builder =>
                 {
-                    builder.WithOrigins("http://192.168.1.30:31496")
+                    builder.WithOrigins("https://proingreso.azurewebsites.net")
                     .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
