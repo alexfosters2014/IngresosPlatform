@@ -232,6 +232,7 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
             {
                 proveedorSeleccionado = null;
             }
+            StateHasChanged();
         }
         catch (Exception ex)
         {
