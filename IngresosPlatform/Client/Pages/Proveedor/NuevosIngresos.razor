@@ -4,9 +4,11 @@
 @inject ILocalStorageService localStorage
 @inject IJSRuntime js
 @inject NavigationManager nav
+@inject HubConnection hubConnection
 
-<h3>Nuevos Ingresos</h3>
-
+<div class="d-flex justify-content-center">
+    <h3>Nuevos Ingresos</h3>
+</div>
 @if (funcionarios != null && funcionarios.Any())
 {
     <section class="recuadroPorteria">
@@ -62,7 +64,7 @@
 
 @if (ingresosDTO != null && ingresosDTO.Any())
 {
-    <table class="table table-striped">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th scope="col">Cedula</th>
@@ -184,12 +186,14 @@
 
         if (resultado == SD.IngresosReturn.OK.ToString())
         {
-            ingresosDTO.Clear();
             bool und = await js.MsgExitoso("Se han enviado las solicitudes de ingreso");
+            await Enviar(ingresosDTO.Count.ToString());
+            ingresosDTO.Clear();
         }
         else if (resultado == SD.IngresosReturn.REVISAR.ToString())
         {
             await js.MsgAdvertencia("Algunas solicitudes han sido rechazadas porque algun dia del rango enviado ya está registrado. Revise");
+            await Enviar("");
             nav.NavigateTo("/Revisiones", true);
         }
         else if (resultado == SD.IngresosReturn.ERROR.ToString())
@@ -197,6 +201,8 @@
             await js.MsgError("Se ha producido un error");
         }
     }
+
+    private async Task Enviar(string cantidad) => await hubConnection.SendAsync("EnviarNotificacion", SD.TipoUsuario.OperadorIngPlt.ToString(), $"Ha recibido {cantidad} nuevos ingresos a autorizar");
 
 }
 

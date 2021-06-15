@@ -4,83 +4,84 @@
 @inject IJSRuntime js
 @inject ILocalStorageService localStorage
 
-<h3>Revision de autorizaciones de ingresos</h3>
+    <div class="d-flex justify-content-center">
+        <h3>Revision de autorizaciones de ingresos</h3>
+    </div>
 
-
-@if (ingresosDTO != null && ingresosDTO.Any())
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Cedula</th>
-                <th scope="col">Funcionario</th>
-                <th scope="col">Hora entrada</th>
-                <th scope="col">Hora salida</th>
-                <th scope="col">Desde</th>
-                <th scope="col">Hasta</th>
-                <th scope="col">Comentarios</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (IngresoDTO ing in ingresosDTO)
-            {
-                <tr>
-                    <td>@ing.Funcionario.Cedula</td>
-                    <td>@ing.Funcionario.Nombre</td>
-                    <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
-                    <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
-                    <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
-                    <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
-                    <td>@ing.Comentarios</td>
-                    <td><a href="" @onclick="(() => EliminarIngreso(ing.Id))" @onclick:preventDefault>Borrar</a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else if (ingresosDTO != null && ingresosDTO.Count == 0)
-{
-    <p> No hay nuevas autorizaciones a procesar</p>
-}
-else
-{
-    <Loading />
-}
-
-@code {
-
-    List<IngresoDTO> ingresosDTO { get; set; } = null;
-    UsuarioDTO usuarioDTO { get; set; } = null;
-    bool confirmacion;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await CargarRechazados();
-    }
-
-    private async Task CargarRechazados()
-    {
-        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-        if (usuarioDTO != null)
+        @if (ingresosDTO != null && ingresosDTO.Any())
         {
-            ingresosDTO = await serviceIngreso.ObtenerIngresosNoAutXProveedor(usuarioDTO.Proveedor.Id);
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Cedula</th>
+                        <th scope="col">Funcionario</th>
+                        <th scope="col">Hora entrada</th>
+                        <th scope="col">Hora salida</th>
+                        <th scope="col">Desde</th>
+                        <th scope="col">Hasta</th>
+                        <th scope="col">Comentarios</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (IngresoDTO ing in ingresosDTO)
+                    {
+                        <tr>
+                            <td>@ing.Funcionario.Cedula</td>
+                            <td>@ing.Funcionario.Nombre</td>
+                            <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                            <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                            <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                            <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+                            <td>@ing.Comentarios</td>
+                            <td><a href="" @onclick="(() => EliminarIngreso(ing.Id))" @onclick:preventDefault>Borrar</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else if (ingresosDTO != null && ingresosDTO.Count == 0)
+        {
+            <p> No hay nuevas autorizaciones a procesar</p>
         }
         else
         {
-            await js.MsgError("No se autentificado");
-            nav.NavigateTo("/login");
+            <Loading />
         }
-    }
 
-    private async Task EliminarIngreso(int ingresoId)
-    {
-        confirmacion = await js.MsgConfirmacion("Desea dar de baja el ingreso seleccionado?");
-        if (confirmacion)
-        {
-            nav.NavigateTo($"/Ingresos/Baja/{ingresoId}");
+        @code {
+
+            List<IngresoDTO> ingresosDTO { get; set; } = null;
+            UsuarioDTO usuarioDTO { get; set; } = null;
+            bool confirmacion;
+
+            protected override async Task OnInitializedAsync()
+            {
+                await CargarRechazados();
+            }
+
+            private async Task CargarRechazados()
+            {
+                usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+                if (usuarioDTO != null)
+                {
+                    ingresosDTO = await serviceIngreso.ObtenerIngresosNoAutXProveedor(usuarioDTO.Proveedor.Id);
+                }
+                else
+                {
+                    await js.MsgError("No se autentificado");
+                    nav.NavigateTo("/login");
+                }
+            }
+
+            private async Task EliminarIngreso(int ingresoId)
+            {
+                confirmacion = await js.MsgConfirmacion("Desea dar de baja el ingreso seleccionado?");
+                if (confirmacion)
+                {
+                    nav.NavigateTo($"/Ingresos/Baja/{ingresoId}");
+                }
+            }
+
+
         }
-    }
-
-
-}

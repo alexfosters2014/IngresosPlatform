@@ -3,102 +3,102 @@
 @inject NavigationManager nav
 @inject IJSRuntime js
 
-    <div class="d-flex justify-content-center">
-        <h3>Mantenimiento de Proveedores</h3>
-    </div>
+<div class="d-flex justify-content-center">
+    <h3>Mantenimiento de Proveedores</h3>
+</div>
 
-        @if (proveedores != null && proveedores.Any())
-        {
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">RUT</th>
-                        <th scope="col">Razon Social</th>
-                        <th scope="col">Nombre Fantasia</th>
-                        <th scope="col">Tipo de Servicio</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (ProveedorDTO pro in proveedores)
+@if (proveedores != null && proveedores.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">RUT</th>
+                <th scope="col">Razon Social</th>
+                <th scope="col">Nombre Fantasia</th>
+                <th scope="col">Tipo de Servicio</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ProveedorDTO pro in proveedores)
+            {
+                <tr>
+                    <td>@pro.Rut</td>
+                    <td>@pro.RazonSocial</td>
+                    <td>@pro.NombreFantasia</td>
+                    <td>@pro.Rubro</td>
+                    <td>@((pro.Activo == true ) ? "Activo" : "No Activo")</td>
+                    @if (pro.Activo == true)
                     {
-                        <tr>
-                            <td>@pro.Rut</td>
-                            <td>@pro.RazonSocial</td>
-                            <td>@pro.NombreFantasia</td>
-                            <td>@pro.Rubro</td>
-                            <td>@((pro.Activo == true ) ? "Activo" : "No Activo")</td>
-                            @if (pro.Activo == true)
-                            {
-                                <td><a href="" @onclick="(() => EdicionProveedor(pro.Id))" @onclick:preventDefault>Editar</a></td>
-                                <td><a href="" @onclick="(() => BajaProveedor(pro.Id))" @onclick:preventDefault>Baja</a></td>
-                            }
-                        </tr>
+                        <td><a href="" @onclick="(() => EdicionProveedor(pro.Id))" @onclick:preventDefault>Editar</a></td>
+                        <td><a href="" @onclick="(() => BajaProveedor(pro.Id))" @onclick:preventDefault>Baja</a></td>
                     }
-                    <tr>
-                        <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoProveedor" /></td>
-                    </tr>
-                </tbody>
-            </table>
-        }
-        else if (proveedores != null && proveedores.Count == 0)
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoProveedor" /></td>
+    </div>
+}
+else if (proveedores != null && proveedores.Count == 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">RUT</th>
+                <th scope="col">Razon Social</th>
+                <th scope="col">Nombre Fantasia</th>
+                <th scope="col">Tipo de Servicio</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoProveedor" /></td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <Loading />
+}
+
+@code {
+
+    List<ProveedorDTO> proveedores { get; set; } = null;
+    private bool confirmacion { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProveedores();
+    }
+
+    private async Task CargarProveedores()
+    {
+        proveedores = await serviceProveedor.ObtenerProveedores();
+    }
+    private void NuevoProveedor()
+    {
+        nav.NavigateTo("/Proveedores/Nuevo");
+    }
+    private async Task BajaProveedor(int proveedorId)
+    {
+        confirmacion = await js.MsgConfirmacion("Desea dar de baja al proveedor seleccionado?");
+        if (confirmacion)
         {
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">RUT</th>
-                        <th scope="col">Razon Social</th>
-                        <th scope="col">Nombre Fantasia</th>
-                        <th scope="col">Tipo de Servicio</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoProveedor" /></td>
-                    </tr>
-                </tbody>
-            </table>
+            nav.NavigateTo($"/Proveedores/Baja/{proveedorId}");
         }
-        else
-        {
-            <Loading />
-        }
+    }
 
-        @code {
+    private async Task EdicionProveedor(int proveedorId)
+    {
+        nav.NavigateTo($"/Proveedores/Editar/{proveedorId}");
+    }
 
-            List<ProveedorDTO> proveedores { get; set; } = null;
-            private bool confirmacion { get; set; } = false;
-
-            protected override async Task OnInitializedAsync()
-            {
-                await CargarProveedores();
-            }
-
-            private async Task CargarProveedores()
-            {
-                proveedores = await serviceProveedor.ObtenerProveedores();
-            }
-            private void NuevoProveedor()
-            {
-                nav.NavigateTo("/Proveedores/Nuevo");
-            }
-            private async Task BajaProveedor(int proveedorId)
-            {
-                confirmacion = await js.MsgConfirmacion("Desea dar de baja al proveedor seleccionado?");
-                if (confirmacion)
-                {
-                    nav.NavigateTo($"/Proveedores/Baja/{proveedorId}");
-                }
-            }
-
-            private async Task EdicionProveedor(int proveedorId)
-            {
-                nav.NavigateTo($"/Proveedores/Editar/{proveedorId}");
-            }
-
-        }
+}

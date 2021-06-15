@@ -1,6 +1,9 @@
 ﻿thead {
     background-color: rgba(109, 171, 211, 0.3);
 }
+table{
+    border-radius:15px !important;
+}
 input[type="radio"] {
     width: 20px;
     height: 20px;
@@ -135,15 +138,15 @@ tr.colorFila{
     -o-background-size: cover;
     background-size: cover;
 }
-h1, h2, h3, h4, h5, h6 {
+h1,h2, h3, h4, h5, h6 {
     color: rgb(255, 36, 36);
 }
 
 .myScrollBar {
     height: calc(100vh - 50px);
-    overflow-y:auto;
-    overflow-x: scroll; 
-    margin-top:5px;
+    overflow-y: auto;
+    overflow-x: scroll;
+    margin-top: 5px;
 }
 .listPorteria {
     text-decoration: none;

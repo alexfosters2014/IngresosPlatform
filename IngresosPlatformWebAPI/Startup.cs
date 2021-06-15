@@ -1,7 +1,9 @@
 using AccesoDatos.Data;
+using IngresosPlatformWebAPI.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Modelo;
 using Negocio.Repositorios;
 using System;
+using System.Linq;
 
 namespace IngresosPlatformWebAPI
 {
@@ -30,12 +33,23 @@ namespace IngresosPlatformWebAPI
             {
                 options.AddPolicy(_MyCors, builder =>
                 {
-                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    builder.WithOrigins("http://192.168.1.30:31496")
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+
                 });
+            });
+            services.AddSignalR();
+
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
             });
 
             services.AddDbContext<AplicacionDBContext>(options =>
-                       options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                       options.UseSqlServer(Configuration.GetConnectionString("ProduccionConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
@@ -77,9 +91,11 @@ namespace IngresosPlatformWebAPI
             app.UseRouting();
             app.UseCors(_MyCors);
             app.UseAuthorization();
+            app.UseResponseCompression();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificacionesHub>("/notificacioneshub");
             });
         }
     }

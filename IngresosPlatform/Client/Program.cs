@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using Tewr.Blazor.FileReader;
 using Radzen;
 using MudBlazor.Services;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.Components;
+using Blazored.Toast;
 
 namespace IngresosPlatform.Client
 {
@@ -22,6 +25,14 @@ namespace IngresosPlatform.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
+            builder.Services.AddSingleton<HubConnection>(sp => {
+                var navigationManager = sp.GetRequiredService<NavigationManager>();
+                return new HubConnectionBuilder()
+                  .WithUrl(navigationManager.ToAbsoluteUri($"{builder.Configuration.GetValue<string>("BaseAPIUrl")}/notificacioneshub"))
+                  .WithAutomaticReconnect()
+                  .Build();
+            });
+
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPIUrl")) });
             builder.Services.AddScoped<IServiceProveedor, ServiceProveedor>();
             builder.Services.AddScoped<IServiceUsuario, ServiceUsuario>();
@@ -31,6 +42,7 @@ namespace IngresosPlatform.Client
             builder.Services.AddScoped<IServiceIngresoDiario, ServiceIngresoDiario>();
             builder.Services.AddScoped<IServiceTerciarizacion, ServiceTerciarizacion>();
 
+            builder.Services.AddBlazoredToast();
             builder.Services.AddMudServices();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);

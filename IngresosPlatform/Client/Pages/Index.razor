@@ -1,25 +1,27 @@
 ﻿@page "/index"
 @inject NavigationManager nav
+
 @inject ILocalStorageService localStorage
 
 @if (usuarioDTO != null)
-            {
-
-<h1>Hola, @((usuarioDTO.Proveedor != null) ? usuarioDTO.Proveedor.RazonSocial : usuarioDTO.UsuarioNombre )</h1>
-
-<p>Bienvenido a su sesión de @((usuarioDTO.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString()) ? "operador" : "proveedor" ) </p>
-  }
-
+{
+<h2>Hola, @((usuarioDTO.Proveedor != null) ? usuarioDTO.Proveedor.RazonSocial : usuarioDTO.UsuarioNombre )</h2>
+<h5 style="color:blueviolet">Bienvenido/a su sesión de @((usuarioDTO.TipoUsuario == SD.TipoUsuario.OperadorIngPlt.ToString()) ? "Operador" : "Proveedor" ) </h5>
+}
 
 @code{
     UsuarioDTO usuarioDTO { get; set; } = null;
 
-    protected override void OnInitialized()
-    {
-        CargaInicial();
-    }
-    private async Task CargaInicial()
+    protected override async Task OnInitializedAsync()
     {
         usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
     }
+
+    //public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+
+    //public async ValueTask DisposeAsync()
+    //{
+    //    await hubConnection.DisposeAsync();
+    //}
+
 }

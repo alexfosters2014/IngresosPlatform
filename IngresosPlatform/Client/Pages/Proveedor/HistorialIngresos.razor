@@ -3,62 +3,62 @@
 @inject ILocalStorageService localStorage
 @inject IJSRuntime js
 @inject NavigationManager nav
+    <div class="d-flex justify-content-center">
+        <h3>Historial de Ingresos Autorizados</h3>
+    </div>
 
-<h3>Historial de Ingresos Autorizados</h3>
+        @if (ingresosDTO != null && ingresosDTO.Any())
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Cedula</th>
+                        <th scope="col">Funcionario</th>
+                        <th scope="col">Hora entrada</th>
+                        <th scope="col">Hora salida</th>
+                        <th scope="col">Desde</th>
+                        <th scope="col">Hasta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (IngresoDTO ing in ingresosDTO)
+                    {
+                        <tr>
+                            <td>@ing.Funcionario.Cedula</td>
+                            <td>@ing.Funcionario.Nombre</td>
+                            <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                            <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                            <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                            <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else if (ingresosDTO != null && ingresosDTO.Count == 0)
+        {
+            <p> No hay aun un historial</p>
+        }
+        else
+        {
+            <Loading />
+        }
 
 
-@if (ingresosDTO != null && ingresosDTO.Any())
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Cedula</th>
-                <th scope="col">Funcionario</th>
-                <th scope="col">Hora entrada</th>
-                <th scope="col">Hora salida</th>
-                <th scope="col">Desde</th>
-                <th scope="col">Hasta</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (IngresoDTO ing in ingresosDTO)
+        @code {
+
+            private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
+            private UsuarioDTO usuarioDTO { get; set; } = null;
+
+            protected override async Task OnInitializedAsync()
             {
-                <tr>
-                    <td>@ing.Funcionario.Cedula</td>
-                    <td>@ing.Funcionario.Nombre</td>
-                    <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
-                    <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
-                    <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
-                    <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
-                </tr>
+                await CargarIngresos();
             }
-        </tbody>
-    </table>
-}
-else if (ingresosDTO != null && ingresosDTO.Count == 0)
-{
-    <p> No hay aun un historial</p>
-}
-else
-{
-    <Loading />
-}
+            private async Task CargarIngresos()
+            {
+                usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+                ingresosDTO = await serviceIngreso.ObtenerIngresosAutXProveedor(usuarioDTO.Proveedor.Id);
+            }
 
-
-@code {
-
-    private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
-    private UsuarioDTO usuarioDTO { get; set; } = null;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await CargarIngresos();
-    }
-    private async Task CargarIngresos()
-    {
-        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-        ingresosDTO = await serviceIngreso.ObtenerIngresosAutXProveedor(usuarioDTO.Proveedor.Id);
-    }
-
-}
+        }
 
