@@ -124,13 +124,11 @@
                                 <div class="form-group">
                                     <label for="vtoCMA">Vto. de C. Manipulación de alimentos</label>
                                     <InputDate @bind-Value="funcionarioDTO.VtoCMAlimentos" id="vtoCMA" class="form-control" />
-                                    <ValidationMessage For="@( () => funcionarioDTO.VtoCMAlimentos)" />
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
                                     <input type="file" accept=".pdf" @ref="refCarneMAEdit" @onchange="SubirPDF_PathMA" />
-                                    <ValidationMessage For="@( () => funcionarioDTO.PathCMAlimentos)" />
                                 </div>
                             </div>
                             <div class="col-12">
@@ -199,27 +197,27 @@
 
         private async Task AgregarNuevoFuncionario()
         {
-            carga = true;
-            UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-            funcionarioDTO.Proveedor = new ProveedorDTO()
-            {
-                Id = usuarioDTO.Proveedor.Id,
-                Rut = "000",
-                RazonSocial = "0",
-                NombreFantasia = "0",
-                Rubro = "0",
-                Email = "a@a.com"
-            };
-            FuncionarioDTO resultado = await serviceFuncionario.Agregar(funcionarioDTO);
+            try {
+                carga = true;
+                UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
 
-            if (resultado != null)
+                funcionarioDTO.Proveedor = usuarioDTO.Proveedor;
+
+                FuncionarioDTO resultado = await serviceFuncionario.Agregar(funcionarioDTO);
+
+                if (resultado != null)
+                {
+                    nav.NavigateTo("/Funcionarios", true);
+                }
+                else
+                {
+                    await js.MsgError("No se pudo dar de alta al nuevo funcionario. Verifique si ya fue ingresado o si los datos estan correctos");
+                    carga = false;
+                }
+            }catch(Exception ex)
             {
-                nav.NavigateTo("/Funcionarios", true);
-            }
-            else
-            {
-                await js.MsgError("No se pudo dar de alta al nuevo funcionario. Verifique si ya fue ingresado");
-                carga = false;
+                Console.WriteLine($"Error recibido: {ex.Message}");
+                await js.MsgError("Hubo un error en la carga. Intente nuevamente");
             }
         }
 

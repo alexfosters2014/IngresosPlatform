@@ -66,8 +66,8 @@
                     if (vmLogin.Password.Length > 20)
                     {
                         nav.NavigateTo("/CambioPass");
-                    }
-                    if (usuarioDTO.TipoUsuario == SD.TipoUsuario.PorteriaIngPlt.ToString())
+
+                    }else if (usuarioDTO.TipoUsuario == SD.TipoUsuario.PorteriaIngPlt.ToString())
                     {
                         nav.NavigateTo("/Porteria");
                     }

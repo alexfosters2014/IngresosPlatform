@@ -159,6 +159,7 @@ else if (carga)
     }
     private async Task Actulizar()
     {
+        PathMensaje = "message.png";
         await CargaInicial();
     }
 
@@ -231,6 +232,7 @@ else if (carga)
         hoy = DateTime.ParseExact(fecha, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
         ingresosSeleccionados = null;
         carga = false;
+        StateHasChanged();
     }
 
 }

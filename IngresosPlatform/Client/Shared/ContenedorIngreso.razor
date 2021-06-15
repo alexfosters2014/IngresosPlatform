@@ -116,7 +116,7 @@
                     if (resultado != null)
                     {
                         await js.MsgExitoso("Se envió la no autorización exitosamente");
-                        await Enviar(proveedorDTO.Rut, "Se autorizaron todos los ingresos enviados");
+                        await Enviar(proveedorDTO.Rut, "Sr. Proveedor: algunos ingresos no fueron autorizados . Revise");
                         ingresosDTO.Remove(ingDTO);
 
                         await serviceUsuario.EnviarMail(new MailMensajeDTO() { EnviarA = proveedorDTO.Email, MensajeAEnviar = "Sr. proveedor: Hay ingreso/s que deberia revisar" });

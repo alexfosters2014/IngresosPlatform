@@ -18,19 +18,27 @@ namespace IngresosPlatform.Client.Services
         }
         public async Task<FuncionarioDTO> Actualizar(FuncionarioDTO funcionarioDTO)
         {
-            var response = await httpClient.PostAsJsonAsync("/api/Funcionario", funcionarioDTO);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var content = await response.Content.ReadAsStringAsync();
+                var response = await httpClient.PostAsJsonAsync("/api/Funcionario", funcionarioDTO);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
 
-                var funciionarioActualizado = JsonConvert.DeserializeObject<FuncionarioDTO>(content);
+                    var funciionarioActualizado = JsonConvert.DeserializeObject<FuncionarioDTO>(content);
 
-                return funciionarioActualizado;
-            }
-            else
+                    return funciionarioActualizado;
+                }
+                else
+                {
+                    return null;
+                }
+            }catch(Exception ex)
             {
+                Console.WriteLine($"Error recibido: {ex.Message}");
                 return null;
             }
+
         }
 
         public async Task<FuncionarioDTO> Agregar(FuncionarioDTO funcionarioDTO)
