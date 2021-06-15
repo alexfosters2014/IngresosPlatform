@@ -53,7 +53,7 @@
                             <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
                             <td>
                                 <a href="" @onclick="(() => IngresoAutorizado(ing, SD.TipoAutIng.AUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">Habilitar</a>
-                                <a href="" @onclick="(() => IngresoNOAutorizado(ing,SD.TipoAutIng.NOAUTORIZADO.ToString()))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
+                                <a href="" @onclick="(() => IngresoNOAutorizado(ing, SD.TipoAutIng.NOAUTORIZADO.ToString(), proveedorDTO.Rut))" @onclick:preventDefault class="btn btn-primary">No Habilitar</a>
                             </td>
                         </tr>
                     }
@@ -92,6 +92,7 @@
             if (resultado != null)
             {
                 await js.MsgExitoso("Se autorizó exitosamente");
+                await Enviar(SD.TipoUsuario.OperadorIngPlt.ToString(), "Nuevos ingresos");
                 ingresosDTO.Remove(ingDTO);
                 StateHasChanged();
             }
@@ -103,7 +104,7 @@
         }
     }
 
-    private async Task IngresoNOAutorizado(IngresoDTO ingDTO, string autorizado)
+    private async Task IngresoNOAutorizado(IngresoDTO ingDTO, string autorizado,string usu)
     {
         string comentarios = await js.OnInputText();
         if (comentarios != "NOTCONFIRMED")
@@ -116,6 +117,7 @@
                 if (resultado != null)
                 {
                     await js.MsgExitoso("Se envió la no autorización exitosamente");
+                    await Enviar(usu, "Se autorizaron todos los ingresos enviados");
                     ingresosDTO.Remove(ingDTO);
                     StateHasChanged();
                 }
@@ -134,7 +136,11 @@
     }
     private async Task EnviarMensajeOkProveedor(string usu)
     {
-        await Enviar(usu, "Se autorizaron todos los ingresos");
+        bool confirmacion = await js.MsgConfirmacion("Notifica al proveedor seleccionado que todos los ingresos fueron habilitados?");
+        if (confirmacion)
+        {
+            await Enviar(usu, "Se autorizaron todos los ingresos enviados");
+        }
     }
     private async Task Enviar(string usuarioEnvio,string mensajeEnvio) => await hubConnection.SendAsync("EnviarNotificacion", usuarioEnvio, mensajeEnvio);
 

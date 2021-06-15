@@ -97,7 +97,7 @@
         bool confirmacion = await js.MsgConfirmacion("Desea Salir de la sesión?");
         if (confirmacion)
         {
-            await hubConnection.DisposeAsync();
+            //await hubConnection.DisposeAsync();
             await localStorage.ClearAsync();
             nav.NavigateTo("/");
         }
@@ -107,6 +107,7 @@
     {
         foreach (string str in mensajes.Take(5))
         {
+            PathMensaje = "messageNotification.png";
             toastService.ShowInfo(str,"Notificaciones");
         }
     }

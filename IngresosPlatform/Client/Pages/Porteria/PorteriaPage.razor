@@ -4,15 +4,16 @@
 @inject IJSRuntime js
 @inject ILocalStorageService localStorage
 @inject NavigationManager nav
+@inject HubConnection hubConnection
 
 <div class="recuadroPorteria">
     <div class="d-flex justify-content-around">
         <div>
-            <img src="/img/barrera.png" class="nuevoBoton" />
+            <img src="/img/@PathMensaje" class="nuevoBoton" />
         </div>
         <div class="form-inline">
-            <input type="date" value="@maxFecha.ToString("yyyy-MM-dd")" max="@maxFecha.ToString("yyyy-MM-dd")" class="form-control" 
-                   @onchange="@((e) => Resetear(e.Value.ToString()))"/>
+            <input type="date" value="@maxFecha.ToString("yyyy-MM-dd")" max="@maxFecha.ToString("yyyy-MM-dd")" class="form-control"
+                   @onchange="@((e) => Resetear(e.Value.ToString()))" />
             <button type="button" class="btn btn-primary ml-3" @onclick="onClickVer">Ver</button>
 
         </div>
@@ -25,7 +26,7 @@
 @if (ingresosXProveedor != null && ingresosXProveedor.Any() && carga)
 {<div class="d-flex justify-content-end">
         <img src="/img/actualizar.png" class="botonPDFVisor" @onclick="Actulizar" />
- </div>
+    </div>
     <section class="row">
 
         <div class="col-3">
@@ -97,9 +98,9 @@
 }
 else if (ingresosXProveedor != null && ingresosXProveedor.Count == 0)
 {
-<div class="d-flex align-content-center align-items-center">
-    <h4 style="color:orangered">No hay ingresos para visualizar</h4>
-</div>
+    <div class="d-flex align-content-center align-items-center">
+        <h4 style="color:orangered">No hay ingresos para visualizar</h4>
+    </div>
 }
 else if (carga)
 {
@@ -109,24 +110,34 @@ else if (carga)
 @code
 {
     DateTime hoy { get; set; } = DateTime.Today;
+    string PathMensaje = "message.png";
 
     List<IngresoDiarioxProveedor> ingresosXProveedor { get; set; } = null;
     ProveedorDTO proveedorSeleccionado { get; set; } = null;
     List<IngresoDiarioDTO> ingresosSeleccionados { get; set; } = null;
-    UsuarioDTO usuario { get; set; } = null;
+    UsuarioDTO usuarioDTO { get; set; } = null;
     bool carga = false;
-    private DateTime maxFecha =DateTime.Today.Date;
+    private DateTime maxFecha = DateTime.Today.Date;
 
     protected async override Task OnInitializedAsync()
     {
         try
         {
-            usuario = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-           
-            if (usuario == null && usuario.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString())
+            usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+
+            if (usuarioDTO == null && usuarioDTO.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString())
             {
                 nav.NavigateTo("/");
             }
+            hubConnection.On<string, string>("RecibirNotificacion", (usuario, mensaje) =>
+            {
+                if (usuario == SD.TipoUsuario.PorteriaIngPlt.ToString() && usuarioDTO.TipoUsuario == SD.TipoUsuario.PorteriaIngPlt.ToString())
+                {
+                    PathMensaje = "messageNotification.png";
+                    StateHasChanged();
+                }
+            });
+            await hubConnection.StartAsync();
             StateHasChanged();
         }
         catch (Exception)
@@ -182,7 +193,8 @@ else if (carga)
 
     private async void MarcarSalida(IngresoDiarioDTO ingD)
     {
-        if (ingD.EntradaEfectiva != null) {
+        if (ingD.EntradaEfectiva != null)
+        {
             bool confirmacion = await js.MsgConfirmacion("Desea marcar la salida del funcionario?");
             if (confirmacion)
             {
