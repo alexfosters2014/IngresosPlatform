@@ -35,7 +35,7 @@
                         <td>@fun.Nombre</td>
                         <td>@fun.VtoCedula.ToString("dd/MM/yyyy")</td>
                         <td>@fun.VtoCarneSalud.Value.ToString("dd/MM/yyyy")</td>
-                        <td>@fun.VtoCMAlimentos.Value.ToString("dd/MM/yyyy")</td>
+                        <td>@((fun.VtoCMAlimentos != null) ? @fun.VtoCMAlimentos.Value.ToString("dd/MM/yyyy") : "")</td>
                         <td>@((fun.VtoLibreta != null) ? fun.VtoLibreta.Value.ToString("dd/MM/yyyy") : "")</td>
                         <td>@((fun.Activo == true ) ? "Activo" : "No Activo")</td>
                         @if (fun.Activo == true)
