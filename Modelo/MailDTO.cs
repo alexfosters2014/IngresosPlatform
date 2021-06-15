@@ -35,7 +35,7 @@ namespace Modelo
             mail.From = new MailAddress(Correo, Correo);
             mail.To.Add(new MailAddress(destinatario));
             mail.Subject = "Nuevo usuario de Ingresos Platform";
-            mail.IsBodyHtml = false;
+            mail.IsBodyHtml = true;
             mail.Body = mensaje;
 
             await smtp.SendMailAsync(mail);

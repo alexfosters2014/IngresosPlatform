@@ -49,10 +49,19 @@ namespace IngresosPlatformWebAPI.Controllers
             string mensaje;
             if (usuarioNuevo.TipoUsuario == SD.TipoUsuario.ProveedorIngPlt.ToString())
             {
-            mensaje = $"Bienvenidos a Ingresos Platform. Su usuario es su RUT: {usuarioNuevo.Proveedor.Rut},y la contraseña inicial es: {usuarioNuevo.PassInicial}, la cual deberá cambiar una vez autentificado al sistema";
-            }else
+                mensaje = $"Bienvenidos a ProIngreso. <br/>" +
+                          $"Su usuario es su RUT: {usuarioNuevo.Proveedor.Rut} <br/>" +
+                          $"Su contraseña inicial es: {usuarioNuevo.PassInicial} <br/>" +
+                          "Debe acceder al siguiente link: https://proingreso.azurewebsites.net/la , ingresar su usuario, copiar y pegar su contraseña inicial e ingresar <br/>" +
+                          "Recuerde que al autentificarse por primera vez deberá cambiar la contraseña por una personal";
+            }
+            else
             {
-             mensaje = $"Bienvenidos a Ingresos Platform. Su usuario es: {usuarioNuevo.UsuarioNombre},y la contraseña inicial es: {usuarioNuevo.PassInicial}, la cual deberá cambiar una vez autentificado al sistema";
+                   mensaje = $"Bienvenidos a ProIngreso. <br/>" +
+                             $"Su usuario es: {usuarioNuevo.UsuarioNombre} <br/>" +
+                             $"Su contraseña inicial es: {usuarioNuevo.PassInicial} <br/>" +
+                             "Debe acceder al siguiente link: https://proingreso.azurewebsites.net/la , ingresar su usuario, copiar y pegar su contraseña inicial e ingresar <br/>" +
+                             "Recuerde que al autentificarse por primera vez deberá cambiar la contraseña por una personal";
             }
             if (await mail.EnvioAutentificacionProveedor(usuarioNuevo.Email, mensaje)) {
                 return Ok(usuarioNuevo);
