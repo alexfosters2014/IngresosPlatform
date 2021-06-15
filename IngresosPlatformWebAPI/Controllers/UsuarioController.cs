@@ -60,7 +60,7 @@ namespace IngresosPlatformWebAPI.Controllers
                    mensaje = $"Bienvenidos a ProIngreso. <br/>" +
                              $"Su usuario es: {usuarioNuevo.UsuarioNombre} <br/>" +
                              $"Su contraseña inicial es: {usuarioNuevo.PassInicial} <br/>" +
-                             "Debe acceder al siguiente link: https://proingreso.azurewebsites.net/la , ingresar su usuario, copiar y pegar su contraseña inicial e ingresar <br/>" +
+                             "Debe acceder al siguiente link: https://proingreso.azurewebsites.net/ , ingresar su usuario, copiar y pegar su contraseña inicial e ingresar <br/>" +
                              "Recuerde que al autentificarse por primera vez deberá cambiar la contraseña por una personal";
             }
             if (await mail.EnvioAutentificacionProveedor(usuarioNuevo.Email, mensaje)) {

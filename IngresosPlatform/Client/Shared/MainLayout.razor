@@ -81,13 +81,13 @@
             }
             else
             {
-                nav.NavigateTo("/");
+                nav.NavigateTo("/",true);
             }
             StateHasChanged();
         }
         catch (Exception)
         {
-            nav.NavigateTo("/");
+            nav.NavigateTo("/",true);
         }
 
 
@@ -97,9 +97,9 @@
         bool confirmacion = await js.MsgConfirmacion("Desea Salir de la sesión?");
         if (confirmacion)
         {
-            //await hubConnection.DisposeAsync();
+            await hubConnection.DisposeAsync();
             await localStorage.ClearAsync();
-            nav.NavigateTo("/");
+            nav.NavigateTo("/",true);
         }
     }
 

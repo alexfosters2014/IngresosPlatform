@@ -127,7 +127,7 @@ else if (carga)
 
             if (usuarioDTO == null && usuarioDTO.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString())
             {
-                nav.NavigateTo("/");
+                nav.NavigateTo("/",true);
             }
             hubConnection.On<string, string>("RecibirNotificacion", (usuario, mensaje) =>
             {
@@ -142,7 +142,7 @@ else if (carga)
         }
         catch (Exception)
         {
-            nav.NavigateTo("/");
+            nav.NavigateTo("/",true);
         }
 
     }
@@ -223,7 +223,7 @@ else if (carga)
         if (confirmacion)
         {
             await localStorage.ClearAsync();
-            nav.NavigateTo("/");
+            nav.NavigateTo("/",true);
         }
     }
     private void Resetear(string fecha)
