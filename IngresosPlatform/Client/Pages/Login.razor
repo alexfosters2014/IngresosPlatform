@@ -57,31 +57,35 @@
         private async void Loguearse()
         {
             UsuarioDTO usuarioDTO = null;
-
-            usuarioDTO = await serviceUsuario.Login(vmLogin);
-            if (usuarioDTO != null)
-            {
-                await localStorage.SetItemAsync(SD.LocalUsuario, usuarioDTO);
-
-                if (vmLogin.Password.Length > 20)
+            try {
+                usuarioDTO = await serviceUsuario.Login(vmLogin);
+                if (usuarioDTO != null)
                 {
-                    nav.NavigateTo("/CambioPass");
-                }
-                if (usuarioDTO.TipoUsuario == SD.TipoUsuario.PorteriaIngPlt.ToString())
-                {
-                    nav.NavigateTo("/Porteria");
+                    await localStorage.SetItemAsync(SD.LocalUsuario, usuarioDTO);
+
+                    if (vmLogin.Password.Length > 20)
+                    {
+                        nav.NavigateTo("/CambioPass");
+                    }
+                    if (usuarioDTO.TipoUsuario == SD.TipoUsuario.PorteriaIngPlt.ToString())
+                    {
+                        nav.NavigateTo("/Porteria");
+                    }
+                    else
+                    {
+                        nav.NavigateTo("/index");
+                    }
                 }
                 else
                 {
-                    nav.NavigateTo("/index");
+                    await js.MsgError("No se ha podido iniciar sesion. Verifique usuario y contraseña, o en su defecto la conexion a internet");
                 }
-            }
-            else
+            } catch (Exception ex)
             {
-                await js.MsgError("No se ha podido iniciar sesion. Verifique usuario y contraseña, o en su defecto la conexion a internet");
+                await js.MsgError(ex.Message);
             }
+
+
         }
 
-
     }
-    
