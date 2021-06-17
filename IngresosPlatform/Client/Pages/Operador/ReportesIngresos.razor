@@ -18,12 +18,12 @@
             {
                 <div class="col">
                     <label>Desde</label>
-                    <input type="date" @bind="desde" class="form-control" />
+                    <input type="date" @bind="desde" class="form-control" max="@maxFecha.ToString("yyyy-MM-dd")" min="@minFecha.ToString("yyyy-MM-dd")"/>
                 </div>
             }
             <div class="col">
                 <label>Hasta</label>
-                <input type="date" @bind="hasta" class="form-control" style="transition: background-color 500ms ease-out 1s;" max="@maxFecha.ToString("yyyy-MM-dd")" />
+                <input type="date" @bind="hasta" class="form-control" max="@maxFecha.ToString("yyyy-MM-dd")" min="@minFecha.ToString("yyyy-MM-dd")"/>
             </div>
 
             <div class="col">
@@ -85,6 +85,7 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
     <div class="d-flex justify-content-center">
         <button class="btn btn-primary" @onclick="OnCerrar">Cerrar</button>
     </div>
+    <div class="dividerLogin"></div>
 }
 @if (cargar)
 {
@@ -98,6 +99,8 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
     List<ProveedorDTO> proveedoresDTO = null;
 
     private DateTime maxFecha = DateTime.Today.Date;
+    private DateTime minFecha = DateTime.Today.Date.AddYears(-20);
+
     private string tipoFecha = SD.TipoFecha.EFECTIVA.ToString();
 
     private bool confirmacion { get; set; } = false;
@@ -134,14 +137,16 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
     {
         if (ingresosDiarios != null)
         {
+            string tipoReporte = (tipoFecha == SD.TipoFecha.PLANIFICADA.ToString()) ? "planificados por el proveedor": "con marcas efectivas";
             cargar = true;
             ReporteIngreso reporte = new ReporteIngreso()
             {
                 TipoFecha = tipoFecha,
+                nombreArchivo= $"Reporte de Ingresos {tipoReporte} del {desde.ToString("dd-MM-yyyy")} al {hasta.ToString("dd-MM-yyyy")}.xlsx",
                 IngresosXProveedores = ingresosDiarios
             };
             var descargaExcel = await serviceArchivo.DescargarExcel(reporte);
-            await js.DescargarExcel("Reporte_Ingresos.xlsx", descargaExcel);
+            await js.DescargarExcel(reporte.nombreArchivo, descargaExcel);
             cargar = false;
         }
     }
@@ -252,10 +257,15 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
                 tipoFecha = valor;
                 if (tipoFecha == SD.TipoFecha.EFECTIVA.ToString())
                 {
+                    desde = DateTime.Today.Date;
+                    hasta = DateTime.Today.Date;
+                    minFecha = DateTime.Today.Date.AddYears(-20);
                     maxFecha = DateTime.Today.Date;
                 }
                 else
                 {
+                    desde = DateTime.Today.Date;
+                    minFecha = DateTime.Today.Date;
                     maxFecha = DateTime.Today.AddYears(5);
                 }
                 StateHasChanged();

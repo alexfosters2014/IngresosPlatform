@@ -74,20 +74,22 @@
                 <th scope="col">Desde</th>
                 <th scope="col">Hasta</th>
                 <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (IngresoDTO ing in ingresosDTO)
             {
-                <tr>
-                    <td>@ing.Funcionario.Cedula</td>
-                    <td>@ing.Funcionario.Nombre</td>
-                    <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
-                    <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
-                    <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
-                    <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
-                    <td><a href="" @onclick="(() => BorrarIngresoList(ing))" @onclick:preventDefault>Borrar</a></td>
-                </tr>
+            <tr>
+                <td>@ing.Funcionario.Cedula</td>
+                <td>@ing.Funcionario.Nombre</td>
+                <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
+                <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
+                <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+                <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+                <td><a href="" @onclick="(() => VerDatosFuncionario(ing.Funcionario.Id))" @onclick:preventDefault class="btn btn-primary">Ver</a></td>
+                <td><a href="" @onclick="(() => BorrarIngresoList(ing))" @onclick:preventDefault>Borrar</a></td>
+            </tr>
             }
         </tbody>
     </table>
@@ -117,6 +119,13 @@
     {
         usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
+
+        ingresosDTO = await localStorage.GetItemAsync<List<IngresoDTO>>(SD.LocalCargaIngresos);
+        if (ingresosDTO == null)
+        {
+            ingresosDTO = new List<IngresoDTO>();
+        }
+        StateHasChanged();
     }
 
     private void BorrarIngresoList(IngresoDTO ingreso)
@@ -149,12 +158,13 @@
             ingresoIndividual.Fecha = DateTime.Now;
             //bool hayDuplicados = ingresosDTO.GroupBy(g => g.Funcionario.Id).Any(c => c.Count() > 1);
             ingresosDTO.Add(ingresoIndividual);
+            await localStorage.SetItemAsync(SD.LocalCargaIngresos,ingresosDTO);
             ReiniciarIngreso();
 
         }
         catch (Exception e)
         {
-            js.MsgError(e.Message);
+            await js.MsgError(e.Message);
         }
     }
 
@@ -189,9 +199,11 @@
             bool und = await js.MsgExitoso("Se han enviado las solicitudes de ingreso");
             await Enviar(ingresosDTO.Count.ToString());
             ingresosDTO.Clear();
+            await localStorage.RemoveItemAsync(SD.LocalCargaIngresos);
         }
         else if (resultado == SD.IngresosReturn.REVISAR.ToString())
         {
+            await localStorage.RemoveItemAsync(SD.LocalCargaIngresos);
             await js.MsgAdvertencia("Algunas solicitudes han sido rechazadas porque algun dia del rango enviado ya está registrado. Revise");
             await Enviar("");
             nav.NavigateTo("/Revisiones", true);
@@ -199,6 +211,20 @@
         else if (resultado == SD.IngresosReturn.ERROR.ToString())
         {
             await js.MsgError("Se ha producido un error");
+        }
+    }
+
+    private async Task VerDatosFuncionario(int funcionarioId)
+    {
+        try
+        {
+            await js.InvokeVoidAsync("open", $"/Funcionario/{funcionarioId}", "_blank");
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            await js.MsgError("No se ha podido cargar. Reintente");
         }
     }
 

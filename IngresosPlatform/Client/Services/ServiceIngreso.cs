@@ -137,5 +137,28 @@ namespace IngresosPlatform.Client.Services
                 return null;
             }
         }
+
+        public async Task<List<IngresoDTO>> ObtenerIngAutYPendXProveedor(int? proveedorId)
+        {
+            if (proveedorId != null)
+            {
+                var response = await httpClient.GetAsync($"api/Ingreso/ingresosAutYPendxProveedor/{proveedorId.Value}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var ingresos = JsonConvert.DeserializeObject<List<IngresoDTO>>(content);
+                    return ingresos;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
     }
 }

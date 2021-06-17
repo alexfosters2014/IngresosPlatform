@@ -125,6 +125,17 @@ tr.colorFila{
     -webkit-filter: invert(30%);
     filter: invert(30%);
 }
+.iconTabla {
+    height: 40px;
+    width: 40px;
+    transition: 0.3s;
+}
+
+    .iconTabla:hover {
+        height: 50px;
+        width: 50px;
+        filter: contrast(200%);
+    }
 .botonExport {
     height: 70px;
     width: auto;

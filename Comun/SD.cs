@@ -9,6 +9,8 @@ namespace Comun
     public class SD
     {
         public const string LocalUsuario = "UsuarioLocalLogin";
+        public const string LocalCargaIngresos = "IngresosCargaLocal";
+
         public enum TipoUsuario
         {
             ProveedorIngPlt,

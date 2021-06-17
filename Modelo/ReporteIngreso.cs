@@ -9,6 +9,7 @@ namespace Modelo
     public class ReporteIngreso
     {
         public string TipoFecha { get; set; }
+        public string nombreArchivo {get; set; }
         public List<IngresoDiarioxProveedor> IngresosXProveedores { get; set; }
     }
 }
