@@ -82,7 +82,8 @@
                 }
             } catch (Exception ex)
             {
-                await js.MsgError(ex.Message);
+                Console.WriteLine(ex.Message);
+                await js.MsgError("No se ha podido iniciar sesion. Verifique usuario y contraseña, o en su defecto la conexion a internet");
             }
 
 

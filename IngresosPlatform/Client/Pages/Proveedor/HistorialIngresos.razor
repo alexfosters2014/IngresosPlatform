@@ -3,62 +3,64 @@
 @inject ILocalStorageService localStorage
 @inject IJSRuntime js
 @inject NavigationManager nav
-    <div class="d-flex justify-content-center">
-        <h3>Historial de Ingresos Autorizados</h3>
-    </div>
+<div class="d-flex justify-content-center">
+    <h3>Historial de Ingresos</h3>
+</div>
+<div class="divider"></div>
 
-        @if (ingresosDTO != null && ingresosDTO.Any())
-        {
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Cedula</th>
-                        <th scope="col">Funcionario</th>
-                        <th scope="col">Hora entrada</th>
-                        <th scope="col">Hora salida</th>
-                        <th scope="col">Desde</th>
-                        <th scope="col">Hasta</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (IngresoDTO ing in ingresosDTO)
-                    {
-                        <tr>
-                            <td>@ing.Funcionario.Cedula</td>
-                            <td>@ing.Funcionario.Nombre</td>
-                            <td>@ing.EntradaPlanificada.Value.ToString("HH:mm")</td>
-                            <td>@ing.SalidaPlanificada.Value.ToString("HH:mm")</td>
-                            <td>@ing.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
-                            <td>@ing.FechaFin.Value.ToString("dd/MM/yyyy")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else if (ingresosDTO != null && ingresosDTO.Count == 0)
-        {
-            <p> No hay aun un historial</p>
-        }
-        else
-        {
-            <Loading />
-        }
+@if (ingresosDTO != null && ingresosDTO.Any())
+{
+    if (ingresosPendientes != null && ingresosPendientes.Count > 0)
+    {
+        <div class="d-flex justify-content-center">
+            <h4>Historial de ingresos pendientes de autorización</h4>
+        </div>
+        <HistorialIngresosProveedor ingresosDTO="ingresosPendientes" />
+    }
+
+    <div style="height:10px;"></div>
+
+    if (ingresosAutorizados != null && ingresosAutorizados.Count > 0)
+    {
+        <div class="d-flex justify-content-center">
+            <h4>Historial de ingresos autorizados</h4>
+        </div>
+        <div class="divider"></div>
+        <HistorialIngresosProveedor ingresosDTO="ingresosAutorizados" />
+
+    }
+}
+else if (ingresosDTO != null && ingresosDTO.Count == 0)
+{
+    <p> No hay aun un historial</p>
+}
+else
+{
+    <Loading />
+}
 
 
-        @code {
+@code {
 
-            private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
-            private UsuarioDTO usuarioDTO { get; set; } = null;
+    private List<IngresoDTO> ingresosDTO { get; set; } = new List<IngresoDTO>();
 
-            protected override async Task OnInitializedAsync()
-            {
-                await CargarIngresos();
-            }
-            private async Task CargarIngresos()
-            {
-                usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-                ingresosDTO = await serviceIngreso.ObtenerIngresosAutXProveedor(usuarioDTO.Proveedor.Id);
-            }
+    private List<IngresoDTO> ingresosAutorizados { get; set; }
+    private List<IngresoDTO> ingresosPendientes { get; set; }
 
-        }
+    private UsuarioDTO usuarioDTO { get; set; } = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarIngresos();
+    }
+    private async Task CargarIngresos()
+    {
+        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        ingresosDTO = await serviceIngreso.ObtenerIngAutYPendXProveedor(usuarioDTO.Proveedor.Id);
+        ingresosPendientes = ingresosDTO.Where(t => t.EstadoAutorizacion == SD.TipoAutIng.PENDIENTE.ToString()).ToList();
+        ingresosAutorizados = ingresosDTO.Where(t => t.EstadoAutorizacion == SD.TipoAutIng.AUTORIZADO.ToString()).ToList();
+        StateHasChanged();
+    }
+
+}
 

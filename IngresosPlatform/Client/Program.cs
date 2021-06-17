@@ -28,12 +28,12 @@ namespace IngresosPlatform.Client
             builder.Services.AddSingleton<HubConnection>(sp => {
                 var navigationManager = sp.GetRequiredService<NavigationManager>();
                 return new HubConnectionBuilder()
-                  .WithUrl(navigationManager.ToAbsoluteUri($"{builder.Configuration.GetValue<string>("BaseAPIUrlLocal")}/notificacioneshub"))
+                  .WithUrl(navigationManager.ToAbsoluteUri($"{builder.Configuration.GetValue<string>("BaseAPIUrl")}/notificacioneshub"))
                   .WithAutomaticReconnect()
                   .Build();
             });
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPIUrlLocal")) });
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPIUrl")) });
             builder.Services.AddScoped<IServiceProveedor, ServiceProveedor>();
             builder.Services.AddScoped<IServiceUsuario, ServiceUsuario>();
             builder.Services.AddScoped<IServiceIngreso, ServiceIngreso>();

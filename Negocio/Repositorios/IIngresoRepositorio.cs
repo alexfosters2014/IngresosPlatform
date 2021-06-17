@@ -16,5 +16,6 @@ namespace Negocio.Repositorios
         public Task<List<IngresoDTO>> ObtenerNoAutorizadosxProveedor(int proveedorId);
         public Task<List<IngresoDTO>> ObtenerAutorizadosxProveedor(int proveedorId);
         public Task<bool> AutorizarIngreso(int ingresoId,string estadoAutorizacion);
+        public Task<List<IngresoDTO>> ObtenerAutorizadosYPendientesxProveedor(int proveedorId);
     }
 }

@@ -78,8 +78,18 @@
 
     private async Task VerDatosFuncionario(int funcionarioId)
     {
+        try
+        {
         await js.InvokeVoidAsync("open", $"/Funcionario/{funcionarioId}", "_blank");
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            await js.MsgError("No se ha podido cargar. Reintente");
+        }
     }
+
     private async Task IngresoAutorizado(IngresoDTO ingDTO, string autorizado)
     {
         bool confirmacion = await js.MsgConfirmacion("Desea confirmar la habilitación de ingreso al funcionario seleccionado?");

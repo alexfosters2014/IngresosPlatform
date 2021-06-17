@@ -72,7 +72,7 @@ namespace IngresosPlatformWebAPI.Controllers
         [HttpPost("ReporteHorariosEfectivos")]
         public async Task<IActionResult> ObtenerTodosHorariosEfectivos([FromBody] VMGeneral vMGeneral)
         {
-            if (vMGeneral != null && vMGeneral.FechaActual <= DateTime.Today.Date && vMGeneral.FechaFin >= DateTime.Today.Date)
+            if (vMGeneral != null)
             {
                 List<IngresoDiarioDTO> ingresos = await ingresoDiarioRepositorio.ObtenerTodosHorariosEfectivos(vMGeneral);
                 if (ingresos == null)
@@ -98,7 +98,7 @@ namespace IngresosPlatformWebAPI.Controllers
         [HttpPost("ReporteHorariosPlanificados")]
         public async Task<IActionResult> ObtenerTodosHorariosPlanificados([FromBody] VMGeneral vMGeneral)
         {
-            if (vMGeneral != null && vMGeneral.FechaActual <= DateTime.Today.Date && vMGeneral.FechaFin >= DateTime.Today.Date)
+            if (vMGeneral != null && vMGeneral.FechaFin >= DateTime.Today.Date)
             {
                 vMGeneral.FechaActual = DateTime.Today.Date;
                 List<IngresoDiarioDTO> ingresos = await ingresoDiarioRepositorio.ObtenerTodosHorariosPlanificados(vMGeneral);

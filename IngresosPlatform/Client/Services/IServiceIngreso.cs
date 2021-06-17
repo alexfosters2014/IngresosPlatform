@@ -16,5 +16,6 @@ namespace IngresosPlatform.Client.Services
         public Task<List<IngresoDTO>> ObtenerIngresosAutXProveedor(int? proveedorId);
         public Task<int> EliminarIngreso(int IngresoId);
         public Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion);
+        public Task<List<IngresoDTO>> ObtenerIngAutYPendXProveedor(int? proveedorId);
     }
 }

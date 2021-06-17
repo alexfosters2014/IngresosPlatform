@@ -48,7 +48,7 @@ namespace IngresosPlatformWebAPI
             });
 
             services.AddDbContext<AplicacionDBContext>(options =>
-                       options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
+                       options.UseSqlServer(Configuration.GetConnectionString("ProduccionConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();

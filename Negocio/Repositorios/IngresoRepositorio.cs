@@ -63,18 +63,18 @@ namespace Negocio.Repositorios
                         db.Entry(ing.Proveedor).State = EntityState.Unchanged;
                         db.Entry(ing.Funcionario).State = EntityState.Unchanged;
 
-                        if (await db.IngresosDiarios.AnyAsync(t => t.Fecha.Date >= ing.FechaInicio.Date
-                         && t.Fecha.Date <= ing.FechaFin.Date && t.Funcionario.Id == ing.Funcionario.Id))
-                        {
-                            ing.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
-                            ing.Comentarios = "Parte del rango de fechas solicitadas ya estan ingresadas. Verifique";
-                        }else if (await db.Ingresos.AnyAsync(i => i.Funcionario.Id == ing.Funcionario.Id &&
-                                                                   !(
-                                                                   (i.FechaInicio < ing.FechaInicio &&
+                        //if (await db.IngresosDiarios.AnyAsync(t => t.Fecha.Date >= ing.FechaInicio.Date
+                        // && t.Fecha.Date <= ing.FechaFin.Date && t.Funcionario.Id == ing.Funcionario.Id))
+                        //{
+                        //    ing.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
+                        //    ing.Comentarios = "Parte del rango de fechas solicitadas ya estan ingresadas. Verifique";
+                        //}else 
+                        if (await db.Ingresos.AnyAsync(i => i.Funcionario.Id == ing.Funcionario.Id &&
+                                                                   !((i.FechaInicio < ing.FechaInicio &&
                                                                     i.FechaInicio < ing.FechaFin &&
                                                                     i.FechaFin < ing.FechaInicio &&
-                                                                    i.FechaFin < ing.FechaFin) || 
-
+                                                                    i.FechaFin < ing.FechaFin) 
+                                                                    || 
                                                                     (i.FechaInicio > ing.FechaInicio &&
                                                                     i.FechaInicio > ing.FechaFin &&
                                                                     i.FechaFin > ing.FechaInicio &&
@@ -83,7 +83,7 @@ namespace Negocio.Repositorios
                                                               )
                         {
                             ing.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
-                            ing.Comentarios = "Parte del rango de fechas fue solicitado para ingreso. Verifique";
+                            ing.Comentarios = "Este rango de ingreso se intercepta con otro rango de ingreso ya existente. Verifique";
                         }
                         else
                         {
@@ -196,6 +196,38 @@ namespace Negocio.Repositorios
                     .OrderByDescending(o => o.Id)
                     .Take(30).ToList());
                 return ingresos;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<IngresoDTO>> ObtenerAutorizadosYPendientesxProveedor(int proveedorId)
+        {
+            try
+            {
+                List<IngresoDTO> ingresosAut =
+                    mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
+                    .Include(i => i.Proveedor)
+                    .Include(i => i.Funcionario)
+                    .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.AUTORIZADO.ToString() &&
+                                  ing.Proveedor.Id == proveedorId)
+                    .OrderByDescending(o => o.Id)
+                    .Take(30).ToList());
+
+
+             List<IngresoDTO> ingresosPend =
+              mapper.Map<List<Ingreso>, List<IngresoDTO>>(db.Ingresos
+                   .Include(i => i.Proveedor)
+                   .Include(i => i.Funcionario)
+                   .Where(ing => ing.EstadoAutorizacion == SD.TipoAutIng.PENDIENTE.ToString() &&
+                                 ing.Proveedor.Id == proveedorId)
+                   .OrderByDescending(o => o.Id).ToList());
+
+                ingresosPend.AddRange(ingresosAut);
+
+                return ingresosPend;
             }
             catch (Exception e)
             {

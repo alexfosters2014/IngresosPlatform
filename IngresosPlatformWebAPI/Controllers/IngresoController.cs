@@ -166,6 +166,16 @@ namespace IngresosPlatformWebAPI.Controllers
             return Ok(ingresos);
         }
 
+        [HttpGet("ingresosAutYPendxProveedor/{proveedorId:int}")]
+        public async Task<IActionResult> IngresosAutorizadosYPendientesXProveedor(int proveedorId)
+        {
+            List<IngresoDTO> ingresos = await ingresoRepositorio.ObtenerAutorizadosYPendientesxProveedor(proveedorId);
+            if (ingresos == null)
+            {
+                return BadRequest();
+            }
+            return Ok(ingresos);
+        }
 
 
     }
