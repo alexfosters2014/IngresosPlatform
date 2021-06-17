@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AccesoDatos.Data
 {
-    [Index(nameof(FechaInicio), nameof(FechaFin), nameof(FuncionarioId),IsUnique =true)]
+    //[Index(nameof(FechaInicio), nameof(FechaFin), nameof(FuncionarioId),IsUnique =true)]
     public class Ingreso
     {
         public int Id { get; set; }

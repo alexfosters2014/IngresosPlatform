@@ -63,11 +63,27 @@ namespace Negocio.Repositorios
                         db.Entry(ing.Proveedor).State = EntityState.Unchanged;
                         db.Entry(ing.Funcionario).State = EntityState.Unchanged;
 
-                        if (await db.IngresosDiarios.AnyAsync(t => t.Fecha >= ing.FechaInicio
-                         && t.Fecha < ing.FechaFin.AddDays(1) && t.Funcionario.Id == ing.Funcionario.Id))
+                        if (await db.IngresosDiarios.AnyAsync(t => t.Fecha.Date >= ing.FechaInicio.Date
+                         && t.Fecha.Date <= ing.FechaFin.Date && t.Funcionario.Id == ing.Funcionario.Id))
                         {
                             ing.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
                             ing.Comentarios = "Parte del rango de fechas solicitadas ya estan ingresadas. Verifique";
+                        }else if (await db.Ingresos.AnyAsync(i => i.Funcionario.Id == ing.Funcionario.Id &&
+                                                                   !(
+                                                                   (i.FechaInicio < ing.FechaInicio &&
+                                                                    i.FechaInicio < ing.FechaFin &&
+                                                                    i.FechaFin < ing.FechaInicio &&
+                                                                    i.FechaFin < ing.FechaFin) || 
+
+                                                                    (i.FechaInicio > ing.FechaInicio &&
+                                                                    i.FechaInicio > ing.FechaFin &&
+                                                                    i.FechaFin > ing.FechaInicio &&
+                                                                    i.FechaFin > ing.FechaFin))
+                                                                    )
+                                                              )
+                        {
+                            ing.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
+                            ing.Comentarios = "Parte del rango de fechas fue solicitado para ingreso. Verifique";
                         }
                         else
                         {

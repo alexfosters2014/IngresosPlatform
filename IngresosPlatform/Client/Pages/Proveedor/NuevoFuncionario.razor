@@ -25,7 +25,7 @@
                         <div class="row recuadro">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="rut">Nombre y apellido del funcionario*</label>
+                                    <label for="rut">Nombre y apellido del funcionario <span class="spanRojo">*</span></label>
                                     <InputText @bind-Value="funcionarioDTO.Nombre" id="rut" class="form-control" />
                                     <ValidationMessage For="@( () => funcionarioDTO.Nombre)" />
                                 </div>
@@ -36,14 +36,14 @@
                         <div class="row recuadro">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="cedula">Numero de Cedula*</label>
+                                    <label for="cedula">Numero de Cedula <span class="spanRojo">*</span></label>
                                     <InputText @bind-Value="funcionarioDTO.Cedula" id="cedula" class="form-control" />
                                     <ValidationMessage For="@( () => funcionarioDTO.Cedula)" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="vtoCedula">Vto. de Cedula*</label>
+                                    <label for="vtoCedula">Vto. de Cedula <span class="spanRojo">*</span></label>
                                     <InputDate @bind-Value="funcionarioDTO.VtoCedula" id="vtoCedula" class="form-control" />
                                     <ValidationMessage For="@( () => funcionarioDTO.VtoCedula)" />
                                 </div>
@@ -98,7 +98,7 @@
                         <div class="row recuadro">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="carnesalud">Vto. de carne de salud</label>
+                                    <label for="carnesalud">Vto. de carne de salud <span class="spanRojo">*</span></label>
                                     <InputDate @bind-Value="funcionarioDTO.VtoCarneSalud" id="carnesalud" class="form-control" />
                                     <ValidationMessage For="@( () => funcionarioDTO.VtoCarneSalud)" />
                                 </div>
@@ -144,7 +144,7 @@
                         <div class="row recuadro">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="altBps">Fecha de alta BPS</label>
+                                    <label for="altBps">Fecha de alta BPS <span class="spanRojo">*</span></label>
                                     <InputDate @bind-Value="funcionarioDTO.AltaBps" id="altBps" class="form-control" />
                                     <ValidationMessage For="@( () => funcionarioDTO.AltaBps)" />
                                 </div>
@@ -152,6 +152,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <input type="file" accept=".pdf" @ref="refAltaBPSEdit" @onchange="SubirPDF_PathAltaBPS" />
+                                    <ValidationMessage For="@( () => funcionarioDTO.PathAltaBps)" />
                                 </div>
                             </div>
                             <div class="col-12">

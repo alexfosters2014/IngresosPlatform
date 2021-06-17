@@ -70,7 +70,7 @@
             @foreach (TerciarizacionDTO ter in terciarizaciones)
             {
                 <tr>
-                    <td>@ter.Proveedor.RazonSocial</td>
+                    <td>@((proveedorSeleccionado == null) ? ter.Proveedor.RazonSocial : ter.Fecha.ToString("MM/yyyy"))</td>
                     <td><Indicador IndicadorIndividual="@ter.PathNomina" /></td>
                     <td><Indicador IndicadorIndividual="@ter.PathMtssUnificada" /></td>
                     <td><Indicador IndicadorIndividual="@ter.PathCertDgi" /></td>
@@ -115,126 +115,127 @@ else if (terciarizaciones != null && terciarizaciones.Count == 0)
             List<TerciarizacionDTO> terciarizaciones { get; set; } = null;
             UsuarioDTO usuarioDTO { get; set; } = null;
             List<ProveedorDTO> proveedoresDTO = null;
-    private bool confirmacion { get; set; } = false;
-        private bool cargar = false;
+            private bool confirmacion { get; set; } = false;
+            private bool cargar = false;
 
-        private DateTime desde = DateTime.Today.Date;
-        private DateTime hasta = DateTime.Today.Date;
-        private ProveedorDTO proveedorSeleccionado = null;
+            private DateTime desde = DateTime.Today.Date;
+            private DateTime hasta = DateTime.Today.Date;
+            private ProveedorDTO proveedorSeleccionado = null;
 
-        private string mousePointer = "auto";
-        private string valorOpacidad = "1";
+            private string mousePointer = "auto";
+            private string valorOpacidad = "1";
 
-        protected override async Task OnInitializedAsync()
-        {
-            await CargarTerciarizacion();
-        }
-
-        private async Task CargarTerciarizacion()
-        {
-            UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-            if (usuarioDTO != null)
+            protected override async Task OnInitializedAsync()
             {
-                proveedoresDTO = await serviceProveedor.ObtenerProveedores();
-            }
-            else
-            {
-                await js.MsgError("Hubo un error");
-            }
-        }
-        private async Task FiltrarTerciarizaciones()
-        {
-            cargar = true;
-            mousePointer = "none";
-            valorOpacidad = "0.5";
-            if (proveedorSeleccionado == null)
-            {
-                hasta = desde;
-                await CargarTerciarizacionProveedores();
-            }
-            else
-            {
-                await CargarTerciarizacionDeUnProveedor();
+                await CargarTerciarizacion();
             }
 
-        }
-        private async Task CargarTerciarizacionProveedores()
-        {
-            try
+            private async Task CargarTerciarizacion()
             {
-                terciarizaciones = await serviceTerciariza.ObtenerTodos(new VMGeneral() { FechaActual = desde });
-                cargar = false;
-                StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                await js.MsgError("Hubo un error");
-            }
-        }
-
-        private async Task CargarTerciarizacionDeUnProveedor()
-        {
-            try
-            {
-                if (desde > hasta)
+                UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+                if (usuarioDTO != null)
                 {
-                    await js.MsgError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'");
-                    return;
-                }
-                terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedorOperador(new VMGeneral()
-                {
-                    FechaActual = desde,
-                    FechaFin = hasta,
-                    ProveedorId = proveedorSeleccionado.Id
-                });
-
-                cargar = false;
-                StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                await js.MsgError("Hubo un error");
-            }
-        }
-
-        private async void OnChangeProveedor(ChangeEventArgs e)
-        {
-            try
-            {
-                int proId;
-                Int32.TryParse(e.Value.ToString(), out proId);
-                if (proId > 0)
-                {
-                    var buscarProveedor = proveedoresDTO.Where(pro => pro.Id == proId).Single();
-                    if (buscarProveedor != null)
-                    {
-                        proveedorSeleccionado = buscarProveedor;
-                    }
-                    else
-                    {
-                        await js.MsgError("Hubo un error");
-                    }
+                    proveedoresDTO = await serviceProveedor.ObtenerProveedores();
                 }
                 else
                 {
-                    proveedorSeleccionado = null;
-                    hasta = desde;
+                    await js.MsgError("Hubo un error");
                 }
             }
-            catch (Exception ex)
+            private async Task FiltrarTerciarizaciones()
             {
-                await js.MsgError("Hubo un error");
+                cargar = true;
+                mousePointer = "none";
+                valorOpacidad = "0.5";
+                if (proveedorSeleccionado == null)
+                {
+                    hasta = desde;
+                    await CargarTerciarizacionProveedores();
+                }
+                else
+                {
+                    await CargarTerciarizacionDeUnProveedor();
+                }
+
+            }
+            private async Task CargarTerciarizacionProveedores()
+            {
+                try
+                {
+                    terciarizaciones = await serviceTerciariza.ObtenerTodos(new VMGeneral() { FechaActual = desde });
+                    cargar = false;
+                    StateHasChanged();
+                }
+                catch (Exception ex)
+                {
+                    await js.MsgError("Hubo un error");
+                }
             }
 
-        }
+            private async Task CargarTerciarizacionDeUnProveedor()
+            {
+                try
+                {
+                    if (desde > hasta)
+                    {
+                        await js.MsgError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'");
+                        return;
+                    }
+                    terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedorOperador(new VMGeneral()
+                    {
+                        FechaActual = desde,
+                        FechaFin = hasta,
+                        ProveedorId = proveedorSeleccionado.Id
+                    });
 
-        private async Task OnCerrar()
-        {
-            terciarizaciones = null;
-            valorOpacidad = "1";
-            mousePointer = "auto";
+                    cargar = false;
+                    StateHasChanged();
+                }
+                catch (Exception ex)
+                {
+                    await js.MsgError("Hubo un error");
+                }
+            }
 
-            StateHasChanged();
-        }
+            private async void OnChangeProveedor(ChangeEventArgs e)
+            {
+                try
+                {
+                    int proId;
+                    Int32.TryParse(e.Value.ToString(), out proId);
+                    if (proId > 0)
+                    {
+                        var buscarProveedor = proveedoresDTO.Where(pro => pro.Id == proId).Single();
+                        if (buscarProveedor != null)
+                        {
+                            proveedorSeleccionado = buscarProveedor;
+                        }
+                        else
+                        {
+                            await js.MsgError("Hubo un error");
+                        }
+                    }
+                    else
+                    {
+                        proveedorSeleccionado = null;
+                        desde = DateTime.Today;
+                        hasta = DateTime.Today;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await js.MsgError("Hubo un error");
+                }
+
+            }
+
+            private async Task OnCerrar()
+            {
+                terciarizaciones = null;
+                valorOpacidad = "1";
+                mousePointer = "auto";
+
+                StateHasChanged();
+            }
 
         }

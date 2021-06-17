@@ -24,7 +24,7 @@
                                 }
                             </td>
                         </tr>
-                        @if (funcionarioDTO.CategoriaLibreta != null)
+                        @if (funcionarioDTO.CategoriaLibreta != null && funcionarioDTO.PathLibreta != null)
                         {
                             <tr>
                                 <td><LabelFull Titulo="Categoria libreta conducir" Dato="@funcionarioDTO.CategoriaLibreta" /></td>
@@ -46,25 +46,29 @@
                                 }
                             </td>
                         </tr>
-                        <tr>
-                            <td colspan="2"><LabelFull Titulo="Vencimiento carne de manipulacion de alimentos" Dato="@funcionarioDTO.VtoCMAlimentos.Value.ToString("dd/MM/yyyy")" /></td>
-                            <td>
-                                @if (funcionarioDTO.PathCMAlimentos.Length > 0)
-                                {
-                                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCMAlimentos))" @onclick:preventDefault><img class="botonPDFVisor" src="/img/archivopdf.png"></a>
-                                }
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><LabelFull Titulo="Fecha de alta BPS" Dato="@funcionarioDTO.AltaBps.Value.ToString("dd/MM/yyyy")" /></td>
-                            <td>
-                                @if (funcionarioDTO.PathAltaBps.Length > 0)
-                                {
-                                    <a href="" @onclick="(() => PopPage(funcionarioDTO.PathAltaBps))" @onclick:preventDefault><img class="botonPDFVisor" src="/img/archivopdf.png"></a>
-                                }
-                            </td>
-                        </tr>
-                    </tbody>
+                        @if (funcionarioDTO.VtoCMAlimentos != null && funcionarioDTO.PathCMAlimentos != null)
+                        {
+                            <tr>
+
+                                <td colspan="2"><LabelFull Titulo="Vencimiento carne de manipulacion de alimentos" Dato="@funcionarioDTO.VtoCMAlimentos.Value.ToString("dd/MM/yyyy")" /></td>
+                                <td>
+                                    @if (funcionarioDTO.PathCMAlimentos != null)
+                                    {
+                                        <a href="" @onclick="(() => PopPage(funcionarioDTO.PathCMAlimentos))" @onclick:preventDefault><img class="botonPDFVisor" src="/img/archivopdf.png"></a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                            <tr>
+                                <td colspan="2"><LabelFull Titulo="Fecha de alta BPS" Dato="@funcionarioDTO.AltaBps.Value.ToString("dd/MM/yyyy")" /></td>
+                                <td>
+                                    @if (funcionarioDTO.PathAltaBps.Length > 0)
+                                    {
+                                        <a href="" @onclick="(() => PopPage(funcionarioDTO.PathAltaBps))" @onclick:preventDefault><img class="botonPDFVisor" src="/img/archivopdf.png"></a>
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
                 </table>
             </div>
 
@@ -92,7 +96,6 @@
 
             private async Task CargaFuncionario()
             {
-                string sss = "";
                 funcionarioDTO = await serviceFuncionario.Obtener(funcionarioId);
 
             }

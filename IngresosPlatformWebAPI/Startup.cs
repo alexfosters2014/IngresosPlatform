@@ -33,11 +33,10 @@ namespace IngresosPlatformWebAPI
             {
                 options.AddPolicy(_MyCors, builder =>
                 {
-                    builder.WithOrigins("https://proingreso.azurewebsites.net")
+                    builder.WithOrigins("https://proingreso.azurewebsites.net", "http://localhost:31496")
                     .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
-
                 });
             });
             services.AddSignalR();
@@ -49,7 +48,7 @@ namespace IngresosPlatformWebAPI
             });
 
             services.AddDbContext<AplicacionDBContext>(options =>
-                       options.UseSqlServer(Configuration.GetConnectionString("ProduccionConnection")));
+                       options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();

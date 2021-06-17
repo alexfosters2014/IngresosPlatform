@@ -4,6 +4,10 @@
 table{
     border-radius:15px !important;
 }
+.spanRojo{
+    color:red;
+    font-weight:bold;
+}
 input[type="radio"] {
     width: 20px;
     height: 20px;
@@ -70,7 +74,7 @@ tr.colorFila{
 }
 .recuadroAutorizaciones {
     border: 1px solid;
-    border-color: rgb(220,227,200);
+    border-color: rgb(195,202,177);
     border-radius: 15px;
     box-shadow: 5px 7px 10px 0px rgba(15,15,15,0.17);
     -webkit-box-shadow: 5px 7px 10px 0px rgba(15,15,15,0.17);
