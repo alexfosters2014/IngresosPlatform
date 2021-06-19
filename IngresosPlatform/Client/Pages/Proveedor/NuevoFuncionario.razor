@@ -50,14 +50,15 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input type="file" accept=".pdf" @ref="refCedulaEdit" @onchange="SubirPDF_PathCedula" />
+                                    <label class="inputFile" for="pathcedula">Subir archivo <img src="/img/upload.png" class="imgUpload"/></label>
+                                    <input type="file" accept=".pdf" @ref="refCedulaEdit" @onchange="SubirPDF_PathCedula" name="pathcedula" id="pathcedula"/>
                                     <ValidationMessage For="@( () => funcionarioDTO.PathCedula)" />
                                 </div>
                             </div>
                             <div class="col-12">
                                 @if (!string.IsNullOrEmpty(funcionarioDTO.PathCedula))
                                 {
-                                    <a href="@funcionarioDTO.PathCedula" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                    <a href="@funcionarioDTO.PathCedula" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                                 }
                             </div>
                         </div>
@@ -81,14 +82,15 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input type="file" accept=".pdf" @ref="refLibretaEdit" @onchange="SubirPDF_PathLibreta" />
+                                    <label class="inputFile" for="pathlibreta">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                    <input type="file" accept=".pdf" @ref="refLibretaEdit" @onchange="SubirPDF_PathLibreta" name="pathlibreta" id="pathlibreta"/>
                                     <ValidationMessage For="@( () => funcionarioDTO.PathLibreta)" />
                                 </div>
                             </div>
                             <div class="col-12">
                                 @if (!string.IsNullOrEmpty(funcionarioDTO.PathLibreta))
                                 {
-                                    <a href="@funcionarioDTO.PathLibreta" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                    <a href="@funcionarioDTO.PathLibreta" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                                 }
                             </div>
                         </div>
@@ -105,14 +107,15 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input type="file" accept=".pdf" @ref="refCarneSaludEdit" @onchange="SubirPDF_PathCarneSalud" />
+                                    <label class="inputFile" for="pathcarnesalud">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                    <input type="file" accept=".pdf" @ref="refCarneSaludEdit" @onchange="SubirPDF_PathCarneSalud" name="pathcarnesalud" id="pathcarnesalud"/>
                                     <ValidationMessage For="@( () => funcionarioDTO.PathCarneSalud)" />
                                 </div>
                             </div>
                             <div class="col-12">
                                 @if (!string.IsNullOrEmpty(funcionarioDTO.PathCarneSalud))
                                 {
-                                    <a href="@funcionarioDTO.PathCarneSalud" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                    <a href="@funcionarioDTO.PathCarneSalud" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                                 }
                             </div>
                         </div>
@@ -128,13 +131,14 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input type="file" accept=".pdf" @ref="refCarneMAEdit" @onchange="SubirPDF_PathMA" />
+                                    <label class="inputFile" for="pathcma">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                    <input type="file" accept=".pdf" @ref="refCarneMAEdit" @onchange="SubirPDF_PathMA" name="pathcma" id="pathcma"/>
                                 </div>
                             </div>
                             <div class="col-12">
                                 @if (!string.IsNullOrEmpty(funcionarioDTO.PathCMAlimentos))
                                 {
-                                    <a href="@funcionarioDTO.PathCMAlimentos" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                    <a href="@funcionarioDTO.PathCMAlimentos" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                                 }
                             </div>
                         </div>
@@ -151,14 +155,15 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input type="file" accept=".pdf" @ref="refAltaBPSEdit" @onchange="SubirPDF_PathAltaBPS" />
+                                    <label class="inputFile" for="pathaltabps">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                    <input type="file" accept=".pdf" @ref="refAltaBPSEdit" @onchange="SubirPDF_PathAltaBPS" name="pathaltabps" id="pathaltabps"/>
                                     <ValidationMessage For="@( () => funcionarioDTO.PathAltaBps)" />
                                 </div>
                             </div>
                             <div class="col-12">
                                 @if (!string.IsNullOrEmpty(funcionarioDTO.PathAltaBps))
                                 {
-                                    <a href="@funcionarioDTO.PathAltaBps" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                    <a href="@funcionarioDTO.PathAltaBps" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                                 }
                             </div>
                         </div>
@@ -166,8 +171,8 @@
                         @if (!carga)
                         {
                             <div class="col text-center">
-                                <button type="submit" class="btn btn-primary">Agregar</button>
-                                <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+                                <button type="submit" class="btn btn-primary btn-lg">Agregar</button>
+                                <button type="button" class="btn btn-primary btn-lg" @onclick="Cancelar">Cancelar</button>
                             </div>
                         }
                     </EditForm>
@@ -215,7 +220,7 @@
                     await js.MsgError("No se pudo dar de alta al nuevo funcionario. Verifique si ya fue ingresado o si los datos estan correctos");
                     carga = false;
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Console.WriteLine($"Error recibido: {ex.Message}");
                 await js.MsgError("Hubo un error en la carga. Intente nuevamente");
@@ -227,7 +232,7 @@
             var file = (await fileReader.CreateReference(refCedulaEdit).EnumerateFilesAsync()).FirstOrDefault();
             if (file != null)
             {
-                string nuevaPath = await FileStream(file,funcionarioDTO.PathCedula);
+                string nuevaPath = await FileStream(file, funcionarioDTO.PathCedula);
                 if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathCedula = nuevaPath;
@@ -246,7 +251,7 @@
             var file = (await fileReader.CreateReference(refLibretaEdit).EnumerateFilesAsync()).FirstOrDefault();
             if (file != null)
             {
-                string nuevaPath = await FileStream(file,funcionarioDTO.PathLibreta);
+                string nuevaPath = await FileStream(file, funcionarioDTO.PathLibreta);
                 if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathLibreta = nuevaPath;
@@ -265,7 +270,7 @@
             var file = (await fileReader.CreateReference(refCarneSaludEdit).EnumerateFilesAsync()).FirstOrDefault();
             if (file != null)
             {
-                string nuevaPath = await FileStream(file,funcionarioDTO.PathCarneSalud);
+                string nuevaPath = await FileStream(file, funcionarioDTO.PathCarneSalud);
                 if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathCarneSalud = nuevaPath;
@@ -284,7 +289,7 @@
             var file = (await fileReader.CreateReference(refCarneMAEdit).EnumerateFilesAsync()).FirstOrDefault();
             if (file != null)
             {
-                string nuevaPath = await FileStream(file,funcionarioDTO.PathCMAlimentos);
+                string nuevaPath = await FileStream(file, funcionarioDTO.PathCMAlimentos);
                 if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathCMAlimentos = nuevaPath;
@@ -303,7 +308,7 @@
             var file = (await fileReader.CreateReference(refAltaBPSEdit).EnumerateFilesAsync()).FirstOrDefault();
             if (file != null)
             {
-                string nuevaPath = await FileStream(file,funcionarioDTO.PathAltaBps);
+                string nuevaPath = await FileStream(file, funcionarioDTO.PathAltaBps);
                 if (!string.IsNullOrEmpty(nuevaPath))
                 {
                     funcionarioDTO.PathAltaBps = nuevaPath;
@@ -321,7 +326,7 @@
         {
             nav.NavigateTo("/Funcionarios");
         }
-        private async Task<string> FileStream(IFileReference file,string pathAnterior)
+        private async Task<string> FileStream(IFileReference file, string pathAnterior)
         {
             //validar size menor a 2Mb
             if (file == null) return "";
@@ -329,7 +334,7 @@
             var fileInfo = await file.ReadFileInfoAsync();
             Stream fileStream = null;
 
-            double tamano = (fileInfo.Size)/1024/1024;
+            double tamano = (fileInfo.Size) / 1024 / 1024;
 
             if (tamano > 2)
             {
@@ -345,4 +350,6 @@
             fileStream.Dispose();
             return nuevaPath;
         }
+
+       
     }

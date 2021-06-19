@@ -10,6 +10,7 @@ namespace Modelo
     public class TerciarizacionDTO
     {
         public int Id { get; set; }
+        [Required(ErrorMessage ="Debe tener una fecha concreta")]
         public DateTime Fecha { get; set; }
         public string PathNomina { get; set; }
         public string PathMtssUnificada { get; set; }

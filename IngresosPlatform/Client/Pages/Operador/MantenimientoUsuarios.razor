@@ -28,11 +28,11 @@
                     <td><a href="" @onclick="(() => EliminarUsuario(usu.Id))" @onclick:preventDefault>Eliminar</a></td>
                 </tr>
             }
-            <tr>
-                <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoUsuario" /></td>
-            </tr>
         </tbody>
     </table>
+    <div class="d-flex justify-content-center">
+        <a href="" @onclick="NuevoUsuario" @onclick:preventDefault><img class="nuevoBoton colorFila" src="img/add.png" /></a>
+    </div>
 }
 else if (usuariosDTO != null && usuariosDTO.Count == 0)
 {
@@ -49,7 +49,7 @@ else if (usuariosDTO != null && usuariosDTO.Count == 0)
         </tbody>
     </table>
     <div class="d-flex justify-content-center">
-        <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoUsuario" /></td>
+        <a href="" @onclick="NuevoUsuario" @onclick:preventDefault><img class="nuevoBoton colorFila" src="img/add.png" /></a>
     </div>
 }
 else

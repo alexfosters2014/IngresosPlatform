@@ -39,7 +39,7 @@ namespace IngresosPlatformWebAPI.Controllers
             }
             string fileName = filePDF.FileName;
             string extension = Path.GetExtension(fileName);
-            string[] soloExtensiones = { ".pdf" };
+            string[] soloExtensiones = { ".pdf", ".zip"};
 
             if (!soloExtensiones.Contains(extension))
             {
