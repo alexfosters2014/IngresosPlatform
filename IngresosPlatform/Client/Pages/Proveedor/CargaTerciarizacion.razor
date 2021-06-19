@@ -24,11 +24,13 @@
         <section class="row">
             <div class="col-8">
                 <EditForm Model="terciarizaDTO" OnValidSubmit="CargarNuevaTerciarizacion">
+                    <DataAnnotationsValidator />
                     <div class="row recuadro">
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="fechaTerc">Fecha de carga*</label>
-                                <input type="month" @bind="terciarizaDTO.Fecha" id="fechaTerc" class="form-control" />
+                                <input type="month" @bind="terciarizaDTO.Fecha" name="fechaTerc" id="fechaTerc" class="form-control" />
+                                <ValidationMessage For="@( () => terciarizaDTO.Fecha)" />
                             </div>
                         </div>
                     </div>
@@ -44,13 +46,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refNomina" @onchange="SubirPDF_PathNomina" />
+                                <label class="inputFile" for="carganomina">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refNomina" @onchange="SubirPDF_PathNomina" name="carganomina" id="carganomina" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathNomina))
                             {
-                                <a href="@terciarizaDTO.PathNomina" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathNomina" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -66,13 +69,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refMtss" @onchange="SubirPDF_PathMtss" />
+                                <label class="inputFile" for="planillamtss">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refMtss" @onchange="SubirPDF_PathMtss" id="planillamtss" name="planillamtss" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathMtssUnificada))
                             {
-                                <a href="@terciarizaDTO.PathMtssUnificada" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathMtssUnificada" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -88,13 +92,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refCertDgi" @onchange="SubirPDF_PathCertDgi" />
+                                <label class="inputFile" for="certdgi">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refCertDgi" @onchange="SubirPDF_PathCertDgi" id="certdgi" name="certdgi" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathCertDgi))
                             {
-                                <a href="@terciarizaDTO.PathCertDgi" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathCertDgi" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -111,13 +116,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refCertBse" @onchange="SubirPDF_PathCertBse" />
+                                <label class="inputFile" for="certbse">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refCertBse" @onchange="SubirPDF_PathCertBse" id="certbse" name="certbse" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathCertBse))
                             {
-                                <a href="@terciarizaDTO.PathCertBse" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathCertBse" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -134,13 +140,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refCertBps" @onchange="SubirPDF_PathCertBps" />
+                                <label class="inputFile" for="certbps">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refCertBps" @onchange="SubirPDF_PathCertBps" id="certbps" name="certbps" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathCertBps))
                             {
-                                <a href="@terciarizaDTO.PathCertBps" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathCertBps" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -157,13 +164,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refPolizaSeguro" @onchange="SubirPDF_PathPolizaSeguro" />
+                                <label class="inputFile" for="polizaseguro">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refPolizaSeguro" @onchange="SubirPDF_PathPolizaSeguro" id="polizaseguro" name="polizaseguro" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathPolizaSeguro))
                             {
-                                <a href="@terciarizaDTO.PathPolizaSeguro" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathPolizaSeguro" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -179,13 +187,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refPolizaTerciariza" @onchange="SubirPDF_PathPolizaTerciariza" />
+                                <label class="inputFile" for="polizaterc">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refPolizaTerciariza" @onchange="SubirPDF_PathPolizaTerciariza" id="polizaterc" name="polizaterc" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathPolizaTerciarizacion))
                             {
-                                <a href="@terciarizaDTO.PathPolizaTerciarizacion" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathPolizaTerciarizacion" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -202,13 +211,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refPolizaRespSocial" @onchange="SubirPDF_PathPolizaRespSocial" />
+                                <label class="inputFile" for="polizarespsocial">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refPolizaRespSocial" @onchange="SubirPDF_PathPolizaRespSocial" id="polizarespsocial" name="polizarespsocial" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathRespSocial))
                             {
-                                <a href="@terciarizaDTO.PathRespSocial" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathRespSocial" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -223,13 +233,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refPagoBps" @onchange="SubirPDF_PathPagoBps" />
+                                <label class="inputFile" for="cargapagobps">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refPagoBps" @onchange="SubirPDF_PathPagoBps" id="cargapagobps" name="cargapagobps" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathPagoBps))
                             {
-                                <a href="@terciarizaDTO.PathPagoBps" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathPagoBps" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -245,13 +256,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refPagoBse" @onchange="SubirPDF_PathPagoBse" />
+                                <label class="inputFile" for="cargapagobse">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refPagoBse" @onchange="SubirPDF_PathPagoBse" id="cargapagobse" name="cargapagobse" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathPagoBse))
                             {
-                                <a href="@terciarizaDTO.PathPagoBse" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathPagoBse" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -269,13 +281,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refPagoDgi" @onchange="SubirPDF_PathPagoDgi" />
+                                <label class="inputFile" for="cargapagodgi">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refPagoDgi" @onchange="SubirPDF_PathPagoDgi" id="cargapagodgi" name="cargapagodgi" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathPagoDgi))
                             {
-                                <a href="@terciarizaDTO.PathPagoDgi" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathPagoDgi" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -291,13 +304,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refRecibosSueldos" @onchange="SubirPDF_PathRecibos" />
+                                <label class="inputFile" for="recsueldos">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refRecibosSueldos" @onchange="SubirPDF_PathRecibos" id="recsueldos" name="recsueldos" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathRecibosSueldo))
                             {
-                                <a href="@terciarizaDTO.PathRecibosSueldo" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathRecibosSueldo" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -312,13 +326,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refRafagas" @onchange="SubirPDF_PathRafagas" />
+                                <label class="inputFile" for="cargarafagas">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refRafagas" @onchange="SubirPDF_PathRafagas" id="cargarafagas" name="cargarafagas" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathRafagas))
                             {
-                                <a href="@terciarizaDTO.PathRafagas" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathRafagas" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -334,17 +349,18 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refOtros" @onchange="SubirPDF_PathOtros" />
+                                <label class="inputFile" for="otrosdocumentos">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refOtros" @onchange="SubirPDF_PathOtros" id="otrosdocumentos" name="otrosdocumentos" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(terciarizaDTO.PathOtrosDocumentos))
                             {
-                                <a href="@terciarizaDTO.PathOtrosDocumentos" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@terciarizaDTO.PathOtrosDocumentos" target="_blank"><img src="/img/documents.png" class="nuevoBoton" /></a>
                             }
                         </div>
                         <div class="col-12">
-                            <InputText @bind-Value="terciarizaDTO.Comentarios"  class="form-control" placeholder="Ingrese comentarios de la carga extra de documentos" />
+                            <InputText @bind-Value="terciarizaDTO.Comentarios" class="form-control" placeholder="Ingrese comentarios de la carga extra de documentos" />
                         </div>
                     </div>
                     <div class="divider"></div>
@@ -352,8 +368,8 @@
                     @if (!carga)
                     {
                         <div class="col text-center">
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                            <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+                            <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
+                            <button type="button" class="btn btn-primary btn-lg" @onclick="Cancelar">Cancelar</button>
                         </div>
                     }
                 </EditForm>
@@ -367,9 +383,8 @@
                 <Loading></Loading>
             }
         </section>
-
+        </div>
     </div>
-</div>
 
 
 @code {
@@ -420,6 +435,7 @@
         if (terciarizaDTO.Id == 0)
         {
             terciarizaDTO.Proveedor = usuarioDTO.Proveedor;
+            terciarizaDTO.Fecha = terciarizaDTO.Fecha.Date;
             resultado = await serviceTerciarizacion.Agregar(terciarizaDTO);
         }
         else
@@ -434,7 +450,7 @@
         }
         else
         {
-            await js.MsgError("No se pudo guardar en el sistema. Intente nuevamente");
+            await js.MsgError("No se pudo guardar en el sistema.Puede que este intentando ingresar un período ya ingresado. Intente nuevamente");
             carga = false;
         }
 
@@ -586,5 +602,6 @@
     {
         nav.NavigateTo("/Terciarizaciones");
     }
+   
 
 }

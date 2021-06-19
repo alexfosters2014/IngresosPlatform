@@ -9,119 +9,122 @@
     <h3>Mantenimiento de Funcionarios</h3>
 </div>
 
-    @if (funcionarios != null && funcionarios.Any())
-    {
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Cedula</th>
-                    <th scope="col">Funcionario</th>
-                    <th scope="col">Vto Cedula</th>
-                    <th scope="col">Vto Carne de Salud</th>
-                    <th scope="col">Vto C. Manipulación Alimentos</th>
-                    <th scope="col">Vto Libreta conducir</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (FuncionarioDTO fun in funcionarios)
-                {
-                    <tr>
-                        <td><img src="/img/indicadores/@fun.Indicador" alt="foto" class="indicadores" /></td>
-                        <td>@fun.Cedula</td>
-                        <td>@fun.Nombre</td>
-                        <td>@fun.VtoCedula.ToString("dd/MM/yyyy")</td>
-                        <td>@fun.VtoCarneSalud.Value.ToString("dd/MM/yyyy")</td>
-                        <td>@((fun.VtoCMAlimentos != null) ? @fun.VtoCMAlimentos.Value.ToString("dd/MM/yyyy") : "")</td>
-                        <td>@((fun.VtoLibreta != null) ? fun.VtoLibreta.Value.ToString("dd/MM/yyyy") : "")</td>
-                        <td>@((fun.Activo == true ) ? "Activo" : "No Activo")</td>
-                        @if (fun.Activo == true)
-                        {
-                            <td><a href="" @onclick="(() => Edicionfuncionario(fun.Id))" @onclick:preventDefault>Editar</a></td>
-                            <td><a href="" @onclick="(() => BajaFuncionario(fun.Id))" @onclick:preventDefault>Baja</a></td>
-                        }
-                    </tr>
-                }
-                <tr>
-                    <td colspan="15" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoFuncionario" /></td>
-                </tr>
-            </tbody>
-        </table>
-    }
-    else if (funcionarios != null && funcionarios.Count == 0)
-    {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Cedula</th>
-                    <th scope="col">Funcionario</th>
-                    <th scope="col">Vto Cedula</th>
-                    <th scope="col">Vto Carne de Salud</th>
-                    <th scope="col">Vto C. Manipulación Alimentos</th>
-                    <th scope="col">Vto Libreta conducir</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoFuncionario" /></td>
-                </tr>
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <Loading />
-    }
-
-    @code {
-
-        List<FuncionarioDTO> funcionarios { get; set; } = null;
-        private bool confirmacion { get; set; } = false;
-
-        protected override async Task OnInitializedAsync()
-        {
-            await CargarProveedores();
-            //por mientras lo inicializo
-
-        }
-
-        private async Task CargarProveedores()
-        {
-            UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-            if (usuarioDTO != null)
+@if (funcionarios != null && funcionarios.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Cedula</th>
+                <th scope="col">Funcionario</th>
+                <th scope="col">Vto Cedula</th>
+                <th scope="col">Vto Carne de Salud</th>
+                <th scope="col">Vto C. Manipulación Alimentos</th>
+                <th scope="col">Vto Libreta conducir</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (FuncionarioDTO fun in funcionarios)
             {
-                funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
+                <tr>
+                    <td><img src="/img/indicadores/@fun.Indicador" alt="foto" class="indicadores" /></td>
+                    <td>@fun.Cedula</td>
+                    <td>@fun.Nombre</td>
+                    <td>@fun.VtoCedula.ToString("dd/MM/yyyy")</td>
+                    <td>@fun.VtoCarneSalud.Value.ToString("dd/MM/yyyy")</td>
+                    <td>@((fun.VtoCMAlimentos != null) ? @fun.VtoCMAlimentos.Value.ToString("dd/MM/yyyy") : "")</td>
+                    <td>@((fun.VtoLibreta != null) ? fun.VtoLibreta.Value.ToString("dd/MM/yyyy") : "")</td>
+                    <td>@((fun.Activo == true ) ? "Activo" : "No Activo")</td>
+                    @if (fun.Activo == true)
+                    {
+                        <td><a href="" @onclick="(() => Edicionfuncionario(fun.Id))" @onclick:preventDefault>Editar</a></td>
+                        <td><a href="" @onclick="(() => BajaFuncionario(fun.Id))" @onclick:preventDefault>Baja</a></td>
+                    }
+                </tr>
             }
-            else
-            {
-                //mensaje de error
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <a href="" @onclick="NuevoFuncionario" @onclick:preventDefault><img class="nuevoBoton colorFila" src="img/add.png" /></a>
+    </div>
+}
+else if (funcionarios != null && funcionarios.Count == 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Cedula</th>
+                <th scope="col">Funcionario</th>
+                <th scope="col">Vto Cedula</th>
+                <th scope="col">Vto Carne de Salud</th>
+                <th scope="col">Vto C. Manipulación Alimentos</th>
+                <th scope="col">Vto Libreta conducir</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="7" align="center"><img class="nuevoBoton colorFila" src="img/add.png" @onclick="NuevoFuncionario" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <a href="" @onclick="NuevoFuncionario" @onclick:preventDefault><img class="nuevoBoton colorFila" src="img/add.png" /></a>
+    </div>
+}
+else
+{
+    <Loading />
+}
 
-            }
-        }
-        private void NuevoFuncionario()
-        {
-            nav.NavigateTo("/Funcionarios/Nuevo");
-        }
+@code {
 
-        private async Task BajaFuncionario(int funcionarioId)
-        {
-            confirmacion = await js.MsgConfirmacion("Desea dar de baja al funcionario seleccionado?");
-            if (confirmacion)
-            {
-                nav.NavigateTo($"/Funcionarios/Baja/{funcionarioId}");
-            }
-        }
+    List<FuncionarioDTO> funcionarios { get; set; } = null;
+    private bool confirmacion { get; set; } = false;
 
-        private async Task Edicionfuncionario(int funcionarioId)
-        {
-            nav.NavigateTo($"/Funcionarios/Editar/{funcionarioId}");
-        }
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProveedores();
+        //por mientras lo inicializo
 
     }
+
+    private async Task CargarProveedores()
+    {
+        UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        if (usuarioDTO != null)
+        {
+            funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
+        }
+        else
+        {
+            //mensaje de error
+
+        }
+    }
+    private void NuevoFuncionario()
+    {
+        nav.NavigateTo("/Funcionarios/Nuevo");
+    }
+
+    private async Task BajaFuncionario(int funcionarioId)
+    {
+        confirmacion = await js.MsgConfirmacion("Desea dar de baja al funcionario seleccionado?");
+        if (confirmacion)
+        {
+            nav.NavigateTo($"/Funcionarios/Baja/{funcionarioId}");
+        }
+    }
+
+    private async Task Edicionfuncionario(int funcionarioId)
+    {
+        nav.NavigateTo($"/Funcionarios/Editar/{funcionarioId}");
+    }
+
+}

@@ -19,7 +19,7 @@
             </div>
         </section>
         <section class="row">
-            <div class="col-6">
+            <div class="col-8">
                 <EditForm Model="funcionarioDTO" OnValidSubmit="EditarFuncionario">
                     <DataAnnotationsValidator />
                     <div class="row recuadro">
@@ -50,14 +50,15 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refCedula" @onchange="SubirPDF_PathCedula" />
+                                <label class="inputFile" for="pathcedulaedit">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refCedula" @onchange="SubirPDF_PathCedula" id="pathcedulaedit" name="pathcedulaedit"/>
                                 <ValidationMessage For="@( () => funcionarioDTO.PathCedula)" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(funcionarioDTO.PathCedula))
                             {
-                                <a href="@funcionarioDTO.PathCedula" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@funcionarioDTO.PathCedula" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -81,14 +82,15 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refLibreta" @onchange="SubirPDF_PathLibreta" />
+                                <label class="inputFile" for="pathlibretaedit">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refLibreta" @onchange="SubirPDF_PathLibreta" id="pathlibretaedit" name="pathlibretaedit"/>
                                 <ValidationMessage For="@( () => funcionarioDTO.PathLibreta)" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(funcionarioDTO.PathLibreta))
                             {
-                                <a href="@funcionarioDTO.PathLibreta" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@funcionarioDTO.PathLibreta" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -105,14 +107,15 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refCarneSalud" @onchange="SubirPDF_PathCarneSalud" />
+                                <label class="inputFile" for="pathcarnesaludedit">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refCarneSalud" @onchange="SubirPDF_PathCarneSalud" id="pathcarnesaludedit" name="pathcarnesaludedit"/>
                                 <ValidationMessage For="@( () => funcionarioDTO.PathCarneSalud)" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(funcionarioDTO.PathCarneSalud))
                             {
-                                <a href="@funcionarioDTO.PathCarneSalud" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@funcionarioDTO.PathCarneSalud" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -129,14 +132,15 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refCarneMA" @onchange="SubirPDF_PathMA" />
+                                <label class="inputFile" for="pathcmaedit">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refCarneMA" @onchange="SubirPDF_PathMA" id="pathcmaedit" name="pathcmaedit"/>
                                 <ValidationMessage For="@( () => funcionarioDTO.PathCMAlimentos)" />
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(funcionarioDTO.PathCMAlimentos))
                             {
-                                <a href="@funcionarioDTO.PathCMAlimentos" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@funcionarioDTO.PathCMAlimentos" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -153,13 +157,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="file" accept=".pdf" @ref="refAltaBPS" @onchange="SubirPDF_PathAltaBPS" />
+                                <label class="inputFile" for="pathaltabpsedit">Subir archivo <img src="/img/upload.png" class="imgUpload" /></label>
+                                <input type="file" accept=".pdf, .zip" @ref="refAltaBPS" @onchange="SubirPDF_PathAltaBPS" id="pathaltabpsedit" name="pathaltabpsedit"/>
                             </div>
                         </div>
                         <div class="col-12">
                             @if (!string.IsNullOrEmpty(funcionarioDTO.PathAltaBps))
                             {
-                                <a href="@funcionarioDTO.PathAltaBps" target="_blank"><img src="/img/archivopdf.png" class="nuevoBoton" /></a>
+                                <a href="@funcionarioDTO.PathAltaBps" target="_blank"><img src="/img/pdf.png" class="nuevoBoton" /></a>
                             }
                         </div>
                     </div>
@@ -167,8 +172,8 @@
                     @if (!carga)
                     {
                         <div class="col text-center">
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                            <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+                            <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
+                            <button type="button" class="btn btn-primary btn-lg" @onclick="Cancelar">Cancelar</button>
                         </div>
                     }
                 </EditForm>

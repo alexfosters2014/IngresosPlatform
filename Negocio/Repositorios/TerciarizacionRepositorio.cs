@@ -50,6 +50,10 @@ namespace Negocio.Repositorios
         {
             try
             {
+                Terciarizacion busqueda = await db.Terciarizaciones.FirstOrDefaultAsync(s => s.Fecha.Date == terciarizacionDTO.Fecha.Date &&
+                                                                                    s.Proveedor.Id == terciarizacionDTO.Proveedor.Id);
+
+                if (busqueda == null) { 
                 Terciarizacion terciarizacion = mapper.Map<TerciarizacionDTO, Terciarizacion>(terciarizacionDTO);
 
                 Proveedor pro = await db.Proveedores.FindAsync(terciarizacion.Proveedor.Id);
@@ -59,6 +63,11 @@ namespace Negocio.Repositorios
                 var addTerciarizacion = await db.Terciarizaciones.AddAsync(terciarizacion);
                 await db.SaveChangesAsync();
                 return mapper.Map<Terciarizacion, TerciarizacionDTO>(addTerciarizacion.Entity);
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception e)
             {
