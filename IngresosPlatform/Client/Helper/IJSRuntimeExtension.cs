@@ -40,6 +40,9 @@ namespace IngresosPlatform.Client.Helper
         {
             await js.InvokeAsync<object>("saveAsFile", fileName, Convert.ToBase64String(fileByte));
         }
-
+        public static async ValueTask DeshabilitarComponente(this IJSRuntime js, string componenteId, bool valorBooleano)
+        {
+            await js.InvokeVoidAsync("DeshabilitarComponente", componenteId, valorBooleano );
+        }
     }
 }

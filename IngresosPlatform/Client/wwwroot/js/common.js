@@ -1,4 +1,8 @@
-﻿function MsgSuccess(mensaje) {
+﻿function DeshabilitarComponente(stringId, disabledBool) {
+    document.getElementById(stringId).disabled = disabledBool;
+}
+
+function MsgSuccess(mensaje) {
     return new Promise(resolve => {
         Swal.fire({
             title: "Exitoso",

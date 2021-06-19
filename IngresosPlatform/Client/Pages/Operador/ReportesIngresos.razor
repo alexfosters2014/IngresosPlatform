@@ -14,16 +14,13 @@
 <div class="d-flex justify-content-center" style="pointer-events: @mousePointer; opacity: @valorOpacidad;">
     <section class="recuadroPorteria">
         <div class="row ml-5">
-            @if (tipoFecha != SD.TipoFecha.PLANIFICADA.ToString())
-            {
-                <div class="col">
+            <div class="col">
                     <label>Desde</label>
-                    <input type="date" @bind="desde" class="form-control" max="@maxFecha.ToString("yyyy-MM-dd")" min="@minFecha.ToString("yyyy-MM-dd")"/>
+                    <input type="date" id="desde" @bind="desde" class="form-control" max="@maxFecha.ToString("yyyy-MM-dd")" min="@minFecha.ToString("yyyy-MM-dd")"/>
                 </div>
-            }
             <div class="col">
                 <label>Hasta</label>
-                <input type="date" @bind="hasta" class="form-control" max="@maxFecha.ToString("yyyy-MM-dd")" min="@minFecha.ToString("yyyy-MM-dd")"/>
+                <input type="date" id="hasta" @bind="hasta" class="form-control" max="@maxFecha.ToString("yyyy-MM-dd")" min="@minFecha.ToString("yyyy-MM-dd")"/>
             </div>
 
             <div class="col">
@@ -122,6 +119,7 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
 
     private async Task CargarTerciarizacion()
     {
+
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         if (usuarioDTO != null)
         {
@@ -131,6 +129,13 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
         {
             await js.MsgError("Hubo un error");
         }
+    }
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            {
+                 await js.DeshabilitarComponente("hasta", true);
+            }
     }
 
     private async Task Exportar()
@@ -257,6 +262,8 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
                 tipoFecha = valor;
                 if (tipoFecha == SD.TipoFecha.EFECTIVA.ToString())
                 {
+                    await js.DeshabilitarComponente("desde", false);
+                    await js.DeshabilitarComponente("hasta", true);
                     desde = DateTime.Today.Date;
                     hasta = DateTime.Today.Date;
                     minFecha = DateTime.Today.Date.AddYears(-20);
@@ -265,6 +272,8 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
                 else
                 {
                     desde = DateTime.Today.Date;
+                    await js.DeshabilitarComponente("desde", true);
+                    await js.DeshabilitarComponente("hasta", false);
                     minFecha = DateTime.Today.Date;
                     maxFecha = DateTime.Today.AddYears(5);
                 }

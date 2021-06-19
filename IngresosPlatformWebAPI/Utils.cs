@@ -108,8 +108,8 @@ namespace IngresosPlatformWebAPI
 
                     if (reporte.TipoFecha == SD.TipoFecha.EFECTIVA.ToString())
                     {
-                        worksheet.Cells[fila, 4].Value = ing.EntradaEfectiva.Value.ToString("HH:mm");
-                        worksheet.Cells[fila, 5].Value = ing.SalidaEfectiva.Value.ToString("HH:mm");
+                        worksheet.Cells[fila, 4].Value = (ing.EntradaEfectiva != null ? ing.EntradaEfectiva.Value.ToString("HH:mm") : "sin marca");
+                        worksheet.Cells[fila, 5].Value = (ing.SalidaEfectiva != null ? ing.SalidaEfectiva.Value.ToString("HH:mm") : "sin marca");
                     }
                     else if (reporte.TipoFecha == SD.TipoFecha.PLANIFICADA.ToString())
                     {
