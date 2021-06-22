@@ -118,12 +118,14 @@ else if (carga)
     UsuarioDTO usuarioDTO { get; set; } = null;
     bool carga = false;
     private DateTime maxFecha = DateTime.Today.Date;
+    private string token;
 
     protected async override Task OnInitializedAsync()
     {
         try
         {
             usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+            token = await localStorage.GetItemAsync<string>(SD.LocalToken);
 
             if (usuarioDTO == null && usuarioDTO.TipoUsuario != SD.TipoUsuario.OperadorIngPlt.ToString())
             {
@@ -154,7 +156,7 @@ else if (carga)
     private async Task CargaInicial()
     {
         carga = true;
-        ingresosXProveedor = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMGeneral() { FechaActual = hoy });
+        ingresosXProveedor = await serviceIngresoDiario.ObtenerSinMarcaciones(new VMGeneral() { FechaActual = hoy },token);
         StateHasChanged();
     }
     private async Task Actulizar()
@@ -178,7 +180,7 @@ else if (carga)
         if (confirmacion)
         {
             ingD.EntradaEfectiva = DateTime.Now;
-            var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD);
+            var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD, token);
             if (ing == null)
             {
                 await js.MsgError("Hubo un error. No se pudo marcar la entrada. Verifique su conexion a internet");
@@ -200,7 +202,7 @@ else if (carga)
             if (confirmacion)
             {
                 ingD.SalidaEfectiva = DateTime.Now;
-                var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD);
+                var ing = await serviceIngresoDiario.ActualizarMarcacion(ingD, token);
                 if (ing == null)
                 {
                     await js.MsgError("Hubo un error. No se pudo marcar la salida. Verifique su conexion a internet");

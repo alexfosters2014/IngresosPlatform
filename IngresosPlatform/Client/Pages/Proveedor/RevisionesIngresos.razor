@@ -54,6 +54,7 @@
             List<IngresoDTO> ingresosDTO { get; set; } = null;
             UsuarioDTO usuarioDTO { get; set; } = null;
             bool confirmacion;
+            private string token;
 
             protected override async Task OnInitializedAsync()
             {
@@ -63,9 +64,11 @@
             private async Task CargarRechazados()
             {
                 usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+                token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+
                 if (usuarioDTO != null)
                 {
-                    ingresosDTO = await serviceIngreso.ObtenerIngresosNoAutXProveedor(usuarioDTO.Proveedor.Id);
+                    ingresosDTO = await serviceIngreso.ObtenerIngresosNoAutXProveedor(usuarioDTO.Proveedor.Id,token);
                 }
                 else
                 {

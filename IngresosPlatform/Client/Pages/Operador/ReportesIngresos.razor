@@ -94,6 +94,7 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
     List<IngresoDiarioxProveedor> ingresosDiarios { get; set; } = null;
     UsuarioDTO usuarioDTO { get; set; } = null;
     List<ProveedorDTO> proveedoresDTO = null;
+    private string token;
 
     private DateTime maxFecha = DateTime.Today.Date;
     private DateTime minFecha = DateTime.Today.Date.AddYears(-20);
@@ -121,9 +122,11 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
     {
 
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+
         if (usuarioDTO != null)
         {
-            proveedoresDTO = await serviceProveedor.ObtenerProveedores();
+            proveedoresDTO = await serviceProveedor.ObtenerProveedores(token);
         }
         else
         {
@@ -133,9 +136,9 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            {
-                 await js.DeshabilitarComponente("hasta", true);
-            }
+        {
+            await js.DeshabilitarComponente("hasta", true);
+        }
     }
 
     private async Task Exportar()
@@ -150,7 +153,7 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
                 nombreArchivo= $"Reporte de Ingresos {tipoReporte} del {desde.ToString("dd-MM-yyyy")} al {hasta.ToString("dd-MM-yyyy")}.xlsx",
                 IngresosXProveedores = ingresosDiarios
             };
-            var descargaExcel = await serviceArchivo.DescargarExcel(reporte);
+            var descargaExcel = await serviceArchivo.DescargarExcel(reporte, token);
             await js.DescargarExcel(reporte.nombreArchivo, descargaExcel);
             cargar = false;
         }
@@ -188,7 +191,7 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
             FechaActual = desde.Date,
             FechaFin = hasta.Date,
             ProveedorId = ((proveedorSeleccionado != null) ? proveedorSeleccionado.Id : 0)
-        });
+        },token);
         cargar = false;
         if (resultado != null)
         {
@@ -207,7 +210,7 @@ else if (ingresosDiarios != null && ingresosDiarios.Count == 0)
             FechaActual = desde.Date,
             FechaFin = hasta.Date,
             ProveedorId = ((proveedorSeleccionado != null) ? proveedorSeleccionado.Id : 0)
-        });
+        },token);
         cargar = false;
         if (resultado != null)
         {

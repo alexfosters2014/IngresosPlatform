@@ -2,6 +2,8 @@
 @layout EmptyLayout
 @inject IJSRuntime js
 @inject IServiceFuncionario serviceFuncionario
+@inject ILocalStorageService localStorage
+
     <div class="d-flex justify-content-center">
         <h4>Visor Funcionario</h4>
     </div>
@@ -77,7 +79,7 @@
         @code {
             [Parameter]
             public int funcionarioId { get; set; }
-
+            private string token;
             private FuncionarioDTO funcionarioDTO = null;
 
             async Task PopPage(string url)
@@ -96,7 +98,8 @@
 
             private async Task CargaFuncionario()
             {
-                funcionarioDTO = await serviceFuncionario.Obtener(funcionarioId);
+                token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+                funcionarioDTO = await serviceFuncionario.Obtener(funcionarioId,token);
 
             }
         }

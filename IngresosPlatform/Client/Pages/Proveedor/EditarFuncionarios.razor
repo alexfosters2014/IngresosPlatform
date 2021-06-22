@@ -193,6 +193,7 @@
         @code {
             [Parameter]
             public int? funcionarioId { get; set; }
+            private string token;
 
             private bool carga = false;
 
@@ -216,9 +217,10 @@
 
             public async Task CargarFunconarios()
             {
+                token = await localStorage.GetItemAsync<string>(SD.LocalToken);
                 if (funcionarioId != null)
                 {
-                    var resultado = await serviceFuncionario.Obtener(funcionarioId);
+                    var resultado = await serviceFuncionario.Obtener(funcionarioId,token);
 
                     if (resultado == null)
                     {
@@ -243,7 +245,7 @@
             public async Task EditarFuncionario()
             {
                 carga = true;
-                var resultado = await serviceFuncionario.Actualizar(funcionarioDTO);
+                var resultado = await serviceFuncionario.Actualizar(funcionarioDTO, token);
 
                 if (resultado == null)
                 {
@@ -362,7 +364,7 @@
                 {
                     fileStream = new MemoryStream(ms.ToArray());
                 }
-                string nuevaPath = await serviceArchivo.ActualizarArchivo(fileStream, fileInfo.Name, patAnterior);
+                string nuevaPath = await serviceArchivo.ActualizarArchivo(fileStream, fileInfo.Name, patAnterior, token);
                 fileStream.Dispose();
                 return nuevaPath;
             }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
@@ -17,24 +18,27 @@ namespace IngresosPlatform.Client.Services
         {
             httpClient = _httpClient;
         }
-        public async Task<IngresoDTO> ActualizarIngreso(IngresoDTO ingresoDTO)
+        public async Task<IngresoDTO> ActualizarIngreso(IngresoDTO ingresoDTO, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.PostAsJsonAsync("/api/Ingreso/Actualizar", ingresoDTO);
                 var content = await response.Content.ReadAsStringAsync();
                 var ingresoActualizado = JsonConvert.DeserializeObject<IngresoDTO>(content);
                 return ingresoActualizado;
         }
 
-        public async Task<string> AgregarIngresos(List<IngresoDTO> ingresosDTO)
+        public async Task<string> AgregarIngresos(List<IngresoDTO> ingresosDTO,string token)
         {
-                var response = await httpClient.PostAsJsonAsync("/api/Ingreso", ingresosDTO);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await httpClient.PostAsJsonAsync("/api/Ingreso", ingresosDTO);
                 var content = await response.Content.ReadAsStringAsync();
                 //var ingresosNuevos = JsonConvert.DeserializeObject<string>(content);
                 return content;
         }
 
-        public async Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion)
+        public async Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.GetAsync($"/api/Ingreso/estado/{ingresoId}/{estadoAutorizacion}");
             if (response.IsSuccessStatusCode)
             {
@@ -50,8 +54,9 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<int> EliminarIngreso(int IngresoId)
+        public async Task<int> EliminarIngreso(int IngresoId, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.DeleteAsync($"/api/Ingreso/{IngresoId}");
 
             if (response.IsSuccessStatusCode)
@@ -64,10 +69,11 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<IngresoDTO> ObtenerIngreso(int? ingresoId)
+        public async Task<IngresoDTO> ObtenerIngreso(int? ingresoId, string token)
         {
             if (ingresoId != null)
             {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await httpClient.GetAsync($"api/Ingreso/{ingresoId.Value}");
                 if (response != null)
                 {
@@ -86,18 +92,20 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<IngresoXProveedorDTO>> ObtenerIngresosPendientes()
+        public async Task<List<IngresoXProveedorDTO>> ObtenerIngresosPendientes(string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.GetAsync("api/Ingreso/");
             var content = await response.Content.ReadAsStringAsync();
             var ingresoss = JsonConvert.DeserializeObject<List<IngresoXProveedorDTO>>(content);
             return ingresoss;
         }
 
-        public async Task<List<IngresoDTO>> ObtenerIngresosNoAutXProveedor(int? proveedorId)
+        public async Task<List<IngresoDTO>> ObtenerIngresosNoAutXProveedor(int? proveedorId, string token)
         {
             if (proveedorId != null)
             {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await httpClient.GetAsync($"api/Ingreso/ingresosNoAutorizadosxProveedor/{proveedorId.Value}");
                 if (response.IsSuccessStatusCode)
                 {
@@ -116,10 +124,11 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<IngresoDTO>> ObtenerIngresosAutXProveedor(int? proveedorId)
+        public async Task<List<IngresoDTO>> ObtenerIngresosAutXProveedor(int? proveedorId, string token)
         {
             if (proveedorId != null)
             {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await httpClient.GetAsync($"api/Ingreso/ingresosAutorizadosxProveedor/{proveedorId.Value}");
                 if (response.IsSuccessStatusCode)
                 {
@@ -138,10 +147,11 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<IngresoDTO>> ObtenerIngAutYPendXProveedor(int? proveedorId)
+        public async Task<List<IngresoDTO>> ObtenerIngAutYPendXProveedor(int? proveedorId, string token)
         {
             if (proveedorId != null)
             {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await httpClient.GetAsync($"api/Ingreso/ingresosAutYPendxProveedor/{proveedorId.Value}");
                 if (response.IsSuccessStatusCode)
                 {

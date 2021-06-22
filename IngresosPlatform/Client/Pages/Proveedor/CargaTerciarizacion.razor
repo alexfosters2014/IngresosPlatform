@@ -392,6 +392,7 @@
     TerciarizacionDTO terciarizaDTO { get; set; } = new TerciarizacionDTO() { Fecha = DateTime.Today };
     bool carga = false;
     UsuarioDTO usuarioDTO = null;
+    private string token;
 
     [Parameter]
     public int tercId { get; set; }
@@ -416,9 +417,10 @@
         try
         {
             usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+            token = await localStorage.GetItemAsync<string>(SD.LocalToken);
             if (tercId > 0)
             {
-                terciarizaDTO = await serviceTerciarizacion.ObtenerIndividual(tercId);
+                terciarizaDTO = await serviceTerciarizacion.ObtenerIndividual(tercId,token);
             }
         }
         catch (Exception e)
@@ -436,11 +438,11 @@
         {
             terciarizaDTO.Proveedor = usuarioDTO.Proveedor;
             terciarizaDTO.Fecha = terciarizaDTO.Fecha.Date;
-            resultado = await serviceTerciarizacion.Agregar(terciarizaDTO);
+            resultado = await serviceTerciarizacion.Agregar(terciarizaDTO, token);
         }
         else
         {
-            resultado = await serviceTerciarizacion.Actualizar(terciarizaDTO);
+            resultado = await serviceTerciarizacion.Actualizar(terciarizaDTO,token);
         }
 
         if (resultado != null)
@@ -593,7 +595,7 @@
         {
             fileStream = new MemoryStream(ms.ToArray());
         }
-        string nuevaPath = await serviceArchivo.ActualizarArchivo(fileStream, fileInfo.Name, pathAnterior);
+        string nuevaPath = await serviceArchivo.ActualizarArchivo(fileStream, fileInfo.Name, pathAnterior,token);
         fileStream.Dispose();
         return nuevaPath;
     }
@@ -602,6 +604,6 @@
     {
         nav.NavigateTo("/Terciarizaciones");
     }
-   
+
 
 }

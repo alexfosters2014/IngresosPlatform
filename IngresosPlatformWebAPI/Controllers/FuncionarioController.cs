@@ -1,4 +1,5 @@
 ﻿using Comun;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelo;
 using Negocio.Repositorios;
@@ -11,6 +12,7 @@ namespace IngresosPlatformWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class FuncionarioController : Controller
     {
         private readonly IFuncionarioRepositorio funcionarioRepositorio;

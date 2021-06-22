@@ -8,10 +8,10 @@ namespace IngresosPlatform.Client.Services
 {
     public interface IServiceProveedor
     {
-        public Task<ProveedorDTO> AgregarProveedor(ProveedorDTO proveedor);
-        public Task<ProveedorDTO> ActualizarProveedor(ProveedorDTO proveedorDTO);
-        public Task<ProveedorDTO> ObtenerProveedor(int? proveedorId);
-        public Task<List<ProveedorDTO>> ObtenerProveedores();
-        public Task<int> EliminarProveedor(int proveedorId);
+        public Task<ProveedorDTO> AgregarProveedor(ProveedorDTO proveedor, string token);
+        public Task<ProveedorDTO> ActualizarProveedor(ProveedorDTO proveedorDTO, string token);
+        public Task<ProveedorDTO> ObtenerProveedor(int? proveedorId, string token);
+        public Task<List<ProveedorDTO>> ObtenerProveedores(string token);
+        public Task<int> EliminarProveedor(int proveedorId, string token);
     }
 }

@@ -1,13 +1,14 @@
 ﻿@page "/Ingresos/Baja/{ingresoId:int}"
 @inject IServiceIngreso serviceIngreso
 @inject NavigationManager nav
-
+@inject ILocalStorageService localStorage
 
 <Loading />
 
 @code {
     [Parameter]
     public int ingresoId { get; set; }
+    private string token;
 
     protected override void OnInitialized()
     {
@@ -22,7 +23,8 @@
 
     public async void BajaIngresoporId()
     {
-        int resultado = await serviceIngreso.EliminarIngreso(ingresoId);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+        int resultado = await serviceIngreso.EliminarIngreso(ingresoId, token);
 
         if (resultado > 0)
         {

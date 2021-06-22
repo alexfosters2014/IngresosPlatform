@@ -1,13 +1,14 @@
 ﻿@page "/Usuarios/Eliminar/{usuarioId:int}"
 @inject IServiceUsuario serviceUsuario;
 @inject NavigationManager nav
-
+@inject ILocalStorageService localStorage
 
 <Loading />
 
 @code {
     [Parameter]
     public int usuarioId { get; set; }
+    private UsuarioDTO usuario;
 
     protected override void OnInitialized()
     {
@@ -22,8 +23,15 @@
 
     public async void EliminarUsuarioSel()
     {
-        int usuarioEliminado = await serviceUsuario.EliminarUsuario(usuarioId);
-     
+        usuario = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        if (usuario == null)
+        {
+            nav.NavigateTo("/", true);
+        }
+        else
+        {
+            int usuarioEliminado = await serviceUsuario.EliminarUsuario(usuarioId,usuario.Token);
+
             if (usuarioEliminado != 0)
             {
                 nav.NavigateTo("/Usuarios", true);
@@ -33,5 +41,9 @@
                 Console.WriteLine("error");
             }
         }
+
     }
+
+
+}
 }

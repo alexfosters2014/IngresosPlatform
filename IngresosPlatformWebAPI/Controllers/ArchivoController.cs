@@ -1,4 +1,5 @@
 ﻿using Comun;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace IngresosPlatformWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ArchivoController : Controller
     {
         private readonly IWebHostEnvironment environment;

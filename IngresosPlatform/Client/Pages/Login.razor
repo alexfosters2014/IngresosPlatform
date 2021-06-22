@@ -62,6 +62,7 @@
                 if (usuarioDTO != null)
                 {
                     await localStorage.SetItemAsync(SD.LocalUsuario, usuarioDTO);
+                    await localStorage.SetItemAsync(SD.LocalToken, usuarioDTO.Token);
 
                     if (vmLogin.Password.Length > 20)
                     {

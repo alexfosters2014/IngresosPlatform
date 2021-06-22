@@ -1,54 +1,67 @@
 ﻿@page "/Autorizaciones"
 @inject IServiceIngreso serviceIngreso
 @inject NavigationManager nav
-    <div class="d-flex justify-content-center">
-        <h3>Monitor de Autorizaciones</h3>
-    </div>
-        <div class="d-flex flex-row-reverse">
-            <img src="/img/actualizar.png" class="botonPDFVisor" @onclick="Refrescar" />
-        </div>
+@inject ILocalStorageService localStorage
 
-        @if (ingresosXProv != null && ingresosXProv.Any())
+<div class="d-flex justify-content-center">
+    <h3>Monitor de Autorizaciones</h3>
+</div>
+<div class="d-flex flex-row-reverse">
+    <img src="/img/actualizar.png" class="botonPDFVisor" @onclick="Refrescar" />
+</div>
+
+@if (ingresosXProv != null && ingresosXProv.Any())
+{
+    @foreach (IngresoXProveedorDTO ing in ingresosXProv)
+    {
+        <ContenedorIngreso token="@usuarioDTO.Token" proveedorDTO="@ing.Ingresos.First().Proveedor" ingresosDTO="@ing.Ingresos" />
+    }
+}
+else if (ingresosXProv != null && ingresosXProv.Count == 0)
+{
+    <p> No hay nuevas autorizaciones a procesar</p>
+}
+else
+{
+    <Loading />
+}
+
+
+
+
+@code {
+    List<IngresoXProveedorDTO> ingresosXProv = null;
+    private UsuarioDTO usuarioDTO;
+    private string token;
+
+    protected override async Task OnInitializedAsync()
+    {
+        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+        if (usuarioDTO == null)
         {
-            @foreach (IngresoXProveedorDTO ing in ingresosXProv)
-            {
-                <ContenedorIngreso proveedorDTO="@ing.Ingresos.First().Proveedor" ingresosDTO="@ing.Ingresos" />
-            }
-        }
-        else if (ingresosXProv != null && ingresosXProv.Count == 0)
-        {
-            <p> No hay nuevas autorizaciones a procesar</p>
+            nav.NavigateTo("/", true);
         }
         else
         {
-            <Loading />
+            await ObtenerTodosIngresos();
         }
+    }
 
-
-
-
-        @code {
-            List<IngresoXProveedorDTO> ingresosXProv = null;
-
-            protected override async Task OnInitializedAsync()
-            {
-                await ObtenerTodosIngresos();
-            }
-
-            private async Task ObtenerTodosIngresos()
-            {
-                ingresosXProv = await serviceIngreso.ObtenerIngresosPendientes();
-                if (ingresosXProv != null)
-                {
-                }
-                else
-                {
-                    Console.WriteLine("Hubo un error");
-                }
-            }
-            private void Refrescar()
-            {
-                nav.NavigateTo("/Autorizaciones", true);
-            }
-
+    private async Task ObtenerTodosIngresos()
+    {
+        ingresosXProv = await serviceIngreso.ObtenerIngresosPendientes(token);
+        if (ingresosXProv != null)
+        {
         }
+        else
+        {
+            Console.WriteLine("Hubo un error");
+        }
+    }
+    private void Refrescar()
+    {
+        nav.NavigateTo("/Autorizaciones", true);
+    }
+
+}

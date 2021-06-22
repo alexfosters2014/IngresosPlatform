@@ -109,6 +109,7 @@
     List<FuncionarioDTO> funcionarios { get; set; } = null;
     private UsuarioDTO usuarioDTO { get; set; } = null;//cargar en el inicio , trae el localstorag
     ElementReference selectFocus;
+    private string token;
 
     protected override async Task OnInitializedAsync()
     {
@@ -118,7 +119,9 @@
     private async Task CargarFuncionarios()
     {
         usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-        funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+
+        funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id,token);
 
         ingresosDTO = await localStorage.GetItemAsync<List<IngresoDTO>>(SD.LocalCargaIngresos);
         if (ingresosDTO == null)
@@ -192,7 +195,7 @@
     }
     private async Task AgregarIngresos()
     {
-        string resultado = await serviceIngreso.AgregarIngresos(ingresosDTO);
+        string resultado = await serviceIngreso.AgregarIngresos(ingresosDTO, token);
 
         if (resultado == SD.IngresosReturn.OK.ToString())
         {

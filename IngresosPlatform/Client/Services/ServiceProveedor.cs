@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
@@ -16,8 +17,9 @@ namespace IngresosPlatform.Client.Services
         {
             httpClient = _httpClient;
         }
-        public async Task<ProveedorDTO> ActualizarProveedor(ProveedorDTO proveedorDTO)
+        public async Task<ProveedorDTO> ActualizarProveedor(ProveedorDTO proveedorDTO, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.PostAsJsonAsync("/api/Proveedor", proveedorDTO);
             if (response.IsSuccessStatusCode)
             {
@@ -31,8 +33,9 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<ProveedorDTO> AgregarProveedor(ProveedorDTO proveedor)
+        public async Task<ProveedorDTO> AgregarProveedor(ProveedorDTO proveedor, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.PostAsJsonAsync("/api/Proveedor",proveedor);
 
             if (response.IsSuccessStatusCode)
@@ -47,8 +50,9 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<int> EliminarProveedor(int proveedorId)
+        public async Task<int> EliminarProveedor(int proveedorId, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.DeleteAsync($"/api/Proveedor/{proveedorId}");
 
             if (response.IsSuccessStatusCode)
@@ -64,10 +68,11 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<ProveedorDTO> ObtenerProveedor(int? proveedorId)
+        public async Task<ProveedorDTO> ObtenerProveedor(int? proveedorId,string token)
         {
             if( proveedorId != null) {
-            var response = await httpClient.GetAsync($"api/Proveedor/{proveedorId.Value}");
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var response = await httpClient.GetAsync($"api/Proveedor/{proveedorId.Value}");
             if (response != null) { 
             var content = await response.Content.ReadAsStringAsync();
             var proveedor = JsonConvert.DeserializeObject<ProveedorDTO>(content);
@@ -84,8 +89,9 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<ProveedorDTO>> ObtenerProveedores()
+        public async Task<List<ProveedorDTO>> ObtenerProveedores(string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.GetAsync("api/Proveedor/");
             var content = await response.Content.ReadAsStringAsync();
             var proveedores = JsonConvert.DeserializeObject<List<ProveedorDTO>>(content);

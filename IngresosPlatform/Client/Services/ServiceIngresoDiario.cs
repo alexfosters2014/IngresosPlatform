@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
@@ -16,8 +17,9 @@ namespace IngresosPlatform.Client.Services
         {
             httpClient = _httpClient;
         }
-        public async Task<IngresoDiarioDTO> ActualizarMarcacion(IngresoDiarioDTO ingresoDiarioDTO)
+        public async Task<IngresoDiarioDTO> ActualizarMarcacion(IngresoDiarioDTO ingresoDiarioDTO, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/Actualizar",ingresoDiarioDTO);
             if (response.IsSuccessStatusCode)
             {
@@ -31,8 +33,9 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<VMGeneral> ObtenerFechaAPI()
+        public async Task<VMGeneral> ObtenerFechaAPI(string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.GetAsync("/api/IngresoDiario/FechaActual");
             if (response.IsSuccessStatusCode)
             {
@@ -45,10 +48,11 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<IngresoDiarioxProveedor>> ObtenerReporteHorariosEfectivos(VMGeneral vmGeneral)
+        public async Task<List<IngresoDiarioxProveedor>> ObtenerReporteHorariosEfectivos(VMGeneral vmGeneral, string token)
         {
             if (vmGeneral != null)
             {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/ReporteHorariosEfectivos", vmGeneral);
                 if (response.IsSuccessStatusCode)
                 {
@@ -66,11 +70,12 @@ namespace IngresosPlatform.Client.Services
                 return null;
             }
         }
-        public async Task<List<IngresoDiarioxProveedor>> ObtenerReporteHorariosPlanificados(VMGeneral vmGeneral)
+        public async Task<List<IngresoDiarioxProveedor>> ObtenerReporteHorariosPlanificados(VMGeneral vmGeneral, string token)
             {
                 if (vmGeneral != null)
                 {
-                    var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/ReporteHorariosPlanificados", vmGeneral);
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/ReporteHorariosPlanificados", vmGeneral);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
@@ -88,10 +93,11 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<List<IngresoDiarioxProveedor>> ObtenerSinMarcaciones(VMGeneral fechaActual)
+        public async Task<List<IngresoDiarioxProveedor>> ObtenerSinMarcaciones(VMGeneral fechaActual, string token)
         {
             if (fechaActual != null)
             {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await httpClient.PostAsJsonAsync("/api/IngresoDiario/sinMarca", fechaActual);
                 if (response.IsSuccessStatusCode)
                 {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
@@ -16,10 +17,11 @@ namespace IngresosPlatform.Client.Services
         {
             httpClient = _httpClient;
         }
-        public async Task<byte[]> DescargarExcel(ReporteIngreso reporteIngreso)
+        public async Task<byte[]> DescargarExcel(ReporteIngreso reporteIngreso, string token)
         {
             if (reporteIngreso != null)
             {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await httpClient.PostAsJsonAsync("/api/Archivo/Planilla",reporteIngreso);
                 response.EnsureSuccessStatusCode();
                 var fileBytes = await response.Content.ReadAsByteArrayAsync();
@@ -30,8 +32,9 @@ namespace IngresosPlatform.Client.Services
                 return null;
             }
         }
-            public async Task<string> ActualizarArchivo(Stream fileStream, string fileName, string pathAnterior)
+            public async Task<string> ActualizarArchivo(Stream fileStream, string fileName, string pathAnterior, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var contentUpload = new MultipartFormDataContent();
             contentUpload.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
             contentUpload.Add(new StreamContent(fileStream, (int)fileStream.Length), "filePDF", fileName);
@@ -50,8 +53,9 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<string> Subir(Stream fileStream, string fileName)
+        public async Task<string> Subir(Stream fileStream, string fileName, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var contentUpload = new MultipartFormDataContent();
             contentUpload.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
             contentUpload.Add(new StreamContent(fileStream, (int)fileStream.Length), "filePDF", fileName);

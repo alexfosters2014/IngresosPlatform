@@ -3,95 +3,98 @@
 @inject IServiceProveedor serviceProveedor;
 @inject IServiceUsuario serviceUsuario;
 @inject NavigationManager nav
+@inject ILocalStorageService localStorage
 
 <div class="container">
     <div class="d-flex justify-content-center">
         <h3>Nuevo Proveedor</h3>
     </div>
-        <section class="row">
-            <EditForm Model="proveedorDTO" OnValidSubmit="CargarNuevoProveedor" class="col-4">
-                <DataAnnotationsValidator />
-                <div class="form-group">
-                    <label for="rut">RUT*</label>
-                    <InputText @bind-Value="proveedorDTO.Rut" id="rut" class="form-control" />
-                    <ValidationMessage For="@( () => proveedorDTO.Rut)" />
-                </div>
-                <div class="form-group">
-                    <label for="razonsocial">Razon Social*</label>
-                    <InputText @bind-Value="proveedorDTO.RazonSocial" id="razonsocial" class="form-control" />
-                    <ValidationMessage For="@( () => proveedorDTO.RazonSocial)" />
-                </div>
-                <div class="form-group">
-                    <label for="nombrefantasia">Nombre Fantasia*</label>
-                    <InputText @bind-Value="proveedorDTO.NombreFantasia" id="nombrefantasia" class="form-control" />
-                    <ValidationMessage For="@( () => proveedorDTO.NombreFantasia)" />
-                </div>
-                <div class="form-group">
-                    <label for="direccion">Dirección</label>
-                    <InputText @bind-Value="proveedorDTO.Direccion" id="direccion" class="form-control" />
-                    <ValidationMessage For="@( () => proveedorDTO.Direccion)" />
-                </div>
-                <div class="form-group">
-                    <label for="rubro">Rubro*</label>
-                    <InputText @bind-Value="proveedorDTO.Rubro" id="rubro" class="form-control" />
-                    <ValidationMessage For="@( () => proveedorDTO.Rubro)" />
-                </div>
-                <div class="form-group">
-                    <label for="email">Email*</label>
-                    <InputText @bind-Value="proveedorDTO.Email" id="email" class="form-control" />
-                    <ValidationMessage For="@( () => proveedorDTO.Email)" />
-                </div>
-                @if (!carga)
-                {
-                    <div class="col text-center">
-                        <button type="submit" class="btn btn-primary">Agregar</button>
-                        <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
-                    </div>
-                }
-            </EditForm>
-        </section>
-
-        <section class="row">
-            @if (carga)
+    <section class="row">
+        <EditForm Model="proveedorDTO" OnValidSubmit="CargarNuevoProveedor" class="col-4">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label for="rut">RUT*</label>
+                <InputText @bind-Value="proveedorDTO.Rut" id="rut" class="form-control" />
+                <ValidationMessage For="@( () => proveedorDTO.Rut)" />
+            </div>
+            <div class="form-group">
+                <label for="razonsocial">Razon Social*</label>
+                <InputText @bind-Value="proveedorDTO.RazonSocial" id="razonsocial" class="form-control" />
+                <ValidationMessage For="@( () => proveedorDTO.RazonSocial)" />
+            </div>
+            <div class="form-group">
+                <label for="nombrefantasia">Nombre Fantasia*</label>
+                <InputText @bind-Value="proveedorDTO.NombreFantasia" id="nombrefantasia" class="form-control" />
+                <ValidationMessage For="@( () => proveedorDTO.NombreFantasia)" />
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <InputText @bind-Value="proveedorDTO.Direccion" id="direccion" class="form-control" />
+                <ValidationMessage For="@( () => proveedorDTO.Direccion)" />
+            </div>
+            <div class="form-group">
+                <label for="rubro">Rubro*</label>
+                <InputText @bind-Value="proveedorDTO.Rubro" id="rubro" class="form-control" />
+                <ValidationMessage For="@( () => proveedorDTO.Rubro)" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email*</label>
+                <InputText @bind-Value="proveedorDTO.Email" id="email" class="form-control" />
+                <ValidationMessage For="@( () => proveedorDTO.Email)" />
+            </div>
+            @if (!carga)
             {
-                <Loading></Loading>
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                    <button type="button" class="btn btn-primary" @onclick="Cancelar">Cancelar</button>
+                </div>
             }
-        </section>
-    </div>
-    @code {
-        ProveedorDTO proveedorDTO = new ProveedorDTO();
-        private bool carga = false;
+        </EditForm>
+    </section>
 
-        public async void CargarNuevoProveedor()
+    <section class="row">
+        @if (carga)
         {
-            carga = true;
-            ProveedorDTO resultado = await serviceProveedor.AgregarProveedor(proveedorDTO);
+            <Loading></Loading>
+        }
+    </section>
+</div>
+@code {
+    ProveedorDTO proveedorDTO = new ProveedorDTO();
+    private bool carga = false;
+    private string token;
 
-            if (resultado != null)
+    public async void CargarNuevoProveedor()
+    {
+        carga = true;
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+        ProveedorDTO resultado = await serviceProveedor.AgregarProveedor(proveedorDTO,token);
+
+        if (resultado != null)
+        {
+            UsuarioDTO usuarioDTO = new UsuarioDTO()
             {
-                UsuarioDTO usuarioDTO = new UsuarioDTO()
-                {
-                    UsuarioNombre = resultado.Rut,
-                    Email = resultado.Email,
-                    TipoUsuario = SD.TipoUsuario.ProveedorIngPlt.ToString(),
-                    Proveedor = resultado
-                };
-                UsuarioDTO usuarioNuevoDTO = await serviceUsuario.Agregar(usuarioDTO);
+                UsuarioNombre = resultado.Rut,
+                Email = resultado.Email,
+                TipoUsuario = SD.TipoUsuario.ProveedorIngPlt.ToString(),
+                Proveedor = resultado
+            };
+            UsuarioDTO usuarioNuevoDTO = await serviceUsuario.Agregar(usuarioDTO,token);
 
-                if (usuarioNuevoDTO != null)
-                {
-                    nav.NavigateTo("/Proveedores", true);
-                }
-                else
-                {
-                    Console.WriteLine("Hubo un error");
-                }
+            if (usuarioNuevoDTO != null)
+            {
+                nav.NavigateTo("/Proveedores", true);
             }
-
+            else
+            {
+                Console.WriteLine("Hubo un error");
+            }
         }
 
-        public void Cancelar()
-        {
-            nav.NavigateTo("/Proveedores");
-        }
     }
+
+    public void Cancelar()
+    {
+        nav.NavigateTo("/Proveedores");
+    }
+}

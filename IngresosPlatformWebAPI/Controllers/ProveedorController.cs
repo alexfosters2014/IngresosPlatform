@@ -1,4 +1,5 @@
 ﻿using Comun;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Modelo;
@@ -12,6 +13,7 @@ namespace IngresosPlatformWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProveedorController : Controller
     {
         private readonly IProveedorRepositorio proveedorRepositorio;

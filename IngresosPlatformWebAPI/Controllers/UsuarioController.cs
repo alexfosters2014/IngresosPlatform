@@ -8,22 +8,32 @@ using Modelo;
 using Comun;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
+using System.Text;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IngresosPlatformWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsuarioController : Controller
     {
         private readonly IUsuarioRepositorio usuarioRepositorio;
         private readonly IMailRepositorio mailRepositorio;
         private readonly IOptions<ConfigMail> config;
+        private readonly IConfiguration configuration;
 
-        public UsuarioController(IUsuarioRepositorio _usuarioRepositorio, IMailRepositorio _mailRepositorio, IOptions<ConfigMail> _config)
+        public UsuarioController(IUsuarioRepositorio _usuarioRepositorio, 
+                                    IMailRepositorio _mailRepositorio, IOptions<ConfigMail> _config,IConfiguration _configuration)
         {
             usuarioRepositorio = _usuarioRepositorio;
             mailRepositorio = _mailRepositorio;
             config = _config;
+            configuration = _configuration;
         }
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos()
@@ -120,6 +130,7 @@ namespace IngresosPlatformWebAPI.Controllers
             }
 
         }
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] VMLogin vmLogin)
         {
@@ -130,7 +141,35 @@ namespace IngresosPlatformWebAPI.Controllers
                 {
                     return BadRequest(null); ;
                 }
-            return Ok(resultado);
+
+                // Leemos el secret_key desde nuestro appseting
+                var secretKey = configuration.GetValue<string>("SecretKey");
+                var key = Encoding.ASCII.GetBytes(secretKey);
+
+                // Creamos los claims (pertenencias, características) del usuario
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, resultado.Id.ToString()),
+                    new Claim(ClaimTypes.Email, resultado.Email)
+                };
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    // Nuestro token va a durar un día
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    // Credenciales para generar el token usando nuestro secretykey y el algoritmo hash 256
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var createdToken = tokenHandler.CreateToken(tokenDescriptor);
+
+                var token = tokenHandler.WriteToken(createdToken);
+
+                resultado.Token = token;
+
+                return Ok(resultado);
             }
             else
                 {

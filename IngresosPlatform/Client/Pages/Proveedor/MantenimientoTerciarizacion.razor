@@ -103,6 +103,7 @@ else
     List<TerciarizacionDTO> terciarizaciones { get; set; } = null;
     UsuarioDTO usuarioDTO { get; set; } = null;
     private bool confirmacion { get; set; } = false;
+    private string token;
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,9 +113,10 @@ else
     private async Task CargarTerciarizacion()
     {
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
         if (usuarioDTO != null)
         {
-            terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedor(new VMGeneral() { ProveedorId = usuarioDTO.Proveedor.Id });
+            terciarizaciones = await serviceTerciariza.ObtenerTodosXProveedor(new VMGeneral() { ProveedorId = usuarioDTO.Proveedor.Id },token);
             StateHasChanged();
         }
         else

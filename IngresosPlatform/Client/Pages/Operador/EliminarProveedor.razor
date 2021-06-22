@@ -2,13 +2,15 @@
 @inject IServiceProveedor serviceProveedor;
 @inject IServiceUsuario serviceUsuario;
 @inject NavigationManager nav
-
+@inject ILocalStorageService localStorage
 
 <Loading />
 
 @code {
     [Parameter]
     public int ProveedorId { get; set; }
+    private UsuarioDTO usuario;
+    private string token;
 
     protected override void OnInitialized()
     {
@@ -23,20 +25,30 @@
 
     public async void BajaProveedor()
     {
-        int usuarioId = await serviceProveedor.EliminarProveedor(ProveedorId);
-
-        if (usuarioId > 0)
+        usuario = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+        if (usuario == null)
         {
-            int usuarioEliminado = await serviceUsuario.EliminarUsuario(usuarioId);
+            nav.NavigateTo("/", true);
+        }
+        else
+        {
+            int usuarioId = await serviceProveedor.EliminarProveedor(ProveedorId,token);
 
-            if (usuarioEliminado != 0)
+            if (usuarioId > 0)
             {
-                nav.NavigateTo("/Proveedores", true);
-            }
-            else
-            {
-                Console.WriteLine("error");
+                int usuarioEliminado = await serviceUsuario.EliminarUsuario(usuarioId, usuario.Token);
+
+                if (usuarioEliminado != 0)
+                {
+                    nav.NavigateTo("/Proveedores", true);
+                }
+                else
+                {
+                    Console.WriteLine("error");
+                }
             }
         }
     }
+
 }

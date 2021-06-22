@@ -1,6 +1,7 @@
 ﻿@page "/Funcionarios/Baja/{funcionarioId:int}"
 @inject IServiceFuncionario serviceFuncionario
 @inject NavigationManager nav
+@inject ILocalStorageService localStorage
 
 
 <Loading />
@@ -8,6 +9,7 @@
 @code {
     [Parameter]
     public int funcionarioId { get; set; }
+    private string token;
 
     protected override void OnInitialized()
     {
@@ -22,7 +24,8 @@
 
     public async void BajaFun()
     {
-        int resultado = await serviceFuncionario.Eliminar(funcionarioId);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+        int resultado = await serviceFuncionario.Eliminar(funcionarioId, token);
 
         if (resultado > 0)
         {

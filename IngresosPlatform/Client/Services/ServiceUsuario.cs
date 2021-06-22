@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
@@ -16,8 +17,9 @@ namespace IngresosPlatform.Client.Services
         {
             httpClient = _httpClient;
         }
-        public async Task<UsuarioDTO> Actualizar(UsuarioDTO usuarioDTO)
+        public async Task<UsuarioDTO> Actualizar(UsuarioDTO usuarioDTO, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.PostAsJsonAsync("/api/Usuario/Actualizar", usuarioDTO);
 
             if (response.IsSuccessStatusCode)
@@ -32,8 +34,9 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<UsuarioDTO> Agregar(UsuarioDTO usuarioDTO)
+        public async Task<UsuarioDTO> Agregar(UsuarioDTO usuarioDTO, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.PostAsJsonAsync("/api/Usuario", usuarioDTO);
 
             if (response.IsSuccessStatusCode)
@@ -49,8 +52,9 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public async Task<int> EliminarUsuario(int usuarioId)
+        public async Task<int> EliminarUsuario(int usuarioId, string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.DeleteAsync($"/api/Usuario/{usuarioId}");
 
             if (response.IsSuccessStatusCode)
@@ -71,6 +75,7 @@ namespace IngresosPlatform.Client.Services
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var usuario = JsonConvert.DeserializeObject<UsuarioDTO>(content);
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", usuario.Token);
                 return usuario;
             }
             else
@@ -79,21 +84,23 @@ namespace IngresosPlatform.Client.Services
             }
         }
 
-        public Task<UsuarioDTO> Obtener(int? usuarioId)
+        public Task<UsuarioDTO> Obtener(int? usuarioId, string token)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<List<UsuarioDTO>> ObtenerTodos()
+        public async Task<List<UsuarioDTO>> ObtenerTodos(string token)
         {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.GetAsync("/api/Usuario/");
             var content = await response.Content.ReadAsStringAsync();
             var usuarios = JsonConvert.DeserializeObject<List<UsuarioDTO>>(content);
             return usuarios;
         }
-    public async Task<string> EnviarMail(MailMensajeDTO mailMensaje)
+    public async Task<string> EnviarMail(MailMensajeDTO mailMensaje, string token)
     {
-        var response = await httpClient.PostAsJsonAsync("/api/Usuario/EnviarMail", mailMensaje);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await httpClient.PostAsJsonAsync("/api/Usuario/EnviarMail", mailMensaje);
 
         if (response.IsSuccessStatusCode)
         {

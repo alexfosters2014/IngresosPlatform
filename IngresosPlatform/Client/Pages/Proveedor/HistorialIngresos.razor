@@ -48,6 +48,7 @@ else
     private List<IngresoDTO> ingresosPendientes { get; set; }
 
     private UsuarioDTO usuarioDTO { get; set; } = null;
+    private string token;
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,7 +57,9 @@ else
     private async Task CargarIngresos()
     {
         usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
-        ingresosDTO = await serviceIngreso.ObtenerIngAutYPendXProveedor(usuarioDTO.Proveedor.Id);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
+
+        ingresosDTO = await serviceIngreso.ObtenerIngAutYPendXProveedor(usuarioDTO.Proveedor.Id,token);
         ingresosPendientes = ingresosDTO.Where(t => t.EstadoAutorizacion == SD.TipoAutIng.PENDIENTE.ToString()).ToList();
         ingresosAutorizados = ingresosDTO.Where(t => t.EstadoAutorizacion == SD.TipoAutIng.AUTORIZADO.ToString()).ToList();
         StateHasChanged();

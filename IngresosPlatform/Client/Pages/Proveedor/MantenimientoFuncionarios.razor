@@ -87,6 +87,7 @@ else
 
     List<FuncionarioDTO> funcionarios { get; set; } = null;
     private bool confirmacion { get; set; } = false;
+    private string token;
 
     protected override async Task OnInitializedAsync()
     {
@@ -98,9 +99,10 @@ else
     private async Task CargarProveedores()
     {
         UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
         if (usuarioDTO != null)
         {
-            funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id);
+            funcionarios = await serviceFuncionario.ObtenerTodosSegunProveedor(usuarioDTO.Proveedor.Id,token);
         }
         else
         {

@@ -191,6 +191,7 @@
     </div>
     @code {
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
+        private string token;
         private bool carga = false;
 
         ElementReference refCedulaEdit;
@@ -206,10 +207,11 @@
             try {
                 carga = true;
                 UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+                token = await localStorage.GetItemAsync<string>(SD.LocalToken);
 
                 funcionarioDTO.Proveedor = usuarioDTO.Proveedor;
 
-                FuncionarioDTO resultado = await serviceFuncionario.Agregar(funcionarioDTO);
+                FuncionarioDTO resultado = await serviceFuncionario.Agregar(funcionarioDTO, token);
 
                 if (resultado != null)
                 {
@@ -346,7 +348,7 @@
             {
                 fileStream = new MemoryStream(ms.ToArray());
             }
-            string nuevaPath = await serviceArchivo.ActualizarArchivo(fileStream, fileInfo.Name, pathAnterior);
+            string nuevaPath = await serviceArchivo.ActualizarArchivo(fileStream, fileInfo.Name, pathAnterior,token);
             fileStream.Dispose();
             return nuevaPath;
         }

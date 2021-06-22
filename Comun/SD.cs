@@ -10,6 +10,7 @@ namespace Comun
     {
         public const string LocalUsuario = "UsuarioLocalLogin";
         public const string LocalCargaIngresos = "IngresosCargaLocal";
+        public const string LocalToken = "LocalTokenPlatformIngreso";
 
         public enum TipoUsuario
         {

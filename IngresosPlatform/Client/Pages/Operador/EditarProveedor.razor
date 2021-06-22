@@ -2,6 +2,7 @@
 @inject IServiceProveedor serviceProveedor;
 @inject NavigationManager nav
 @inject IJSRuntime js
+@inject ILocalStorageService localStorage
 
 <div class="container">
     <div class="d-flex justify-content-center">
@@ -59,6 +60,7 @@
     @code {
         [Parameter]
         public int? proveedorId { get; set; }
+        private string token;
 
         private bool carga = false;
 
@@ -75,9 +77,10 @@
 
         public async Task CargarProveedor()
         {
+            token = await localStorage.GetItemAsync<string>(SD.LocalToken);
             if (proveedorId != null)
             {
-                var resultado = await serviceProveedor.ObtenerProveedor(proveedorId.Value);
+                var resultado = await serviceProveedor.ObtenerProveedor(proveedorId.Value,token);
 
                 if (resultado == null)
                 {
@@ -102,7 +105,7 @@
         public async Task EditarProveedorX()
         {
             carga = true;
-            var resultado = await serviceProveedor.ActualizarProveedor(proveedorDTO);
+            var resultado = await serviceProveedor.ActualizarProveedor(proveedorDTO,token);
 
             if (resultado == null)
             {

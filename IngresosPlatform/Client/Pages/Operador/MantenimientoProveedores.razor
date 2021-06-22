@@ -2,6 +2,7 @@
 @inject IServiceProveedor serviceProveedor;
 @inject NavigationManager nav
 @inject IJSRuntime js
+@inject ILocalStorageService localStorage
 
 <div class="d-flex justify-content-center">
     <h3>Mantenimiento de Proveedores</h3>
@@ -73,15 +74,17 @@ else
 
     List<ProveedorDTO> proveedores { get; set; } = null;
     private bool confirmacion { get; set; } = false;
+    private string token;
 
     protected override async Task OnInitializedAsync()
     {
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
         await CargarProveedores();
     }
 
     private async Task CargarProveedores()
     {
-        proveedores = await serviceProveedor.ObtenerProveedores();
+        proveedores = await serviceProveedor.ObtenerProveedores(token);
     }
     private void NuevoProveedor()
     {

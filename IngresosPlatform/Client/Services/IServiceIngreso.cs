@@ -8,14 +8,14 @@ namespace IngresosPlatform.Client.Services
 {
     interface IServiceIngreso
     {
-        public Task<string> AgregarIngresos(List<IngresoDTO> ingresosDTO);
-        public Task<IngresoDTO> ActualizarIngreso(IngresoDTO ingresoDTO);
-        public Task<IngresoDTO> ObtenerIngreso(int? ingresoId);
-        public Task<List<IngresoXProveedorDTO>> ObtenerIngresosPendientes();
-        public Task<List<IngresoDTO>> ObtenerIngresosNoAutXProveedor(int? proveedorId);
-        public Task<List<IngresoDTO>> ObtenerIngresosAutXProveedor(int? proveedorId);
-        public Task<int> EliminarIngreso(int IngresoId);
-        public Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion);
-        public Task<List<IngresoDTO>> ObtenerIngAutYPendXProveedor(int? proveedorId);
+        public Task<string> AgregarIngresos(List<IngresoDTO> ingresosDTO, string token);
+        public Task<IngresoDTO> ActualizarIngreso(IngresoDTO ingresoDTO, string token);
+        public Task<IngresoDTO> ObtenerIngreso(int? ingresoId, string token);
+        public Task<List<IngresoXProveedorDTO>> ObtenerIngresosPendientes(string token);
+        public Task<List<IngresoDTO>> ObtenerIngresosNoAutXProveedor(int? proveedorId, string token);
+        public Task<List<IngresoDTO>> ObtenerIngresosAutXProveedor(int? proveedorId, string token);
+        public Task<int> EliminarIngreso(int IngresoId, string token);
+        public Task<bool> AutorizarIngreso(int ingresoId, string estadoAutorizacion, string token);
+        public Task<List<IngresoDTO>> ObtenerIngAutYPendXProveedor(int? proveedorId, string token);
     }
 }

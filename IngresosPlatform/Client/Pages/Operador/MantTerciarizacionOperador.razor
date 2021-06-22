@@ -120,6 +120,7 @@ else if (terciarizaciones != null && terciarizaciones.Count == 0)
     List<ProveedorDTO> proveedoresDTO = null;
     private bool confirmacion { get; set; } = false;
     private bool cargar = false;
+    private string token;
 
     private DateTime desde = DateTime.Today.Date;
     private DateTime hasta = DateTime.Today.Date;
@@ -130,15 +131,16 @@ else if (terciarizaciones != null && terciarizaciones.Count == 0)
 
     protected override async Task OnInitializedAsync()
     {
+        usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
+        token = await localStorage.GetItemAsync<string>(SD.LocalToken);
         await CargarTerciarizacion();
     }
 
     private async Task CargarTerciarizacion()
     {
-        UsuarioDTO usuarioDTO = await localStorage.GetItemAsync<UsuarioDTO>(SD.LocalUsuario);
         if (usuarioDTO != null)
         {
-            proveedoresDTO = await serviceProveedor.ObtenerProveedores();
+            proveedoresDTO = await serviceProveedor.ObtenerProveedores(token);
         }
         else
         {
@@ -165,7 +167,7 @@ else if (terciarizaciones != null && terciarizaciones.Count == 0)
     {
         try
         {
-            terciarizaciones = await serviceTerciariza.ObtenerTodos(new VMGeneral() { FechaActual = desde });
+            terciarizaciones = await serviceTerciariza.ObtenerTodos(new VMGeneral() { FechaActual = desde },token);
             cargar = false;
             StateHasChanged();
         }
@@ -189,7 +191,7 @@ else if (terciarizaciones != null && terciarizaciones.Count == 0)
                 FechaActual = desde,
                 FechaFin = hasta,
                 ProveedorId = proveedorSeleccionado.Id
-            });
+            },token);
 
             cargar = false;
             StateHasChanged();
@@ -245,7 +247,7 @@ else if (terciarizaciones != null && terciarizaciones.Count == 0)
         try {
             bool confirmacion = await js.MsgConfirmacion($"Desea enviar una notificación de falta de carga de documentación al proveedor {proveedorMail.RazonSocial} ({proveedorMail.NombreFantasia})");
             if (confirmacion) {
-                await serviceUsuario.EnviarMail(new MailMensajeDTO() { EnviarA = proveedorMail.Email, MensajeAEnviar = $"Sr. proveedor: Todavia hay archivos de terciarización sin subir del período {fechaPeriodo.ToString("MM/yyyy")}" });
+                await serviceUsuario.EnviarMail(new MailMensajeDTO() { EnviarA = proveedorMail.Email, MensajeAEnviar = $"Sr. proveedor: Todavia hay archivos de terciarización sin subir del período {fechaPeriodo.ToString("MM/yyyy")}" },token);
                 await js.MsgExitoso("Se envió el mail exitosamente");
             }
         }

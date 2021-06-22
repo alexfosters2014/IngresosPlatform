@@ -68,6 +68,8 @@
     public List<IngresoDTO> ingresosDTO { get; set; }
     [Parameter]
     public ProveedorDTO proveedorDTO { get; set; }
+    [Parameter]
+    public string token { get; set; }
 
     private bool visible = true;
 
@@ -80,7 +82,7 @@
     {
         try
         {
-        await js.InvokeVoidAsync("open", $"/Funcionario/{funcionarioId}", "_blank");
+            await js.InvokeVoidAsync("open", $"/Funcionario/{funcionarioId}", "_blank");
 
         }
         catch (Exception ex)
@@ -96,7 +98,7 @@
         if (confirmacion)
         {
             ingDTO.EstadoAutorizacion = SD.TipoAutIng.AUTORIZADO.ToString();
-            IngresoDTO resultado = await serviceIngreso.ActualizarIngreso(ingDTO);
+            IngresoDTO resultado = await serviceIngreso.ActualizarIngreso(ingDTO, token);
             if (resultado != null)
             {
                 await js.MsgExitoso("Se autorizó exitosamente");
@@ -122,14 +124,14 @@
                 {
                     ingDTO.EstadoAutorizacion = SD.TipoAutIng.NOAUTORIZADO.ToString();
                     ingDTO.Comentarios = comentarios;
-                    IngresoDTO resultado = await serviceIngreso.ActualizarIngreso(ingDTO);
+                    IngresoDTO resultado = await serviceIngreso.ActualizarIngreso(ingDTO,token);
                     if (resultado != null)
                     {
                         await js.MsgExitoso("Se envió la no autorización exitosamente");
                         await Enviar(proveedorDTO.Rut, "Sr. Proveedor: algunos ingresos no fueron autorizados . Revise");
                         ingresosDTO.Remove(ingDTO);
 
-                        await serviceUsuario.EnviarMail(new MailMensajeDTO() { EnviarA = proveedorDTO.Email, MensajeAEnviar = "Sr. proveedor: Hay ingreso/s que deberia revisar" });
+                        await serviceUsuario.EnviarMail(new MailMensajeDTO() { EnviarA = proveedorDTO.Email, MensajeAEnviar = "Sr. proveedor: Hay ingreso/s que deberia revisar" }, token);
 
                         StateHasChanged();
                     }
