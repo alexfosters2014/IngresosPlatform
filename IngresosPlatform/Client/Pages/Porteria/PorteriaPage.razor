@@ -71,7 +71,7 @@
                                     <td>@ingProv.SalidaPlanificada.ToString("HH:mm")</td>
                                     @if (ingProv.EntradaEfectiva == null)
                                     {
-                                        <td class="pull-right"><a href="" @onclick="(() => MarcarEntrada(ingProv))" @onclick:preventDefault class="btn btn-success">Marcar Entrada</a></td>
+                                        <td class="text-right"><a href="" @onclick="(() => MarcarEntrada(ingProv))" @onclick:preventDefault class="btn btn-success">Marcar Entrada</a></td>
                                     }
                                     else
                                     {
@@ -79,7 +79,7 @@
                                     }
                                     @if (ingProv.SalidaEfectiva == null)
                                     {
-                                        <td class="pull-right"><a href="" @onclick="(() => MarcarSalida(ingProv))" @onclick:preventDefault class="btn btn-warning">Marcar Salida</a></td>
+                                        <td class="text-right"><a href="" @onclick="(() => MarcarSalida(ingProv))" @onclick:preventDefault class="btn btn-warning">Marcar Salida</a></td>
                                     }
                                     else
                                     {

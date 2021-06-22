@@ -34,12 +34,13 @@ namespace IngresosPlatform.Client.Services
         }
             public async Task<string> ActualizarArchivo(Stream fileStream, string fileName, string pathAnterior, string token)
         {
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            
             var contentUpload = new MultipartFormDataContent();
             contentUpload.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
             contentUpload.Add(new StreamContent(fileStream, (int)fileStream.Length), "filePDF", fileName);
             contentUpload.Add(new StringContent(pathAnterior ?? ""), "pathPDFAnterior");
 
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.PostAsync($"/api/Archivo/Actualizar", contentUpload);
 
             if (response.IsSuccessStatusCode)
@@ -55,11 +56,12 @@ namespace IngresosPlatform.Client.Services
 
         public async Task<string> Subir(Stream fileStream, string fileName, string token)
         {
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+           
             var contentUpload = new MultipartFormDataContent();
             contentUpload.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
             contentUpload.Add(new StreamContent(fileStream, (int)fileStream.Length), "filePDF", fileName);
 
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.PostAsync("/api/Archivo", contentUpload);
 
             if (response.IsSuccessStatusCode)
